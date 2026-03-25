@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "repos": [
+    {
+      "repo": "nano-banana-hub/nanobanana",
+      "type": "builtin",
+      "path": "references/templates",
+      "official": true
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BananaHub - Nanobanana Prompt Templates</title>
+  <meta name="description" content="Browse and discover prompt templates for Nanobanana AI image generation. Cyberpunk cities, cute stickers, product photos, and more.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍌</text></svg>">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        BananaHub <span>prompt template hub</span>
+      </div>
+      <nav class="header-links">
+        <a href="https://github.com/nano-banana-hub" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.npmjs.com/package/bananahub" target="_blank" rel="noopener">npm</a>
+        <a href="https://github.com/nano-banana-hub/nanobanana" target="_blank" rel="noopener">Docs</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <pre class="hero-ascii" aria-hidden="true">
+ ____                              _   _       _
+| __ )  __ _ _ __   __ _ _ __   __ _| | | |_   _| |__
+|  _ \ / _` | '_ \ / _` | '_ \ / _` | |_| | | | | '_ \
+| |_) | (_| | | | | (_| | | | | (_| |  _  | |_| | |_) |
+|____/ \__,_|_| |_|\__,_|_| |_|\__,_|_| |_|\__,_|_.__/
+    </pre>
+    <p class="hero-tagline">Discover, share, and install prompt templates for Nanobanana AI image generation</p>
+    <p class="hero-stats"><strong id="template-count">0</strong> templates available</p>
+  </section>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="search-box">
+      <span class="search-icon">&#x1F50D;</span>
+      <input type="text" id="search-input" placeholder="Search templates... (bilingual: English or Chinese)">
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Profile</span>
+      <button class="pill active" data-profile="all">All</button>
+      <button class="pill" data-profile="photo"><span class="dot photo"></span> Photo</button>
+      <button class="pill" data-profile="sticker"><span class="dot sticker"></span> Sticker</button>
+      <button class="pill" data-profile="product"><span class="dot product"></span> Product</button>
+      <button class="pill" data-profile="diagram"><span class="dot diagram"></span> Diagram</button>
+      <button class="pill" data-profile="minimal"><span class="dot minimal"></span> Minimal</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Difficulty</span>
+      <button class="pill active" data-difficulty="all">All</button>
+      <button class="pill" data-difficulty="beginner">Beginner</button>
+      <button class="pill" data-difficulty="intermediate">Intermediate</button>
+      <button class="pill" data-difficulty="advanced">Advanced</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Sort</span>
+      <div class="sort-tabs">
+        <button class="sort-tab active" data-sort="all-time">All Time</button>
+        <button class="sort-tab" data-sort="trending">Trending 24h</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card Grid -->
+  <main class="card-grid" id="card-grid">
+    <!-- Cards rendered by JS -->
+  </main>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <img class="modal-image" id="modal-image" src="" alt="">
+      <div class="modal-body">
+        <h2 id="modal-title"></h2>
+        <p class="modal-subtitle" id="modal-subtitle"></p>
+        <p class="modal-desc" id="modal-desc"></p>
+        <div class="card-badges" id="modal-badges"></div>
+        <div class="card-tags" id="modal-tags"></div>
+        <div class="modal-meta">
+          <div class="modal-meta-item"><span class="label">Author: </span><span id="modal-author"></span></div>
+          <div class="modal-meta-item"><span class="label">Version: </span><span id="modal-version"></span></div>
+          <div class="modal-meta-item"><span class="label">Aspect: </span><span id="modal-aspect"></span></div>
+          <div class="modal-meta-item"><span class="label">Updated: </span><span id="modal-updated"></span></div>
+        </div>
+        <div class="modal-install-box">
+          <code id="modal-install-cmd"></code>
+          <button class="copy-btn" id="modal-copy-btn">Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="https://github.com/nano-banana-hub">GitHub</a>
+      <a href="https://www.npmjs.com/package/bananahub">npm</a>
+      <a href="https://github.com/nano-banana-hub/nanobanana/issues">Submit Template</a>
+    </div>
+    <p>BananaHub &mdash; Open-source prompt template ecosystem for Nanobanana</p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
