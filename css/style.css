@@ -972,3 +972,104 @@ a:hover {
     max-height: calc(100vh - 7rem);
   }
 }
+
+/* ===== Gallery Stage Refinements ===== */
+.template-card {
+  background: linear-gradient(180deg, #171717 0%, #121212 100%);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
+}
+
+.template-card:hover {
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.22);
+}
+
+.card-image-wrap {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.05) 0%, transparent 48%),
+    linear-gradient(180deg, #0f0f0f 0%, #151515 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 -72px 90px rgba(0, 0, 0, 0.24);
+}
+
+.card-image-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 8, 8, 0.04) 0%, rgba(8, 8, 8, 0.42) 100%);
+  opacity: 0;
+  transition: opacity 180ms ease;
+  z-index: 2;
+}
+
+.card-image-wrap::after {
+  content: 'View Details';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, calc(-50% + 8px));
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(10, 10, 10, 0.78);
+  color: var(--text);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 180ms ease, transform 180ms ease;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.template-card:hover .card-image-wrap.is-loaded::before,
+.template-card:focus-within .card-image-wrap.is-loaded::before {
+  opacity: 1;
+}
+
+.template-card:hover .card-image-wrap.is-loaded::after,
+.template-card:focus-within .card-image-wrap.is-loaded::after {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.card-image-wrap img.loaded {
+  transition: opacity 0.3s ease, transform 180ms ease, filter 180ms ease;
+}
+
+.template-card:hover .card-image-wrap img.loaded,
+.template-card:focus-within .card-image-wrap img.loaded {
+  transform: scale(1.018);
+  filter: saturate(1.02);
+}
+
+.card-image-wrap.prefers-contain {
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 34%, rgba(0, 0, 0, 0.55) 100%),
+    linear-gradient(180deg, #090909 0%, #131313 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 0 56px rgba(0, 0, 0, 0.34);
+}
+
+.card-image-wrap.prefers-contain img {
+  padding: 0.75rem 0.9rem;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.32));
+}
+
+.card-image-wrap.prefers-contain::after {
+  content: 'View Full Composition';
+}
+
+@media (max-width: 767px) {
+  .card-image-wrap::after {
+    font-size: 0.6875rem;
+    padding: 0.35rem 0.65rem;
+  }
+
+  .card-image-wrap.prefers-contain img {
+    padding: 0.55rem 0.7rem;
+  }
+}
