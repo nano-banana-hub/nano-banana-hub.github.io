@@ -10,16 +10,23 @@ let currentFilters = { profile: 'all', difficulty: 'all' };
 let currentSort = 'all-time';
 let currentSearch = '';
 let searchTimer = null;
+let activeTemplate = null;
 
 // ===== DOM refs =====
 const grid = document.getElementById('card-grid');
 const searchInput = document.getElementById('search-input');
 const templateCount = document.getElementById('template-count');
 const modalOverlay = document.getElementById('modal-overlay');
-const modal = document.getElementById('modal');
+const modalImageButton = document.getElementById('modal-image-button');
 const modalImage = document.getElementById('modal-image');
-const modalImageLink = document.getElementById('modal-image-link');
-const modalLinks = document.getElementById('modal-links');
+const modalImageHint = document.getElementById('modal-image-hint');
+const modalActions = document.getElementById('modal-actions');
+const modalViewImageBtn = document.getElementById('modal-view-image-btn');
+const modalOpenOriginalLink = document.getElementById('modal-open-original-link');
+const modalTemplateSourceLink = document.getElementById('modal-template-source-link');
+const lightboxOverlay = document.getElementById('lightbox-overlay');
+const lightboxImage = document.getElementById('lightbox-image');
+const lightboxOpenOriginalLink = document.getElementById('lightbox-open-original-link');
 
 // ===== Init =====
 async function init() {
@@ -112,10 +119,11 @@ function renderCard(template) {
     .join('');
   const hasSampleImage = Boolean(template.sample_image);
   const placeholderLabel = hasSampleImage ? 'Loading preview' : 'Preview unavailable';
+  const previewClass = prefersContainedPreview(template.aspect) ? ' prefers-contain' : '';
 
   return `
     <article class="template-card" data-id="${escAttr(template.id)}" data-repo="${escAttr(template.repo)}">
-      <div class="card-image-wrap${hasSampleImage ? '' : ' is-error'}">
+      <div class="card-image-wrap${hasSampleImage ? '' : ' is-error'}${previewClass}">
         <div class="card-image-placeholder" aria-hidden="true">
           <span class="card-image-placeholder-label">${escHtml(placeholderLabel)}</span>
         </div>
@@ -268,13 +276,34 @@ function bindEvents() {
   modalOverlay.addEventListener('click', (e) => {
     if (e.target === modalOverlay) closeModal();
   });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+
+  modalImageButton.addEventListener('click', () => {
+    if (activeTemplate?.sample_image) openLightbox(activeTemplate);
+  });
+
+  modalViewImageBtn.addEventListener('click', () => {
+    if (activeTemplate?.sample_image) openLightbox(activeTemplate);
   });
 
   document.getElementById('modal-copy-btn').addEventListener('click', () => {
     const cmd = document.getElementById('modal-install-cmd').textContent;
     copyToClipboard(cmd, document.getElementById('modal-copy-btn'));
+  });
+
+  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  lightboxOverlay.addEventListener('click', (e) => {
+    if (e.target === lightboxOverlay) closeLightbox();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (lightboxOverlay.classList.contains('open')) {
+      closeLightbox();
+      return;
+    }
+    if (modalOverlay.classList.contains('open')) {
+      closeModal();
+    }
   });
 
   window.addEventListener('hashchange', () => {
@@ -286,22 +315,29 @@ function bindEvents() {
 
 // ===== Modal =====
 function openModal(template) {
-  const imageLink = getOriginalImageLink(template);
-  if (template.sample_image) {
+  activeTemplate = template;
+  const hasSampleImage = Boolean(template.sample_image);
+  const originalImageUrl = getOriginalImageLink(template);
+  const templateUrl = getTemplateUrl(template);
+
+  if (hasSampleImage) {
     modalImage.src = template.sample_image;
     modalImage.alt = template.title_en;
-    modalImageLink.classList.remove('is-disabled');
-    if (imageLink) {
-      modalImageLink.href = imageLink;
-    } else {
-      modalImageLink.removeAttribute('href');
-    }
+    modalImageButton.classList.remove('is-disabled');
+    modalImageButton.disabled = false;
+    modalImageHint.textContent = 'Click to view full image';
   } else {
     modalImage.removeAttribute('src');
     modalImage.alt = `${template.title_en} preview unavailable`;
-    modalImageLink.removeAttribute('href');
-    modalImageLink.classList.add('is-disabled');
+    modalImageButton.classList.add('is-disabled');
+    modalImageButton.disabled = true;
+    modalImageHint.textContent = 'Preview unavailable';
   }
+
+  modalViewImageBtn.hidden = !hasSampleImage;
+  setLinkState(modalOpenOriginalLink, originalImageUrl);
+  setLinkState(modalTemplateSourceLink, templateUrl);
+  modalActions.hidden = modalViewImageBtn.hidden && modalOpenOriginalLink.hidden && modalTemplateSourceLink.hidden;
 
   document.getElementById('modal-title').textContent = template.title_en;
   document.getElementById('modal-subtitle').textContent = template.title;
@@ -321,34 +357,52 @@ function openModal(template) {
     .map((tag) => `<span class="tag">${escHtml(tag)}</span>`)
     .join('');
 
-  const linksHtml = renderTemplateLinks(template);
-  modalLinks.innerHTML = linksHtml;
-  modalLinks.hidden = !linksHtml;
-
+  closeLightbox();
   modalOverlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  updateBodyScrollLock();
 }
 
 function closeModal() {
+  closeLightbox();
   modalOverlay.classList.remove('open');
-  document.body.style.overflow = '';
+  activeTemplate = null;
+  updateBodyScrollLock();
 }
 
-function renderTemplateLinks(template) {
-  const links = [];
-  const templateUrl = getTemplateUrl(template);
-  const originalImageUrl = getOriginalImageLink(template);
+// ===== Lightbox =====
+function openLightbox(template) {
+  if (!template?.sample_image) return;
 
-  if (templateUrl) {
-    links.push({ href: templateUrl, label: 'Template Source' });
-  }
-  if (originalImageUrl) {
-    links.push({ href: originalImageUrl, label: 'Original Image' });
+  lightboxImage.src = template.sample_image;
+  lightboxImage.alt = template.title_en;
+  setLinkState(lightboxOpenOriginalLink, getOriginalImageLink(template));
+  lightboxOverlay.classList.add('open');
+  updateBodyScrollLock();
+}
+
+function closeLightbox() {
+  lightboxOverlay.classList.remove('open');
+  lightboxImage.removeAttribute('src');
+  lightboxImage.alt = '';
+  lightboxOpenOriginalLink.hidden = true;
+  lightboxOpenOriginalLink.removeAttribute('href');
+  updateBodyScrollLock();
+}
+
+// ===== Helpers =====
+function updateBodyScrollLock() {
+  document.body.style.overflow = modalOverlay.classList.contains('open') || lightboxOverlay.classList.contains('open') ? 'hidden' : '';
+}
+
+function setLinkState(link, href) {
+  if (href) {
+    link.href = href;
+    link.hidden = false;
+    return;
   }
 
-  return links
-    .map((link) => `<a class="modal-link" href="${escAttr(link.href)}" target="_blank" rel="noopener">${escHtml(link.label)}</a>`)
-    .join('');
+  link.hidden = true;
+  link.removeAttribute('href');
 }
 
 function getTemplateUrl(template) {
@@ -362,6 +416,22 @@ function getTemplateUrl(template) {
 function getOriginalImageLink(template) {
   if (template.sample_image_page_url) return template.sample_image_page_url;
   return template.sample_image || '';
+}
+
+function prefersContainedPreview(aspect) {
+  const parsed = parseAspect(aspect);
+  return Boolean(parsed && parsed.width <= parsed.height);
+}
+
+function parseAspect(aspect) {
+  if (!aspect || !String(aspect).includes(':')) return null;
+
+  const [width, height] = String(aspect).split(':').map((value) => Number(value));
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+    return null;
+  }
+
+  return { width, height };
 }
 
 // ===== Clipboard =====
@@ -394,7 +464,6 @@ async function copyToClipboard(text, btn) {
   }
 }
 
-// ===== Helpers =====
 function escHtml(str) {
   if (!str) return '';
   return String(str)

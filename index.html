@@ -72,9 +72,10 @@
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal" id="modal">
       <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
-      <a class="modal-image-link" id="modal-image-link" href="#" target="_blank" rel="noopener">
+      <button class="modal-image-button" id="modal-image-button" type="button" aria-label="View full image">
         <img class="modal-image" id="modal-image" src="" alt="">
-      </a>
+        <span class="modal-image-hint" id="modal-image-hint">Click to view full image</span>
+      </button>
       <div class="modal-body">
         <h2 id="modal-title"></h2>
         <p class="modal-subtitle" id="modal-subtitle"></p>
@@ -87,13 +88,25 @@
           <div class="modal-meta-item"><span class="label">Aspect: </span><span id="modal-aspect"></span></div>
           <div class="modal-meta-item"><span class="label">Updated: </span><span id="modal-updated"></span></div>
         </div>
-        <div class="modal-links" id="modal-links" hidden></div>
+        <div class="modal-actions" id="modal-actions">
+          <button class="modal-link modal-link-button" id="modal-view-image-btn" type="button">View Full Image</button>
+          <a class="modal-link" id="modal-open-original-link" href="#" target="_blank" rel="noopener">Open Original</a>
+          <a class="modal-link" id="modal-template-source-link" href="#" target="_blank" rel="noopener">Template Source</a>
+        </div>
         <div class="modal-install-box">
           <code id="modal-install-cmd"></code>
           <button class="copy-btn" id="modal-copy-btn">Copy</button>
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="lightbox-overlay" id="lightbox-overlay">
+    <div class="lightbox-toolbar">
+      <a class="lightbox-link" id="lightbox-open-original-link" href="#" target="_blank" rel="noopener">Open Original</a>
+      <button class="lightbox-close" id="lightbox-close" aria-label="Close full image">&times;</button>
+    </div>
+    <img class="lightbox-image" id="lightbox-image" src="" alt="">
   </div>
 
   <footer class="site-footer">
