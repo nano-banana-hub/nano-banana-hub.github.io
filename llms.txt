@@ -30,4 +30,4 @@ Ecosystem links:
 - Template format spec: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-format-spec.md
 
 Current catalog summary: 5 templates, 5 profiles, 5 official templates.
-Generated: 2026-03-30T06:48:56.137Z
+Generated: 2026-03-30T06:49:38.899Z
