@@ -711,8 +711,11 @@ main {
 }
 
 .card-profile-badge {
-  padding-inline: 8px;
-  border-radius: 10px;
+  min-height: 18px;
+  padding: 0 6px;
+  border-radius: 7px;
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
   background: rgba(28, 33, 28, 0.72);
   color: #f7efdc;
 }
