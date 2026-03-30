@@ -2,10 +2,11 @@ name: Build Catalog
 
 on:
   schedule:
-    - cron: '0 6 * * *'   # Daily at 06:00 UTC
+    - cron: '0 6 * * *'
   push:
     paths:
       - 'catalog-source.json'
+      - 'scripts/build-catalog.js'
   workflow_dispatch:
 
 permissions:
@@ -23,15 +24,15 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Build catalog
+      - name: Build catalog assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/build-catalog.js
 
-      - name: Check for changes
+      - name: Check for generated changes
         id: check
         run: |
-          if git diff --quiet catalog.json; then
+          if git diff --quiet -- catalog.json llms.txt agent-catalog.md robots.txt sitemap.xml; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -42,6 +43,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add catalog.json
-          git commit -m "chore: rebuild catalog.json [skip ci]"
+          git add catalog.json llms.txt agent-catalog.md robots.txt sitemap.xml
+          git commit -m "chore: rebuild BananaHub catalog assets [skip ci]"
           git push

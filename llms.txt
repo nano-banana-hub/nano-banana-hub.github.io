@@ -1,0 +1,31 @@
+# BananaHub
+
+BananaHub is the plug-in prompt template hub for Nano Banana Skill.
+It is designed for progressive disclosure: keep the base skill lean, discover templates through stable files, and install only the module that matches the current task.
+
+Canonical site: https://nano-banana-hub.github.io/
+
+Preferred machine-readable entry points:
+- https://nano-banana-hub.github.io/catalog.json — structured catalog with template metadata, install commands, source URLs, and preview URLs
+- https://nano-banana-hub.github.io/agent-catalog.md — markdown digest of the current catalog for agents and humans
+- https://nano-banana-hub.github.io/llms.txt — this overview
+
+Install rules:
+- Prefer the install_cmd value from catalog.json for deterministic installation.
+- Official Nano Banana built-ins use the short form: bananahub add nano-banana-hub/nanobanana/<template-id>
+- Generic nested templates may use: bananahub add owner/repo/path/to/template
+
+How to use BananaHub as an agent:
+- Read catalog.json first for discovery and ranking inputs.
+- Use template_url when the full template body is needed.
+- Use sample_image and sample_image_page_url for preview assets.
+- Avoid scraping homepage cards when machine files are available.
+
+Ecosystem links:
+- Nano Banana repository: https://github.com/nano-banana-hub/nanobanana
+- BananaHub CLI: https://www.npmjs.com/package/bananahub
+- Template system docs: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-system.md
+- Template format spec: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-format-spec.md
+
+Current catalog summary: 5 templates, 5 profiles, 5 official templates.
+Generated: 2026-03-30T04:32:40.591Z

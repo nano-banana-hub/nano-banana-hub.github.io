@@ -3,120 +3,373 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BananaHub - Nanobanana Prompt Templates</title>
-  <meta name="description" content="Browse and discover prompt templates for Nanobanana AI image generation. Cyberpunk cities, cute stickers, product photos, and more.">
+  <title>BananaHub | Plug-in Prompt Templates for Nano Banana Skill</title>
+  <meta
+    name="description"
+    content="BananaHub is the plug-in prompt template hub for Nano Banana Skill: browse installable templates, keep the base skill lean, and expose agent-friendly entry points through llms.txt and catalog.json."
+  >
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="theme-color" content="#f2c94c">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nano-banana-hub.github.io/">
+  <meta property="og:title" content="BananaHub | Plug-in Prompt Templates for Nano Banana Skill">
+  <meta
+    property="og:description"
+    content="Human-friendly gallery. Agent-friendly index. Discover focused prompt templates for Nano Banana Skill and install only what you need."
+  >
+  <link rel="canonical" href="https://nano-banana-hub.github.io/">
+  <link rel="alternate" type="application/json" title="BananaHub Catalog JSON" href="catalog.json">
+  <link rel="alternate" type="text/plain" title="BananaHub llms.txt" href="llms.txt">
+  <link rel="alternate" type="text/markdown" title="BananaHub Agent Catalog" href="agent-catalog.md">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍌</text></svg>">
+  <script type="application/ld+json" id="structured-data">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "BananaHub",
+      "url": "https://nano-banana-hub.github.io/",
+      "description": "Plug-in prompt template hub for Nano Banana Skill."
+    }
+  </script>
 </head>
 <body>
+  <a class="skip-link" href="#catalog-section">Skip to catalog</a>
 
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="header-brand">
-        BananaHub <span>prompt template hub</span>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="header-brand" href="/">
+          <span class="brand-badge">BananaHub</span>
+          <span class="brand-note">for Nano Banana Skill</span>
+        </a>
+
+        <nav class="header-links" aria-label="Primary">
+          <a href="#catalog-section">Catalog</a>
+          <a href="#agent-access">For Agents</a>
+          <a href="https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-system.md" target="_blank" rel="noopener">Template System</a>
+          <a href="https://github.com/nano-banana-hub">GitHub</a>
+        </nav>
       </div>
-      <nav class="header-links">
-        <a href="https://github.com/nano-banana-hub" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://www.npmjs.com/package/bananahub" target="_blank" rel="noopener">npm</a>
-        <a href="https://github.com/nano-banana-hub/nanobanana" target="_blank" rel="noopener">Docs</a>
-      </nav>
-    </div>
-  </header>
+    </header>
 
-  <section class="hero">
-    <pre class="hero-ascii" aria-hidden="true">
- ____                              _   _       _
-| __ )  __ _ _ __   __ _ _ __   __ _| | | |_   _| |__
-|  _ \ / _` | '_ \ / _` | '_ \ / _` | |_| | | | | '_ \
-| |_) | (_| | | | | (_| | | | | (_| |  _  | |_| | |_) |
-|____/ \__,_|_| |_|\__,_|_| |_|\__,_|_| |_|\__,_|_.__/
-    </pre>
-    <p class="hero-tagline">Discover, share, and install prompt templates for Nanobanana AI image generation</p>
-    <p class="hero-stats"><strong id="template-count">0</strong> templates available</p>
-  </section>
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Human-friendly gallery. Agent-friendly index.</p>
+          <h1>Plug prompt templates into Nano Banana Skill without bloating the base skill.</h1>
+          <p class="hero-lead">
+            BananaHub is a progressive-disclosure template library for Nano Banana Skill. Discover focused prompt recipes,
+            install only what you need, and let the skill surface them only when a request actually matches.
+          </p>
 
-  <div class="filter-bar">
-    <div class="search-box">
-      <span class="search-icon">&#x1F50D;</span>
-      <input type="text" id="search-input" placeholder="Search templates... (bilingual: English or Chinese)">
-    </div>
-    <div class="filter-row">
-      <span class="filter-label">Profile</span>
-      <button class="pill active" data-profile="all">All</button>
-      <button class="pill" data-profile="photo"><span class="dot photo"></span> Photo</button>
-      <button class="pill" data-profile="sticker"><span class="dot sticker"></span> Sticker</button>
-      <button class="pill" data-profile="product"><span class="dot product"></span> Product</button>
-      <button class="pill" data-profile="diagram"><span class="dot diagram"></span> Diagram</button>
-      <button class="pill" data-profile="minimal"><span class="dot minimal"></span> Minimal</button>
-    </div>
-    <div class="filter-row">
-      <span class="filter-label">Difficulty</span>
-      <button class="pill active" data-difficulty="all">All</button>
-      <button class="pill" data-difficulty="beginner">Beginner</button>
-      <button class="pill" data-difficulty="intermediate">Intermediate</button>
-      <button class="pill" data-difficulty="advanced">Advanced</button>
-    </div>
-    <div class="filter-row">
-      <span class="filter-label">Sort</span>
-      <div class="sort-tabs">
-        <button class="sort-tab active" data-sort="all-time">All Time</button>
-        <button class="sort-tab" data-sort="trending">Trending 24h</button>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#catalog-section">Browse live catalog</a>
+            <a class="button button-secondary" href="llms.txt">Open llms.txt</a>
+            <a class="button button-tertiary" href="catalog.json">Open catalog.json</a>
+          </div>
+
+          <ul class="hero-metrics" aria-label="Catalog metrics">
+            <li>
+              <span id="template-count">0</span>
+              <small>indexed templates</small>
+            </li>
+            <li>
+              <span id="profile-count">0</span>
+              <small>profiles covered</small>
+            </li>
+            <li>
+              <span id="catalog-generated">Loading</span>
+              <small>catalog freshness</small>
+            </li>
+          </ul>
+        </div>
+
+        <aside class="hero-panel" aria-labelledby="agent-panel-title">
+          <p class="panel-kicker">Agent Access</p>
+          <h2 id="agent-panel-title">If an agent needs this hub, start with the stable files.</h2>
+
+          <ol class="agent-steps">
+            <li>Read <a href="llms.txt">llms.txt</a> for curated entry points and ecosystem links.</li>
+            <li>Use <a href="catalog.json">catalog.json</a> for structured discovery, install commands, and source URLs.</li>
+            <li>Open <a href="agent-catalog.md">agent-catalog.md</a> for a markdown digest of the current catalog.</li>
+            <li>Install with <code>bananahub add owner/repo/template-id</code>.</li>
+          </ol>
+
+          <div class="agent-code-block">
+            <p class="agent-code-label">Suggested install pattern</p>
+            <code>bananahub add nano-banana-hub/nanobanana/cute-sticker</code>
+          </div>
+
+          <p class="agent-note">
+            BananaHub is aligned with Nano Banana's progressive-disclosure model: frontmatter stays lightweight for matching,
+            while the full template body is only read when a template is activated.
+          </p>
+        </aside>
+      </section>
+
+      <section class="manifesto" aria-labelledby="manifesto-title">
+        <div class="section-heading">
+          <p class="section-kicker">Why BananaHub Exists</p>
+          <h2 id="manifesto-title">A template hub built for progressive loading, not template dumping.</h2>
+          <p>
+            The goal is not to flood Nano Banana Skill with every prompt variation. The goal is to keep the core skill lean,
+            let templates live in GitHub, and expose clear discovery paths for humans, agents, and template authors.
+          </p>
+        </div>
+
+        <div class="principle-grid">
+          <article class="principle-card">
+            <p class="principle-index">01</p>
+            <h3>Install only the capability you need</h3>
+            <p>
+              Templates are hot-pluggable. Users do not need to ship every domain recipe up front, and Nano Banana can stay
+              focused until a real request calls for more.
+            </p>
+          </article>
+
+          <article class="principle-card">
+            <p class="principle-index">02</p>
+            <h3>Use tiered discovery instead of one giant prompt file</h3>
+            <p>
+              Lightweight frontmatter powers listing and matching. Richer body content remains in the source template and is
+              pulled only when activation happens.
+            </p>
+          </article>
+
+          <article class="principle-card">
+            <p class="principle-index">03</p>
+            <h3>Give agents a first-class interface, not a hidden afterthought</h3>
+            <p>
+              The homepage is readable, but machine-readable files are linked directly so an agent can search, compare, and
+              install templates without scraping visual UI.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="access-strip" id="agent-access" aria-labelledby="access-title">
+        <div class="section-heading">
+          <p class="section-kicker">Machine-Readable Entry Points</p>
+          <h2 id="access-title">Prefer these resources over scraping cards.</h2>
+        </div>
+
+        <div class="access-grid">
+          <a class="access-card" href="llms.txt">
+            <span class="access-label">Curated entry point</span>
+            <h3>/llms.txt</h3>
+            <p>Short overview for LLMs and agents. Includes purpose, canonical files, install pattern, and ecosystem docs.</p>
+          </a>
+
+          <a class="access-card" href="agent-catalog.md">
+            <span class="access-label">Markdown digest</span>
+            <h3>/agent-catalog.md</h3>
+            <p>Readable summary of current templates with profile, tags, install command, source URL, and sample URL.</p>
+          </a>
+
+          <a class="access-card" href="catalog.json">
+            <span class="access-label">Structured feed</span>
+            <h3>/catalog.json</h3>
+            <p>Machine-readable catalog for search, ranking, previews, and deterministic installs across the Nano Banana ecosystem.</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="catalog-shell" id="catalog-section" aria-labelledby="catalog-title">
+        <div class="catalog-intro">
+          <div>
+            <p class="section-kicker">Live Catalog</p>
+            <h2 id="catalog-title">Browse installable templates</h2>
+            <p id="results-summary">
+              Search by use case, bilingual tags, author, or difficulty. Every card links back to the source template and exposes
+              a one-click install command.
+            </p>
+          </div>
+
+          <div class="catalog-status" aria-label="Catalog status">
+            <div class="status-pill">
+              <span id="result-count">0</span>
+              <small>matches</small>
+            </div>
+            <div class="status-pill">
+              <span id="official-count">0</span>
+              <small>official</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <label class="search-box" for="search-input">
+            <span class="search-label">Search</span>
+            <span class="search-input-shell">
+              <span class="search-icon" aria-hidden="true">/</span>
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search by template name, tag, profile, author, or intent in English or Chinese"
+                autocomplete="off"
+              >
+            </span>
+          </label>
+
+          <div class="filter-group">
+            <p class="filter-label">Profile</p>
+            <div class="filter-row">
+              <button class="pill active" data-profile="all" type="button">All</button>
+              <button class="pill" data-profile="photo" type="button">Photo</button>
+              <button class="pill" data-profile="sticker" type="button">Sticker</button>
+              <button class="pill" data-profile="product" type="button">Product</button>
+              <button class="pill" data-profile="diagram" type="button">Diagram</button>
+              <button class="pill" data-profile="minimal" type="button">Minimal</button>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <p class="filter-label">Difficulty</p>
+            <div class="filter-row">
+              <button class="pill active" data-difficulty="all" type="button">All</button>
+              <button class="pill" data-difficulty="beginner" type="button">Beginner</button>
+              <button class="pill" data-difficulty="intermediate" type="button">Intermediate</button>
+              <button class="pill" data-difficulty="advanced" type="button">Advanced</button>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <p class="filter-label">Sort</p>
+            <div class="sort-tabs" role="tablist" aria-label="Sort templates">
+              <button class="sort-tab active" data-sort="all-time" type="button">Most installed</button>
+              <button class="sort-tab" data-sort="trending" type="button">Trending 24h</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="catalog-helper">
+          <p id="catalog-hint">URL query params keep the current search view shareable.</p>
+          <button class="link-button" id="clear-filters" type="button" hidden>Reset filters</button>
+        </div>
+
+        <div class="card-grid" id="card-grid" aria-live="polite">
+          <!-- Cards rendered by JS -->
+        </div>
+      </section>
+
+      <section class="contribute-strip" aria-labelledby="contribute-title">
+        <div class="section-heading">
+          <p class="section-kicker">Contribution Loop</p>
+          <h2 id="contribute-title">BananaHub is a library, not a silo.</h2>
+        </div>
+
+        <div class="contribute-grid">
+          <article class="contribute-card">
+            <h3>For template authors</h3>
+            <p>
+              Publish self-describing template folders in GitHub, follow the Nano Banana template format, and get indexed through
+              the catalog source. Templates stay in your repo; BananaHub stays lightweight.
+            </p>
+            <a href="https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-format-spec.md" target="_blank" rel="noopener">Read the template spec</a>
+          </article>
+
+          <article class="contribute-card">
+            <h3>For agents and advanced users</h3>
+            <p>
+              Use the catalog to detect a match, inspect the source template when needed, and install only the exact prompt module
+              that improves the current task.
+            </p>
+            <a href="https://www.npmjs.com/package/bananahub" target="_blank" rel="noopener">Open the bananahub CLI</a>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-top">
+        <div>
+          <p class="footer-title">BananaHub</p>
+          <p class="footer-copy">
+            Plug-in prompt template hub for Nano Banana Skill. Built for progressive disclosure, GitHub-native publishing, and
+            agent-readable discovery.
+          </p>
+        </div>
+
+        <div class="footer-links">
+          <a href="llms.txt">llms.txt</a>
+          <a href="agent-catalog.md">agent-catalog.md</a>
+          <a href="catalog.json">catalog.json</a>
+          <a href="https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-system.md" target="_blank" rel="noopener">Template System</a>
+          <a href="https://github.com/nano-banana-hub/nanobanana/issues" target="_blank" rel="noopener">Submit Template</a>
+        </div>
       </div>
-    </div>
+
+      <p class="footer-meta">BananaHub reads decentralized template repos and surfaces installable modules for the Nano Banana ecosystem.</p>
+    </footer>
   </div>
 
-  <main class="card-grid" id="card-grid">
-    <!-- Cards rendered by JS -->
-  </main>
+  <noscript>
+    <div class="noscript-banner">
+      JavaScript is disabled. For agent-friendly and no-JS access, use
+      <a href="llms.txt">llms.txt</a>,
+      <a href="agent-catalog.md">agent-catalog.md</a>, or
+      <a href="catalog.json">catalog.json</a>.
+    </div>
+  </noscript>
 
-  <div class="modal-overlay" id="modal-overlay">
-    <div class="modal" id="modal">
-      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+  <div class="modal-overlay" id="modal-overlay" aria-hidden="true">
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" type="button" aria-label="Close">&times;</button>
+
       <button class="modal-image-button" id="modal-image-button" type="button" aria-label="View full image">
         <img class="modal-image" id="modal-image" src="" alt="">
-        <span class="modal-image-hint" id="modal-image-hint">Click to view full image</span>
+        <span class="modal-image-hint" id="modal-image-hint">Open preview</span>
       </button>
+
       <div class="modal-body">
+        <p class="modal-kicker">Template Brief</p>
         <h2 id="modal-title"></h2>
         <p class="modal-subtitle" id="modal-subtitle"></p>
         <p class="modal-desc" id="modal-desc"></p>
+
         <div class="card-badges" id="modal-badges"></div>
         <div class="card-tags" id="modal-tags"></div>
+
         <div class="modal-meta">
-          <div class="modal-meta-item"><span class="label">Author: </span><span id="modal-author"></span></div>
-          <div class="modal-meta-item"><span class="label">Version: </span><span id="modal-version"></span></div>
-          <div class="modal-meta-item"><span class="label">Aspect: </span><span id="modal-aspect"></span></div>
-          <div class="modal-meta-item"><span class="label">Updated: </span><span id="modal-updated"></span></div>
+          <div class="modal-meta-item"><span class="label">Author</span><span id="modal-author"></span></div>
+          <div class="modal-meta-item"><span class="label">Version</span><span id="modal-version"></span></div>
+          <div class="modal-meta-item"><span class="label">Aspect</span><span id="modal-aspect"></span></div>
+          <div class="modal-meta-item"><span class="label">Updated</span><span id="modal-updated"></span></div>
+          <div class="modal-meta-item"><span class="label">Installs</span><span id="modal-installs"></span></div>
+          <div class="modal-meta-item"><span class="label">24h Trend</span><span id="modal-trending"></span></div>
         </div>
+
         <div class="modal-actions" id="modal-actions">
-          <button class="modal-link modal-link-button" id="modal-view-image-btn" type="button">View Full Image</button>
-          <a class="modal-link" id="modal-open-original-link" href="#" target="_blank" rel="noopener">Open Original</a>
+          <button class="modal-link modal-link-button" id="modal-view-image-btn" type="button">Open Preview</button>
+          <a class="modal-link" id="modal-open-original-link" href="#" target="_blank" rel="noopener">Preview Source</a>
           <a class="modal-link" id="modal-template-source-link" href="#" target="_blank" rel="noopener">Template Source</a>
         </div>
-        <div class="modal-install-box">
-          <code id="modal-install-cmd"></code>
-          <button class="copy-btn" id="modal-copy-btn">Copy</button>
+
+        <div class="modal-install">
+          <p class="modal-install-label">Install command</p>
+          <div class="modal-install-box">
+            <code id="modal-install-cmd"></code>
+            <button class="copy-btn" id="modal-copy-btn" type="button">Copy</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="lightbox-overlay" id="lightbox-overlay">
+  <div class="lightbox-overlay" id="lightbox-overlay" aria-hidden="true">
     <div class="lightbox-toolbar">
-      <a class="lightbox-link" id="lightbox-open-original-link" href="#" target="_blank" rel="noopener">Open Original</a>
-      <button class="lightbox-close" id="lightbox-close" aria-label="Close full image">&times;</button>
+      <a class="lightbox-link" id="lightbox-open-original-link" href="#" target="_blank" rel="noopener">Open original</a>
+      <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Close full image">&times;</button>
     </div>
     <img class="lightbox-image" id="lightbox-image" src="" alt="">
   </div>
-
-  <footer class="site-footer">
-    <div class="footer-links">
-      <a href="https://github.com/nano-banana-hub">GitHub</a>
-      <a href="https://www.npmjs.com/package/bananahub">npm</a>
-      <a href="https://github.com/nano-banana-hub/nanobanana/issues">Submit Template</a>
-    </div>
-    <p>BananaHub &mdash; Open-source prompt template ecosystem for Nanobanana</p>
-  </footer>
 
   <script type="module" src="js/app.js"></script>
 </body>

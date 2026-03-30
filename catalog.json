@@ -1,6 +1,27 @@
 {
   "version": "1.0.0",
-  "generated": "2026-03-29T07:00:00.095Z",
+  "generated": "2026-03-30T04:32:40.591Z",
+  "site": {
+    "url": "https://nano-banana-hub.github.io/",
+    "catalog_json": "https://nano-banana-hub.github.io/catalog.json",
+    "llms_txt": "https://nano-banana-hub.github.io/llms.txt",
+    "agent_catalog": "https://nano-banana-hub.github.io/agent-catalog.md"
+  },
+  "summary": {
+    "template_count": 5,
+    "profile_count": 5,
+    "official_count": 5,
+    "repos": [
+      "nano-banana-hub/nanobanana"
+    ]
+  },
+  "profiles": [
+    "diagram",
+    "minimal",
+    "photo",
+    "product",
+    "sticker"
+  ],
   "templates": [
     {
       "id": "cute-sticker",
@@ -23,9 +44,12 @@
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/cute-sticker/samples/sample-3.1-flash-01.png",
       "repo": "nano-banana-hub/nanobanana",
       "repo_url": "https://github.com/nano-banana-hub/nanobanana",
+      "branch": "main",
+      "template_root": "references/templates",
       "template_path": "references/templates/cute-sticker",
       "template_url": "https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/cute-sticker",
       "official": true,
+      "install_target": "nano-banana-hub/nanobanana/cute-sticker",
       "install_cmd": "bananahub add nano-banana-hub/nanobanana/cute-sticker",
       "created": "2026-03-24",
       "updated": "2026-03-24"
@@ -51,9 +75,12 @@
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/cyberpunk-city/samples/sample-3.1-flash-01.png",
       "repo": "nano-banana-hub/nanobanana",
       "repo_url": "https://github.com/nano-banana-hub/nanobanana",
+      "branch": "main",
+      "template_root": "references/templates",
       "template_path": "references/templates/cyberpunk-city",
       "template_url": "https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/cyberpunk-city",
       "official": true,
+      "install_target": "nano-banana-hub/nanobanana/cyberpunk-city",
       "install_cmd": "bananahub add nano-banana-hub/nanobanana/cyberpunk-city",
       "created": "2026-03-24",
       "updated": "2026-03-24"
@@ -79,9 +106,12 @@
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/info-diagram/samples/sample-3.1-flash-01.png",
       "repo": "nano-banana-hub/nanobanana",
       "repo_url": "https://github.com/nano-banana-hub/nanobanana",
+      "branch": "main",
+      "template_root": "references/templates",
       "template_path": "references/templates/info-diagram",
       "template_url": "https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/info-diagram",
       "official": true,
+      "install_target": "nano-banana-hub/nanobanana/info-diagram",
       "install_cmd": "bananahub add nano-banana-hub/nanobanana/info-diagram",
       "created": "2026-03-24",
       "updated": "2026-03-24"
@@ -107,9 +137,12 @@
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/minimal-wallpaper/samples/sample-3.1-flash-01.png",
       "repo": "nano-banana-hub/nanobanana",
       "repo_url": "https://github.com/nano-banana-hub/nanobanana",
+      "branch": "main",
+      "template_root": "references/templates",
       "template_path": "references/templates/minimal-wallpaper",
       "template_url": "https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/minimal-wallpaper",
       "official": true,
+      "install_target": "nano-banana-hub/nanobanana/minimal-wallpaper",
       "install_cmd": "bananahub add nano-banana-hub/nanobanana/minimal-wallpaper",
       "created": "2026-03-24",
       "updated": "2026-03-24"
@@ -135,9 +168,12 @@
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/product-white-bg/samples/sample-3.1-flash-01.png",
       "repo": "nano-banana-hub/nanobanana",
       "repo_url": "https://github.com/nano-banana-hub/nanobanana",
+      "branch": "main",
+      "template_root": "references/templates",
       "template_path": "references/templates/product-white-bg",
       "template_url": "https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/product-white-bg",
       "official": true,
+      "install_target": "nano-banana-hub/nanobanana/product-white-bg",
       "install_cmd": "bananahub add nano-banana-hub/nanobanana/product-white-bg",
       "created": "2026-03-24",
       "updated": "2026-03-24"
