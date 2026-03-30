@@ -670,6 +670,7 @@ main {
   z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
   gap: 8px;
 }
 
@@ -677,6 +678,7 @@ main {
 .card-top-badges-right {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   min-width: 0;
   gap: 8px;
 }
