@@ -675,6 +675,8 @@ main {
 
 .card-official-badge,
 .card-profile-badge,
+.card-source-badge,
+.card-flag-badge,
 .card-aspect-badge {
   display: inline-flex;
   align-items: center;
@@ -696,6 +698,16 @@ main {
   margin-left: auto;
   background: rgba(28, 33, 28, 0.72);
   color: #f7efdc;
+}
+
+.card-source-badge {
+  background: rgba(47, 110, 114, 0.14);
+  color: var(--teal);
+}
+
+.card-flag-badge {
+  background: rgba(217, 134, 42, 0.18);
+  color: var(--accent-deep);
 }
 
 .card-aspect-badge {
@@ -792,6 +804,14 @@ main {
 .badge {
   border: 1px solid rgba(28, 33, 28, 0.12);
   background: rgba(28, 33, 28, 0.06);
+}
+
+.badge-source {
+  background: rgba(47, 110, 114, 0.12);
+}
+
+.badge-flag {
+  background: rgba(217, 134, 42, 0.16);
 }
 
 .badge-profile.photo {

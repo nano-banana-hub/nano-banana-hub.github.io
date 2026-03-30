@@ -1,27 +1,29 @@
 # BananaHub
 
 BananaHub is the searchable, installable prompt-module network for Nano Banana.
-Nano Banana itself is an agent-native image workflow: it extracts constraints, guides ambiguous choices progressively, and can auto-match installed templates.
-BananaHub is the distribution layer for that workflow: browse reusable outputs, inspect structured metadata, and install only the module that matches the current task.
+The catalog has two layers: curated templates for reviewed defaults, and discovered templates collected automatically from real installs.
+Curated is the recommendation layer. Discovered is the open discovery layer. Moderation rules can ban or pin templates independently of either layer.
 
 Canonical site: https://nano-banana-hub.github.io/
 
 Preferred machine-readable entry points:
-- https://nano-banana-hub.github.io/catalog.json — structured catalog with template metadata, install commands, source URLs, and preview URLs
-- https://nano-banana-hub.github.io/agent-catalog.md — markdown digest of the current catalog for agents and humans
+- https://nano-banana-hub.github.io/catalog.json — merged catalog with curated + discovered templates
+- https://nano-banana-hub.github.io/catalog-curated.json — curated-only catalog
+- https://nano-banana-hub.github.io/catalog-discovered.json — discovered-only catalog
+- https://nano-banana-hub.github.io/agent-catalog.md — markdown digest of the current catalog
 - https://nano-banana-hub.github.io/llms.txt — this overview
 
 Install rules:
 - Prefer the install_cmd value from catalog.json for deterministic installation.
-- Official Nano Banana built-ins use the short form: bananahub add nano-banana-hub/nanobanana/<template-id>
-- Generic nested templates may use: bananahub add owner/repo/path/to/template
+- Curated templates are not the only valid templates. Discovered templates are intentionally open and may be unreviewed.
+- Pinned templates should be treated as stronger defaults than raw install counts alone.
 
 How to use BananaHub as an agent:
-- Read catalog.json first for discovery and ranking inputs.
-- Treat templates as optional modules, not required global context.
+- Read catalog.json first for merged discovery and moderation flags.
+- Use catalog_source to distinguish curated from discovered entries.
+- Respect pinned and featured flags before raw popularity when choosing defaults.
 - Use template_url when the full template body is needed.
 - Use sample_image and sample_image_page_url for preview assets.
-- Avoid scraping homepage cards when machine files are available.
 
 Ecosystem links:
 - Nano Banana repository: https://github.com/nano-banana-hub/nanobanana
@@ -29,5 +31,5 @@ Ecosystem links:
 - Template system docs: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-system.md
 - Template format spec: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-format-spec.md
 
-Current catalog summary: 5 templates, 5 profiles, 5 official templates.
-Generated: 2026-03-30T07:23:45.625Z
+Current catalog summary: 5 templates total, 5 curated, 0 discovered, 0 pinned, 0 featured.
+Generated: 2026-03-30T09:03:04.430Z

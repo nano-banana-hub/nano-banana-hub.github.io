@@ -2,6 +2,7 @@ import { loadCatalog, getTemplates, filterTemplates, sortTemplates, searchTempla
 import { fetchAllStats, getTemplateKey } from './api.js';
 
 const DEFAULT_FILTERS = {
+  source: 'all',
   profile: 'all',
   difficulty: 'all'
 };
@@ -30,7 +31,8 @@ const dom = {
   profileCount: document.getElementById('profile-count'),
   catalogGenerated: document.getElementById('catalog-generated'),
   resultCount: document.getElementById('result-count'),
-  officialCount: document.getElementById('official-count'),
+  curatedCount: document.getElementById('curated-count'),
+  discoveredCount: document.getElementById('discovered-count'),
   resultsSummary: document.getElementById('results-summary'),
   catalogHint: document.getElementById('catalog-hint'),
   clearFilters: document.getElementById('clear-filters'),
@@ -98,6 +100,15 @@ function bindEvents() {
   document.querySelectorAll('[data-profile]').forEach((button) => {
     button.addEventListener('click', () => {
       currentFilters.profile = button.dataset.profile || DEFAULT_FILTERS.profile;
+      writeUrlState();
+      syncUIFromState();
+      render();
+    });
+  });
+
+  document.querySelectorAll('[data-source]').forEach((button) => {
+    button.addEventListener('click', () => {
+      currentFilters.source = button.dataset.source || DEFAULT_FILTERS.source;
       writeUrlState();
       syncUIFromState();
       render();
@@ -224,7 +235,8 @@ function renderLoadError() {
   dom.profileCount.textContent = '0';
   dom.catalogGenerated.textContent = 'Unavailable';
   dom.resultCount.textContent = '0';
-  dom.officialCount.textContent = '0';
+  dom.curatedCount.textContent = '0';
+  dom.discoveredCount.textContent = '0';
   dom.resultsSummary.textContent = 'The catalog could not be loaded.';
   dom.catalogHint.textContent = 'Refresh the page or open catalog.json directly to inspect the generated catalog.';
   dom.grid.innerHTML = [
@@ -245,10 +257,15 @@ function readUrlState() {
   resetState();
 
   const params = getStateParamsFromUrl();
+  const source = params.get('source');
   const profile = params.get('profile');
   const difficulty = params.get('difficulty');
   const sort = params.get('sort');
   const query = params.get('q');
+
+  if (isAllowedValue('source', source)) {
+    currentFilters.source = source;
+  }
 
   if (isAllowedValue('profile', profile)) {
     currentFilters.profile = profile;
@@ -282,6 +299,10 @@ function getStateParamsFromUrl() {
 
 function writeUrlState() {
   const params = new URLSearchParams();
+
+  if (currentFilters.source !== DEFAULT_FILTERS.source) {
+    params.set('source', currentFilters.source);
+  }
 
   if (currentFilters.profile !== DEFAULT_FILTERS.profile) {
     params.set('profile', currentFilters.profile);
@@ -320,6 +341,10 @@ function isAllowedValue(datasetKey, value) {
 }
 
 function syncUIFromState() {
+  document.querySelectorAll('[data-source]').forEach((button) => {
+    button.classList.toggle('active', button.dataset.source === currentFilters.source);
+  });
+
   document.querySelectorAll('[data-profile]').forEach((button) => {
     button.classList.toggle('active', button.dataset.profile === currentFilters.profile);
   });
@@ -378,11 +403,16 @@ function render() {
 
 function updateResultsPanel() {
   const visibleProfileCount = new Set(visibleTemplates.map((template) => template.profile)).size;
-  const visibleOfficialCount = visibleTemplates.filter((template) => template.official).length;
+  const visibleCuratedCount = visibleTemplates.filter((template) => template.catalog_source === 'curated').length;
+  const visibleDiscoveredCount = visibleTemplates.filter((template) => template.catalog_source === 'discovered').length;
   const activeDetails = [];
 
   if (currentSearch) {
     activeDetails.push(`query "${currentSearch}"`);
+  }
+
+  if (currentFilters.source !== DEFAULT_FILTERS.source) {
+    activeDetails.push(`source ${currentFilters.source}`);
   }
 
   if (currentFilters.profile !== DEFAULT_FILTERS.profile) {
@@ -394,7 +424,8 @@ function updateResultsPanel() {
   }
 
   dom.resultCount.textContent = formatCount(visibleTemplates.length);
-  dom.officialCount.textContent = formatCount(visibleOfficialCount);
+  dom.curatedCount.textContent = formatCount(visibleCuratedCount);
+  dom.discoveredCount.textContent = formatCount(visibleDiscoveredCount);
 
   if (visibleTemplates.length > 0) {
     const summaryBits = [`${formatCount(visibleTemplates.length)} template${visibleTemplates.length === 1 ? '' : 's'}`];
@@ -426,6 +457,7 @@ function updateResultsPanel() {
 function hasActiveState() {
   return Boolean(
     currentSearch
+    || currentFilters.source !== DEFAULT_FILTERS.source
     || currentFilters.profile !== DEFAULT_FILTERS.profile
     || currentFilters.difficulty !== DEFAULT_FILTERS.difficulty
     || currentSort !== DEFAULT_SORT
@@ -460,7 +492,10 @@ function renderCard(template) {
         </div>
         ${hasSampleImage ? `<img data-src="${escAttr(template.sample_image)}" alt="${escAttr(title)}" loading="lazy">` : ''}
         <div class="card-top-badges">
+          ${template.pinned ? '<span class="card-flag-badge">Pinned</span>' : ''}
+          ${template.featured ? `<span class="card-flag-badge">${escHtml(template.featured_label || 'Featured')}</span>` : ''}
           ${template.official ? '<span class="card-official-badge">Official</span>' : '<span class="card-official-badge">Community</span>'}
+          <span class="card-source-badge">${escHtml(template.catalog_source || 'curated')}</span>
           <span class="card-profile-badge">${escHtml(template.profile || 'general')}</span>
         </div>
         <span class="card-aspect-badge">${escHtml(template.aspect || 'n/a')}</span>
@@ -618,9 +653,12 @@ function populateModal(template) {
   dom.modalInstallCmd.textContent = template.install_cmd || '';
 
   dom.modalBadges.innerHTML = [
+    ...(template.pinned ? [renderBadge('badge badge-flag', 'pinned')] : []),
+    ...(template.featured ? [renderBadge('badge badge-flag', template.featured_label || 'featured')] : []),
     renderBadge(`badge badge-profile ${escAttr(template.profile || 'general')}`, template.profile || 'general'),
     renderBadge('badge badge-difficulty', template.difficulty || 'beginner'),
-    renderBadge('badge', template.official ? 'official' : 'community')
+    renderBadge('badge', template.official ? 'official' : 'community'),
+    renderBadge('badge badge-source', template.catalog_source || 'curated')
   ].join('');
 
   dom.modalTags.innerHTML = (template.tags || []).length > 0

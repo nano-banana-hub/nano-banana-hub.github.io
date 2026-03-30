@@ -16,6 +16,9 @@ export function getTemplates() {
 
 export function filterTemplates(templates, filters) {
   return templates.filter((template) => {
+    if (filters.source && filters.source !== 'all' && template.catalog_source !== filters.source) {
+      return false;
+    }
     if (filters.profile && filters.profile !== 'all' && template.profile !== filters.profile) {
       return false;
     }
@@ -29,8 +32,6 @@ export function filterTemplates(templates, filters) {
 export function sortTemplates(templates, sortMode, statsMap) {
   const sorted = [...templates];
 
-  if (!statsMap) return sorted;
-
   const getStats = (template) => statsMap.get(`${template.repo || 'unknown'}::${template.id}`);
   const getTrending = (template) => {
     const value = getStats(template)?.trending;
@@ -40,13 +41,44 @@ export function sortTemplates(templates, sortMode, statsMap) {
     const value = getStats(template)?.installs;
     return typeof value === 'number' ? value : 0;
   };
+  const getPinnedRank = (template) => (
+    Number.isFinite(template.pinned_rank) ? template.pinned_rank : Number.POSITIVE_INFINITY
+  );
+  const getFeatured = (template) => Number(Boolean(template.featured));
+  const getOfficial = (template) => Number(Boolean(template.official));
+  const getTitle = (template) => template.title_en || template.title || template.id;
 
-  if (sortMode === 'trending') {
-    sorted.sort((a, b) => getTrending(b) - getTrending(a));
-    return sorted;
-  }
+  sorted.sort((a, b) => {
+    const pinnedDiff = getPinnedRank(a) - getPinnedRank(b);
+    if (pinnedDiff !== 0) {
+      return pinnedDiff;
+    }
 
-  sorted.sort((a, b) => getInstalls(b) - getInstalls(a));
+    const featuredDiff = getFeatured(b) - getFeatured(a);
+    if (featuredDiff !== 0) {
+      return featuredDiff;
+    }
+
+    if (sortMode === 'trending') {
+      const trendingDiff = getTrending(b) - getTrending(a);
+      if (trendingDiff !== 0) {
+        return trendingDiff;
+      }
+    } else {
+      const installsDiff = getInstalls(b) - getInstalls(a);
+      if (installsDiff !== 0) {
+        return installsDiff;
+      }
+    }
+
+    const officialDiff = getOfficial(b) - getOfficial(a);
+    if (officialDiff !== 0) {
+      return officialDiff;
+    }
+
+    return getTitle(a).localeCompare(getTitle(b), 'en');
+  });
+
   return sorted;
 }
 
@@ -63,6 +95,7 @@ export function searchTemplates(templates, query) {
       template.description,
       template.author,
       template.profile,
+      template.catalog_source,
       template.difficulty,
       ...(template.tags || [])
     ].join(' ').toLowerCase();

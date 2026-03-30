@@ -6,10 +6,13 @@ const path = require('path');
 const GITHUB_API = 'https://api.github.com';
 const GITHUB_RAW = 'https://raw.githubusercontent.com';
 const GITHUB_WEB = 'https://github.com';
+const HUB_API_BASE = process.env.BANANAHUB_API_BASE || 'https://bananahub-api.zhan9kun.workers.dev/api';
 const SITE_URL = 'https://nano-banana-hub.github.io';
 const KNOWN_SHORT_INSTALL_ROOTS = new Set(['references/templates', 'templates']);
 const GENERATED_FILES = {
   catalog: 'catalog.json',
+  catalogCurated: 'catalog-curated.json',
+  catalogDiscovered: 'catalog-discovered.json',
   llms: 'llms.txt',
   agentCatalog: 'agent-catalog.md',
   robots: 'robots.txt',
@@ -126,20 +129,69 @@ function slugifyText(value) {
   return String(value || '').trim().toLowerCase();
 }
 
+function normalizePath(value) {
+  return String(value || '').replace(/^\/+|\/+$/g, '');
+}
+
+function joinRepoPath(...parts) {
+  return parts
+    .map((part) => normalizePath(part))
+    .filter(Boolean)
+    .join('/');
+}
+
+function dirnameSafe(value) {
+  const normalized = normalizePath(value);
+  if (!normalized || !normalized.includes('/')) {
+    return '';
+  }
+  return path.posix.dirname(normalized);
+}
+
+function basenameSafe(value) {
+  const normalized = normalizePath(value);
+  if (!normalized) {
+    return '';
+  }
+  return path.posix.basename(normalized);
+}
+
 function isKnownShortInstallRoot(templateRoot) {
   return KNOWN_SHORT_INSTALL_ROOTS.has(slugifyText(templateRoot));
 }
 
-function buildInstallTarget(repoConfig, templateId) {
-  if (repoConfig.install_prefix) {
-    return `${repoConfig.repo}/${repoConfig.install_prefix.replace(/^\/+|\/+$/g, '')}/${templateId}`;
+function buildTemplateKey(repo, id) {
+  return `${slugifyText(repo)}::${slugifyText(id)}`;
+}
+
+function buildInstallTargetFromTemplateDir(repoConfig, templateDirPath, templateSlug) {
+  const explicitTarget = normalizePath(repoConfig.install_target || '');
+  if (explicitTarget) {
+    return explicitTarget;
   }
 
-  if (isKnownShortInstallRoot(repoConfig.path)) {
-    return `${repoConfig.repo}/${templateId}`;
+  const explicitPrefix = normalizePath(repoConfig.install_prefix || '');
+  if (explicitPrefix) {
+    return `${repoConfig.repo}/${joinRepoPath(explicitPrefix, templateSlug)}`;
   }
 
-  return `${repoConfig.repo}/${repoConfig.path.replace(/^\/+|\/+$/g, '')}/${templateId}`;
+  const normalizedDir = normalizePath(templateDirPath);
+  if (!normalizedDir) {
+    return repoConfig.repo;
+  }
+
+  const templateRoot = dirnameSafe(normalizedDir);
+  const resolvedSlug = templateSlug || basenameSafe(normalizedDir);
+
+  if (!templateRoot) {
+    return `${repoConfig.repo}/${resolvedSlug}`;
+  }
+
+  if (isKnownShortInstallRoot(templateRoot)) {
+    return `${repoConfig.repo}/${resolvedSlug}`;
+  }
+
+  return `${repoConfig.repo}/${normalizedDir}`;
 }
 
 async function fetchWithRetry(url, headers, retries = 3) {
@@ -178,75 +230,198 @@ async function fetchRepoInfo(repo, headers) {
   return response.json();
 }
 
-async function fetchTemplateIds(repo, templatePath, headers) {
-  const url = `${GITHUB_API}/repos/${repo}/contents/${templatePath}`;
-  console.log(`  Fetching directory listing: ${url}`);
-  const response = await fetchWithRetry(url, headers);
-  if (!response.ok) {
-    console.error(`  Failed to list templates: ${response.status} ${response.statusText}`);
-    return [];
+async function fetchDirectoryItems(repo, relativePath, headers, { quiet = false } = {}) {
+  const normalized = normalizePath(relativePath);
+  const url = normalized
+    ? `${GITHUB_API}/repos/${repo}/contents/${normalized}`
+    : `${GITHUB_API}/repos/${repo}/contents`;
+
+  if (!quiet) {
+    console.log(`  Fetching directory listing: ${url}`);
   }
 
-  const items = await response.json();
-  return items.filter((item) => item.type === 'dir').map((item) => item.name).sort();
+  const response = await fetchWithRetry(url, headers);
+  if (response.status === 404) {
+    return null;
+  }
+  if (!response.ok) {
+    throw new Error(`Failed to list ${normalized || '.'} in ${repo}: ${response.status} ${response.statusText}`);
+  }
+
+  const payload = await response.json();
+  return Array.isArray(payload) ? payload : null;
 }
 
-async function fetchTemplateContent(repo, branch, templatePath, templateId, headers) {
-  const url = `${GITHUB_RAW}/${repo}/${branch}/${templatePath}/${templateId}/template.md`;
-  console.log(`  Fetching: ${templateId}/template.md`);
+async function fetchRepoText(repo, branch, relativePath, headers, { quiet = false } = {}) {
+  const normalized = normalizePath(relativePath);
+  const url = normalized
+    ? `${GITHUB_RAW}/${repo}/${branch}/${normalized}`
+    : `${GITHUB_RAW}/${repo}/${branch}`;
+
+  if (!quiet) {
+    console.log(`  Fetching file: ${normalized || '.'}`);
+  }
+
   const response = await fetchWithRetry(url, headers);
-  if (!response.ok) {
-    console.error(`  Failed to fetch ${templateId}: ${response.status}`);
+  if (response.status === 404) {
     return null;
+  }
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${normalized || '.'} from ${repo}: ${response.status} ${response.statusText}`);
   }
   return response.text();
 }
 
-function buildTemplatePath(templateRoot, templateId) {
-  return `${templateRoot}/${templateId}`;
+async function fetchDiscoveredCandidates() {
+  const url = `${HUB_API_BASE}/discovered?limit=500`;
+
+  try {
+    const response = await fetch(url, {
+      headers: { Accept: 'application/json', 'User-Agent': 'BananaHub-Catalog-Builder/1.0' },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const payload = await response.json();
+    return Array.isArray(payload.items) ? payload.items : [];
+  } catch (error) {
+    console.warn(`Discovered candidates unavailable: ${error.message}`);
+    return [];
+  }
 }
 
-function buildTemplateUrl(repo, branch, templateRoot, templateId) {
-  return `${GITHUB_WEB}/${repo}/tree/${branch}/${templateRoot}/${templateId}`;
+function loadModeration(rootDir) {
+  const moderationFile = path.join(rootDir, 'moderation.json');
+  const defaultValue = {
+    version: '1.0.0',
+    pinned_templates: [],
+    featured_templates: [],
+    banned_repos: [],
+    banned_templates: [],
+  };
+
+  if (!fs.existsSync(moderationFile)) {
+    return defaultValue;
+  }
+
+  try {
+    const parsed = JSON.parse(fs.readFileSync(moderationFile, 'utf8'));
+    return {
+      ...defaultValue,
+      ...parsed,
+      pinned_templates: Array.isArray(parsed.pinned_templates) ? parsed.pinned_templates : [],
+      featured_templates: Array.isArray(parsed.featured_templates) ? parsed.featured_templates : [],
+      banned_repos: Array.isArray(parsed.banned_repos) ? parsed.banned_repos : [],
+      banned_templates: Array.isArray(parsed.banned_templates) ? parsed.banned_templates : [],
+    };
+  } catch (error) {
+    console.warn(`Invalid moderation.json, using defaults: ${error.message}`);
+    return defaultValue;
+  }
 }
 
-function buildSampleImageUrl(repo, branch, templateRoot, templateId, sampleFile) {
-  return `${GITHUB_RAW}/${repo}/${branch}/${templateRoot}/${templateId}/${sampleFile}`;
+function buildModerationIndex(moderation) {
+  const bannedRepos = new Set(
+    moderation.banned_repos.map((repo) => slugifyText(repo)).filter(Boolean)
+  );
+  const bannedTemplates = new Set(
+    moderation.banned_templates
+      .map((entry) => buildTemplateKey(entry.repo, entry.id || entry.template_id))
+      .filter(Boolean)
+  );
+  const pinnedTemplates = new Map();
+  const featuredTemplates = new Map();
+
+  moderation.pinned_templates.forEach((entry, index) => {
+    const key = buildTemplateKey(entry.repo, entry.id || entry.template_id);
+    if (!key) {
+      return;
+    }
+
+    pinnedTemplates.set(key, {
+      rank: Number.isFinite(entry.rank) ? entry.rank : index + 1,
+      note: entry.note || '',
+    });
+  });
+
+  moderation.featured_templates.forEach((entry) => {
+    const key = buildTemplateKey(entry.repo, entry.id || entry.template_id);
+    if (!key) {
+      return;
+    }
+
+    featuredTemplates.set(key, {
+      label: entry.label || 'Featured',
+      note: entry.note || '',
+    });
+  });
+
+  return {
+    bannedRepos,
+    bannedTemplates,
+    pinnedTemplates,
+    featuredTemplates,
+  };
 }
 
-function buildSampleImagePageUrl(repo, branch, templateRoot, templateId, sampleFile) {
-  return `${GITHUB_WEB}/${repo}/blob/${branch}/${templateRoot}/${templateId}/${sampleFile}`;
+function isBannedTemplate(template, moderationIndex) {
+  if (moderationIndex.bannedRepos.has(slugifyText(template.repo))) {
+    return true;
+  }
+
+  return moderationIndex.bannedTemplates.has(buildTemplateKey(template.repo, template.id));
 }
 
-function safeArray(value) {
-  return Array.isArray(value) ? value : [];
+function applyModeration(template, moderationIndex) {
+  const key = buildTemplateKey(template.repo, template.id);
+  const pinned = moderationIndex.pinnedTemplates.get(key);
+  const featured = moderationIndex.featuredTemplates.get(key);
+
+  return {
+    ...template,
+    pinned: Boolean(pinned),
+    pinned_rank: pinned ? pinned.rank : null,
+    featured: Boolean(featured),
+    featured_label: featured?.label || '',
+    featured_note: featured?.note || '',
+  };
 }
 
-function buildTemplateRecord(repoConfig, repoInfo, templateId, frontmatter, content, generatedAt) {
+function buildTemplateRecord({ repoConfig, repoInfo, templateDirPath, templateSlug, frontmatter, content, generatedAt }) {
+  const normalizedTemplateDir = normalizePath(templateDirPath);
+  const resolvedSlug = templateSlug || basenameSafe(normalizedTemplateDir) || frontmatter.id || '';
+  const resolvedId = frontmatter.id || resolvedSlug || repoConfig.repo.split('/')[1];
   const description = extractDescription(content);
-  const templatePath = buildTemplatePath(repoConfig.path, templateId);
-  const installTarget = buildInstallTarget(repoConfig, templateId);
+  const installTarget = buildInstallTargetFromTemplateDir(repoConfig, normalizedTemplateDir, resolvedSlug);
 
   let sampleImage = '';
   let sampleImagePageUrl = '';
-  const samples = safeArray(frontmatter.samples);
+  const samples = Array.isArray(frontmatter.samples) ? frontmatter.samples : [];
   if (samples.length > 0) {
     const firstSample = samples[0];
     const sampleFile = typeof firstSample === 'string' ? firstSample : firstSample.file;
     if (sampleFile) {
-      sampleImage = buildSampleImageUrl(repoConfig.repo, repoInfo.default_branch, repoConfig.path, templateId, sampleFile);
-      sampleImagePageUrl = buildSampleImagePageUrl(repoConfig.repo, repoInfo.default_branch, repoConfig.path, templateId, sampleFile);
+      const samplePath = joinRepoPath(normalizedTemplateDir, sampleFile);
+      sampleImage = `${GITHUB_RAW}/${repoConfig.repo}/${repoInfo.default_branch}/${samplePath}`;
+      sampleImagePageUrl = `${GITHUB_WEB}/${repoConfig.repo}/blob/${repoInfo.default_branch}/${samplePath}`;
     }
   }
 
+  const templateRoot = dirnameSafe(normalizedTemplateDir);
+  const templateUrl = normalizedTemplateDir
+    ? `${GITHUB_WEB}/${repoConfig.repo}/tree/${repoInfo.default_branch}/${normalizedTemplateDir}`
+    : `${GITHUB_WEB}/${repoConfig.repo}/tree/${repoInfo.default_branch}`;
+
   return {
-    id: frontmatter.id || templateId,
+    id: resolvedId,
     title: frontmatter.title || '',
-    title_en: frontmatter.title_en || frontmatter.title || templateId,
+    title_en: frontmatter.title_en || frontmatter.title || resolvedId,
     author: frontmatter.author || 'unknown',
     version: frontmatter.version || '1.0.0',
     profile: frontmatter.profile || 'general',
-    tags: safeArray(frontmatter.tags),
+    tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
     aspect: frontmatter.aspect || '1:1',
     difficulty: frontmatter.difficulty || 'beginner',
     description,
@@ -255,39 +430,242 @@ function buildTemplateRecord(repoConfig, repoInfo, templateId, frontmatter, cont
     repo: repoConfig.repo,
     repo_url: repoInfo.html_url || `${GITHUB_WEB}/${repoConfig.repo}`,
     branch: repoInfo.default_branch,
-    template_root: repoConfig.path,
-    template_path: templatePath,
-    template_url: buildTemplateUrl(repoConfig.repo, repoInfo.default_branch, repoConfig.path, templateId),
+    template_root: templateRoot,
+    template_path: normalizedTemplateDir,
+    template_url: templateUrl,
     official: Boolean(repoConfig.official),
+    catalog_source: repoConfig.catalog_source || 'curated',
     install_target: installTarget,
     install_cmd: `bananahub add ${installTarget}`,
     created: frontmatter.created || generatedAt.slice(0, 10),
-    updated: frontmatter.updated || generatedAt.slice(0, 10)
+    updated: frontmatter.updated || generatedAt.slice(0, 10),
   };
 }
 
-function buildCatalog(source, templates, generatedAt) {
+async function resolveTemplateAtDir({ repoConfig, repoInfo, templateDirPath, templateSlug, headers, generatedAt }) {
+  const templateMdPath = joinRepoPath(templateDirPath, 'template.md');
+  const content = await fetchRepoText(repoConfig.repo, repoInfo.default_branch, templateMdPath, headers, { quiet: true });
+  if (!content) {
+    return null;
+  }
+
+  const frontmatter = parseFrontmatter(content);
+  if (!frontmatter) {
+    console.warn(`  No frontmatter in ${templateMdPath}`);
+    return null;
+  }
+
+  return buildTemplateRecord({
+    repoConfig,
+    repoInfo,
+    templateDirPath,
+    templateSlug,
+    frontmatter,
+    content,
+    generatedAt,
+  });
+}
+
+async function resolveRootSingleTemplate(repoConfig, repoInfo, candidateTemplateId, headers, generatedAt) {
+  const content = await fetchRepoText(repoConfig.repo, repoInfo.default_branch, 'template.md', headers, { quiet: true });
+  if (!content) {
+    return null;
+  }
+
+  const frontmatter = parseFrontmatter(content);
+  if (!frontmatter) {
+    return null;
+  }
+
+  if (candidateTemplateId && frontmatter.id && frontmatter.id !== candidateTemplateId) {
+    return null;
+  }
+
+  return buildTemplateRecord({
+    repoConfig,
+    repoInfo,
+    templateDirPath: '',
+    templateSlug: '',
+    frontmatter,
+    content,
+    generatedAt,
+  });
+}
+
+async function resolveFromRootManifest(repoConfig, repoInfo, candidateTemplateId, headers, generatedAt) {
+  if (!candidateTemplateId) {
+    return null;
+  }
+
+  const manifestText = await fetchRepoText(repoConfig.repo, repoInfo.default_branch, 'bananahub.json', headers, { quiet: true });
+  if (!manifestText) {
+    return null;
+  }
+
+  try {
+    const manifest = JSON.parse(manifestText);
+    if (!Array.isArray(manifest.templates) || !manifest.templates.includes(candidateTemplateId)) {
+      return null;
+    }
+  } catch {
+    return null;
+  }
+
+  return resolveTemplateAtDir({
+    repoConfig,
+    repoInfo,
+    templateDirPath: candidateTemplateId,
+    templateSlug: candidateTemplateId,
+    headers,
+    generatedAt,
+  });
+}
+
+function deriveInstallTail(candidate) {
+  const repo = String(candidate.repo || '').trim();
+  const installTarget = String(candidate.install_target || '').trim();
+  if (!repo || !installTarget || !installTarget.startsWith(`${repo}/`)) {
+    return '';
+  }
+
+  return normalizePath(installTarget.slice(repo.length + 1));
+}
+
+async function resolveDiscoveredCandidate(candidate, repoInfo, headers, generatedAt) {
+  const repoConfig = {
+    repo: candidate.repo,
+    official: false,
+    catalog_source: 'discovered',
+    install_target: candidate.install_target || '',
+  };
+
+  const attempts = [];
+  const explicitTemplatePath = normalizePath(candidate.template_path);
+  const installTail = deriveInstallTail(candidate);
+  const candidateTemplateId = String(candidate.template_id || '').trim();
+
+  if (explicitTemplatePath) {
+    attempts.push({ type: 'path', value: explicitTemplatePath });
+  }
+
+  if (installTail && installTail !== explicitTemplatePath && installTail !== candidateTemplateId) {
+    attempts.push({ type: 'path', value: installTail });
+  }
+
+  attempts.push({ type: 'root-single' });
+
+  if (candidateTemplateId) {
+    attempts.push({ type: 'path', value: candidateTemplateId });
+    attempts.push({ type: 'root-manifest', value: candidateTemplateId });
+    for (const root of KNOWN_SHORT_INSTALL_ROOTS) {
+      attempts.push({ type: 'path', value: joinRepoPath(root, candidateTemplateId) });
+    }
+  }
+
+  const seen = new Set();
+  for (const attempt of attempts) {
+    const attemptKey = `${attempt.type}:${attempt.value || ''}`;
+    if (seen.has(attemptKey)) {
+      continue;
+    }
+    seen.add(attemptKey);
+
+    try {
+      if (attempt.type === 'root-single') {
+        const template = await resolveRootSingleTemplate(repoConfig, repoInfo, candidateTemplateId, headers, generatedAt);
+        if (template) {
+          return template;
+        }
+      } else if (attempt.type === 'root-manifest') {
+        const template = await resolveFromRootManifest(repoConfig, repoInfo, attempt.value, headers, generatedAt);
+        if (template) {
+          return template;
+        }
+      } else if (attempt.type === 'path') {
+        const template = await resolveTemplateAtDir({
+          repoConfig,
+          repoInfo,
+          templateDirPath: attempt.value,
+          templateSlug: basenameSafe(attempt.value),
+          headers,
+          generatedAt,
+        });
+        if (template && (!candidateTemplateId || template.id === candidateTemplateId || basenameSafe(attempt.value) === candidateTemplateId)) {
+          return template;
+        }
+      }
+    } catch (error) {
+      console.warn(`  Failed to resolve discovered template ${candidate.repo}/${candidate.template_id}: ${error.message}`);
+    }
+  }
+
+  return null;
+}
+
+function compareControlledTemplates(left, right) {
+  const leftPinned = Number.isFinite(left.pinned_rank) ? left.pinned_rank : Number.POSITIVE_INFINITY;
+  const rightPinned = Number.isFinite(right.pinned_rank) ? right.pinned_rank : Number.POSITIVE_INFINITY;
+  if (leftPinned !== rightPinned) {
+    return leftPinned - rightPinned;
+  }
+
+  if (Boolean(left.featured) !== Boolean(right.featured)) {
+    return Number(Boolean(right.featured)) - Number(Boolean(left.featured));
+  }
+
+  if (Boolean(left.official) !== Boolean(right.official)) {
+    return Number(Boolean(right.official)) - Number(Boolean(left.official));
+  }
+
+  return left.id.localeCompare(right.id, 'en');
+}
+
+function buildLayerSummary(templates) {
+  const repos = [...new Set(templates.map((template) => template.repo))].sort();
+  return {
+    template_count: templates.length,
+    official_count: templates.filter((template) => template.official).length,
+    repos,
+  };
+}
+
+function buildCatalog({ version, generatedAt, catalogType, templates, curatedTemplates, discoveredTemplates }) {
   const profiles = [...new Set(templates.map((template) => template.profile))].sort();
   const repos = [...new Set(templates.map((template) => template.repo))].sort();
   const officialCount = templates.filter((template) => template.official).length;
+  const featuredCount = templates.filter((template) => template.featured).length;
+  const pinnedCount = templates.filter((template) => template.pinned).length;
+  const curatedSummary = buildLayerSummary(curatedTemplates);
+  const discoveredSummary = buildLayerSummary(discoveredTemplates);
 
   return {
-    version: source.version,
+    version,
+    catalog_type: catalogType,
     generated: generatedAt,
     site: {
       url: `${SITE_URL}/`,
       catalog_json: `${SITE_URL}/${GENERATED_FILES.catalog}`,
+      catalog_curated_json: `${SITE_URL}/${GENERATED_FILES.catalogCurated}`,
+      catalog_discovered_json: `${SITE_URL}/${GENERATED_FILES.catalogDiscovered}`,
       llms_txt: `${SITE_URL}/${GENERATED_FILES.llms}`,
-      agent_catalog: `${SITE_URL}/${GENERATED_FILES.agentCatalog}`
+      agent_catalog: `${SITE_URL}/${GENERATED_FILES.agentCatalog}`,
     },
     summary: {
       template_count: templates.length,
       profile_count: profiles.length,
       official_count: officialCount,
-      repos
+      featured_count: featuredCount,
+      pinned_count: pinnedCount,
+      curated_count: curatedSummary.template_count,
+      discovered_count: discoveredSummary.template_count,
+      repos,
+    },
+    layers: {
+      curated: curatedSummary,
+      discovered: discoveredSummary,
     },
     profiles,
-    templates
+    templates,
   };
 }
 
@@ -296,27 +674,29 @@ function buildLlmsTxt(catalog) {
     '# BananaHub',
     '',
     'BananaHub is the searchable, installable prompt-module network for Nano Banana.',
-    'Nano Banana itself is an agent-native image workflow: it extracts constraints, guides ambiguous choices progressively, and can auto-match installed templates.',
-    'BananaHub is the distribution layer for that workflow: browse reusable outputs, inspect structured metadata, and install only the module that matches the current task.',
+    'The catalog has two layers: curated templates for reviewed defaults, and discovered templates collected automatically from real installs.',
+    'Curated is the recommendation layer. Discovered is the open discovery layer. Moderation rules can ban or pin templates independently of either layer.',
     '',
     `Canonical site: ${catalog.site.url}`,
     '',
     'Preferred machine-readable entry points:',
-    `- ${catalog.site.catalog_json} — structured catalog with template metadata, install commands, source URLs, and preview URLs`,
-    `- ${catalog.site.agent_catalog} — markdown digest of the current catalog for agents and humans`,
+    `- ${catalog.site.catalog_json} — merged catalog with curated + discovered templates`,
+    `- ${catalog.site.catalog_curated_json} — curated-only catalog`,
+    `- ${catalog.site.catalog_discovered_json} — discovered-only catalog`,
+    `- ${catalog.site.agent_catalog} — markdown digest of the current catalog`,
     `- ${catalog.site.llms_txt} — this overview`,
     '',
     'Install rules:',
     '- Prefer the install_cmd value from catalog.json for deterministic installation.',
-    '- Official Nano Banana built-ins use the short form: bananahub add nano-banana-hub/nanobanana/<template-id>',
-    '- Generic nested templates may use: bananahub add owner/repo/path/to/template',
+    '- Curated templates are not the only valid templates. Discovered templates are intentionally open and may be unreviewed.',
+    '- Pinned templates should be treated as stronger defaults than raw install counts alone.',
     '',
     'How to use BananaHub as an agent:',
-    '- Read catalog.json first for discovery and ranking inputs.',
-    '- Treat templates as optional modules, not required global context.',
+    '- Read catalog.json first for merged discovery and moderation flags.',
+    '- Use catalog_source to distinguish curated from discovered entries.',
+    '- Respect pinned and featured flags before raw popularity when choosing defaults.',
     '- Use template_url when the full template body is needed.',
     '- Use sample_image and sample_image_page_url for preview assets.',
-    '- Avoid scraping homepage cards when machine files are available.',
     '',
     'Ecosystem links:',
     '- Nano Banana repository: https://github.com/nano-banana-hub/nanobanana',
@@ -324,8 +704,8 @@ function buildLlmsTxt(catalog) {
     '- Template system docs: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-system.md',
     '- Template format spec: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-format-spec.md',
     '',
-    `Current catalog summary: ${catalog.summary.template_count} templates, ${catalog.summary.profile_count} profiles, ${catalog.summary.official_count} official templates.`,
-    `Generated: ${catalog.generated}`
+    `Current catalog summary: ${catalog.summary.template_count} templates total, ${catalog.summary.curated_count} curated, ${catalog.summary.discovered_count} discovered, ${catalog.summary.pinned_count} pinned, ${catalog.summary.featured_count} featured.`,
+    `Generated: ${catalog.generated}`,
   ];
 
   return `${lines.join('\n')}\n`;
@@ -338,35 +718,54 @@ function buildAgentCatalog(catalog) {
     `Generated: ${catalog.generated}`,
     '',
     'BananaHub is the installable prompt-module network for Nano Banana.',
-    'Use `catalog.json` for structured access. This markdown file is a readable digest of the same catalog.',
+    'Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.',
     '',
     '## Entry Points',
     '',
     `- Site: ${catalog.site.url}`,
-    `- Catalog JSON: ${catalog.site.catalog_json}`,
+    `- Merged Catalog JSON: ${catalog.site.catalog_json}`,
+    `- Curated Catalog JSON: ${catalog.site.catalog_curated_json}`,
+    `- Discovered Catalog JSON: ${catalog.site.catalog_discovered_json}`,
     `- llms.txt: ${catalog.site.llms_txt}`,
     '',
-    '## Templates',
-    ''
+    `## Curated Templates (${catalog.layers.curated.template_count})`,
+    '',
   ];
 
-  for (const template of catalog.templates) {
-    lines.push(`### ${template.id}`);
-    lines.push(`- Title: ${template.title_en}${template.title && template.title !== template.title_en ? ` / ${template.title}` : ''}`);
-    lines.push(`- Profile: ${template.profile}`);
-    lines.push(`- Difficulty: ${template.difficulty}`);
-    lines.push(`- Official: ${template.official ? 'yes' : 'no'}`);
-    lines.push(`- Tags: ${template.tags.join(', ') || 'none'}`);
-    lines.push(`- Description: ${template.description || 'No description provided.'}`);
-    lines.push(`- Install: \`${template.install_cmd}\``);
-    lines.push(`- Template Source: ${template.template_url}`);
-    if (template.sample_image) {
-      lines.push(`- Preview Image: ${template.sample_image}`);
-    }
-    lines.push('');
+  const curatedTemplates = catalog.templates.filter((template) => template.catalog_source === 'curated');
+  const discoveredTemplates = catalog.templates.filter((template) => template.catalog_source === 'discovered');
+
+  for (const template of curatedTemplates) {
+    appendTemplateDigest(lines, template);
+  }
+
+  lines.push(`## Discovered Templates (${catalog.layers.discovered.template_count})`);
+  lines.push('');
+
+  for (const template of discoveredTemplates) {
+    appendTemplateDigest(lines, template);
   }
 
   return `${lines.join('\n')}\n`;
+}
+
+function appendTemplateDigest(lines, template) {
+  lines.push(`### ${template.id}`);
+  lines.push(`- Title: ${template.title_en}${template.title && template.title !== template.title_en ? ` / ${template.title}` : ''}`);
+  lines.push(`- Profile: ${template.profile}`);
+  lines.push(`- Difficulty: ${template.difficulty}`);
+  lines.push(`- Source Layer: ${template.catalog_source}`);
+  lines.push(`- Official: ${template.official ? 'yes' : 'no'}`);
+  lines.push(`- Featured: ${template.featured ? (template.featured_label || 'yes') : 'no'}`);
+  lines.push(`- Pinned: ${template.pinned ? `yes${Number.isFinite(template.pinned_rank) ? ` (#${template.pinned_rank})` : ''}` : 'no'}`);
+  lines.push(`- Tags: ${template.tags.join(', ') || 'none'}`);
+  lines.push(`- Description: ${template.description || 'No description provided.'}`);
+  lines.push(`- Install: \`${template.install_cmd}\``);
+  lines.push(`- Template Source: ${template.template_url}`);
+  if (template.sample_image) {
+    lines.push(`- Preview Image: ${template.sample_image}`);
+  }
+  lines.push('');
 }
 
 function buildRobotsTxt() {
@@ -378,8 +777,10 @@ function buildSitemapXml(generatedAt) {
     `${SITE_URL}/`,
     `${SITE_URL}/about.html`,
     `${SITE_URL}/${GENERATED_FILES.catalog}`,
+    `${SITE_URL}/${GENERATED_FILES.catalogCurated}`,
+    `${SITE_URL}/${GENERATED_FILES.catalogDiscovered}`,
     `${SITE_URL}/${GENERATED_FILES.llms}`,
-    `${SITE_URL}/${GENERATED_FILES.agentCatalog}`
+    `${SITE_URL}/${GENERATED_FILES.agentCatalog}`,
   ];
 
   const entries = urls
@@ -407,10 +808,12 @@ async function main() {
   const rootDir = path.resolve(__dirname, '..');
   const sourceFile = path.join(rootDir, 'catalog-source.json');
   const source = JSON.parse(fs.readFileSync(sourceFile, 'utf8'));
+  const moderation = loadModeration(rootDir);
+  const moderationIndex = buildModerationIndex(moderation);
   const generatedAt = new Date().toISOString();
   const headers = {
     Accept: 'application/vnd.github.v3+json',
-    'User-Agent': 'BananaHub-Catalog-Builder/1.0'
+    'User-Agent': 'BananaHub-Catalog-Builder/1.0',
   };
 
   if (process.env.GITHUB_TOKEN) {
@@ -420,43 +823,151 @@ async function main() {
     console.log('No GITHUB_TOKEN found. Using unauthenticated requests (60/hr limit).\n');
   }
 
-  const templates = [];
+  const repoInfoCache = new Map();
+  const getRepoInfoCached = async (repo) => {
+    if (!repoInfoCache.has(repo)) {
+      repoInfoCache.set(repo, fetchRepoInfo(repo, headers));
+    }
+    return repoInfoCache.get(repo);
+  };
 
+  const curatedRaw = [];
   for (const repoConfig of source.repos) {
-    console.log(`Processing repo: ${repoConfig.repo}`);
-    const repoInfo = await fetchRepoInfo(repoConfig.repo, headers);
-    const templateIds = await fetchTemplateIds(repoConfig.repo, repoConfig.path, headers);
-    console.log(`  Found ${templateIds.length} templates: ${templateIds.join(', ')}\n`);
+    if (moderationIndex.bannedRepos.has(slugifyText(repoConfig.repo))) {
+      console.log(`Skipping banned curated repo: ${repoConfig.repo}\n`);
+      continue;
+    }
 
-    for (const templateId of templateIds) {
-      const content = await fetchTemplateContent(repoConfig.repo, repoInfo.default_branch, repoConfig.path, templateId, headers);
-      if (!content) continue;
+    console.log(`Processing curated repo: ${repoConfig.repo}`);
+    const repoInfo = await getRepoInfoCached(repoConfig.repo);
+    const collectionPath = normalizePath(repoConfig.path);
+    const directTemplate = await resolveTemplateAtDir({
+      repoConfig: { ...repoConfig, catalog_source: 'curated' },
+      repoInfo,
+      templateDirPath: collectionPath,
+      templateSlug: basenameSafe(collectionPath),
+      headers,
+      generatedAt,
+    });
 
-      const frontmatter = parseFrontmatter(content);
-      if (!frontmatter) {
-        console.error(`  No frontmatter in ${templateId}`);
+    if (directTemplate) {
+      curatedRaw.push(directTemplate);
+      console.log(`  Found single template at ${collectionPath || '/'}\n`);
+      console.log(`  + ${directTemplate.id} (${directTemplate.profile}, ${directTemplate.difficulty})\n`);
+      continue;
+    }
+
+    const templateItems = await fetchDirectoryItems(repoConfig.repo, collectionPath, headers);
+    const templateDirs = Array.isArray(templateItems)
+      ? templateItems.filter((item) => item.type === 'dir').map((item) => item.name).sort()
+      : [];
+
+    console.log(`  Found ${templateDirs.length} templates: ${templateDirs.join(', ')}\n`);
+
+    for (const templateSlug of templateDirs) {
+      const templateDirPath = joinRepoPath(collectionPath, templateSlug);
+      const template = await resolveTemplateAtDir({
+        repoConfig: { ...repoConfig, catalog_source: 'curated' },
+        repoInfo,
+        templateDirPath,
+        templateSlug,
+        headers,
+        generatedAt,
+      });
+
+      if (!template) {
         continue;
       }
 
-      const template = buildTemplateRecord(repoConfig, repoInfo, templateId, frontmatter, content, generatedAt);
-      templates.push(template);
+      curatedRaw.push(template);
       console.log(`  + ${template.id} (${template.profile}, ${template.difficulty})`);
     }
 
     console.log('');
   }
 
-  templates.sort((left, right) => left.id.localeCompare(right.id, 'en'));
+  console.log('Fetching discovered candidates...\n');
+  const discoveredCandidates = await fetchDiscoveredCandidates();
+  const discoveredRaw = [];
 
-  const catalog = buildCatalog(source, templates, generatedAt);
+  for (const candidate of discoveredCandidates) {
+    if (moderationIndex.bannedRepos.has(slugifyText(candidate.repo))) {
+      continue;
+    }
 
-  writeOutput(path.join(rootDir, GENERATED_FILES.catalog), `${JSON.stringify(catalog, null, 2)}\n`);
-  writeOutput(path.join(rootDir, GENERATED_FILES.llms), buildLlmsTxt(catalog));
-  writeOutput(path.join(rootDir, GENERATED_FILES.agentCatalog), buildAgentCatalog(catalog));
+    if (moderationIndex.bannedTemplates.has(buildTemplateKey(candidate.repo, candidate.template_id))) {
+      continue;
+    }
+
+    try {
+      console.log(`Processing discovered candidate: ${candidate.repo}/${candidate.template_id}`);
+      const repoInfo = await getRepoInfoCached(candidate.repo);
+      const template = await resolveDiscoveredCandidate(candidate, repoInfo, headers, generatedAt);
+
+      if (!template) {
+        console.log('  ! Could not resolve template path from install metadata.\n');
+        continue;
+      }
+
+      discoveredRaw.push(template);
+      console.log(`  + ${template.id} (${template.profile}, ${template.difficulty})\n`);
+    } catch (error) {
+      console.warn(`  ! Failed to process discovered candidate ${candidate.repo}/${candidate.template_id}: ${error.message}\n`);
+    }
+  }
+
+  const curatedTemplates = curatedRaw
+    .filter((template) => !isBannedTemplate(template, moderationIndex))
+    .map((template) => applyModeration(template, moderationIndex))
+    .sort(compareControlledTemplates);
+
+  const curatedKeys = new Set(curatedTemplates.map((template) => buildTemplateKey(template.repo, template.id)));
+  const discoveredTemplates = discoveredRaw
+    .filter((template) => !isBannedTemplate(template, moderationIndex))
+    .filter((template) => !curatedKeys.has(buildTemplateKey(template.repo, template.id)))
+    .map((template) => applyModeration(template, moderationIndex))
+    .sort(compareControlledTemplates);
+
+  const mergedTemplates = [...curatedTemplates, ...discoveredTemplates].sort(compareControlledTemplates);
+
+  const mergedCatalog = buildCatalog({
+    version: source.version,
+    generatedAt,
+    catalogType: 'merged',
+    templates: mergedTemplates,
+    curatedTemplates,
+    discoveredTemplates,
+  });
+
+  const curatedCatalog = buildCatalog({
+    version: source.version,
+    generatedAt,
+    catalogType: 'curated',
+    templates: curatedTemplates,
+    curatedTemplates,
+    discoveredTemplates: [],
+  });
+
+  const discoveredCatalog = buildCatalog({
+    version: source.version,
+    generatedAt,
+    catalogType: 'discovered',
+    templates: discoveredTemplates,
+    curatedTemplates: [],
+    discoveredTemplates,
+  });
+
+  writeOutput(path.join(rootDir, GENERATED_FILES.catalog), `${JSON.stringify(mergedCatalog, null, 2)}\n`);
+  writeOutput(path.join(rootDir, GENERATED_FILES.catalogCurated), `${JSON.stringify(curatedCatalog, null, 2)}\n`);
+  writeOutput(path.join(rootDir, GENERATED_FILES.catalogDiscovered), `${JSON.stringify(discoveredCatalog, null, 2)}\n`);
+  writeOutput(path.join(rootDir, GENERATED_FILES.llms), buildLlmsTxt(mergedCatalog));
+  writeOutput(path.join(rootDir, GENERATED_FILES.agentCatalog), buildAgentCatalog(mergedCatalog));
   writeOutput(path.join(rootDir, GENERATED_FILES.robots), buildRobotsTxt());
   writeOutput(path.join(rootDir, GENERATED_FILES.sitemap), buildSitemapXml(generatedAt));
 
-  console.log(`Total templates: ${templates.length}`);
+  console.log(`Curated templates: ${curatedTemplates.length}`);
+  console.log(`Discovered templates: ${discoveredTemplates.length}`);
+  console.log(`Total templates: ${mergedTemplates.length}`);
 }
 
 main().catch((error) => {

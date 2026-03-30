@@ -114,8 +114,12 @@
               <small>shown</small>
             </div>
             <div class="status-pill">
-              <span id="official-count">0</span>
-              <small>official</small>
+              <span id="curated-count">0</span>
+              <small>curated</small>
+            </div>
+            <div class="status-pill">
+              <span id="discovered-count">0</span>
+              <small>discovered</small>
             </div>
           </div>
         </div>
@@ -133,6 +137,15 @@
               >
             </span>
           </label>
+
+          <div class="filter-group">
+            <p class="filter-label">Source</p>
+            <div class="sort-tabs" role="tablist" aria-label="Filter by source layer">
+              <button class="sort-tab active" data-source="all" type="button">All</button>
+              <button class="sort-tab" data-source="curated" type="button">Curated</button>
+              <button class="sort-tab" data-source="discovered" type="button">Discovered</button>
+            </div>
+          </div>
 
           <div class="filter-group">
             <p class="filter-label">Profile</p>
@@ -188,6 +201,8 @@
           <a class="agent-pill" href="llms.txt">llms.txt</a>
           <a class="agent-pill" href="agent-catalog.md">agent-catalog.md</a>
           <a class="agent-pill" href="catalog.json">catalog.json</a>
+          <a class="agent-pill" href="catalog-curated.json">catalog-curated.json</a>
+          <a class="agent-pill" href="catalog-discovered.json">catalog-discovered.json</a>
         </div>
 
         <p class="agent-install-line">
@@ -212,6 +227,8 @@
           <a href="llms.txt">llms.txt</a>
           <a href="agent-catalog.md">agent-catalog.md</a>
           <a href="catalog.json">catalog.json</a>
+          <a href="catalog-curated.json">catalog-curated.json</a>
+          <a href="catalog-discovered.json">catalog-discovered.json</a>
           <a href="https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-system.md" target="_blank" rel="noopener">Template System</a>
           <a href="https://github.com/nano-banana-hub/nanobanana/issues" target="_blank" rel="noopener">Submit Template</a>
         </div>

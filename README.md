@@ -17,7 +17,9 @@ The goal is not to create one giant prompt dump. The goal is to keep the base wo
 
 `node scripts/build-catalog.js` rebuilds these output files:
 
-- `catalog.json` — structured template catalog used by the homepage and agents
+- `catalog.json` — merged structured catalog used by the homepage and agents
+- `catalog-curated.json` — curated-only catalog
+- `catalog-discovered.json` — discovered-only catalog
 - `llms.txt` — short agent-oriented overview with canonical entry points
 - `agent-catalog.md` — markdown digest of the current catalog
 - `robots.txt` — crawler policy with sitemap reference
@@ -25,16 +27,21 @@ The goal is not to create one giant prompt dump. The goal is to keep the base wo
 
 ## How it works
 
-- `catalog-source.json` defines which repos to index
-- `scripts/build-catalog.js` fetches template frontmatter from GitHub and builds all generated catalog assets
+- `catalog-source.json` defines the curated repos to index
+- `moderation.json` applies manual controls such as pinning, featuring, and banning
+- the Hub API provides discovered install candidates inferred from real template installs
+- `scripts/build-catalog.js` merges curated + discovered templates, applies moderation, and builds all generated catalog assets
 - A GitHub Action rebuilds the assets daily and whenever the source config or builder changes
 - The site is pure HTML/CSS/JS with no build step — GitHub Pages serves it directly
 
 ## Adding templates
 
-1. Create a template following the Nano Banana template format
-2. Add your repo to `catalog-source.json`
-3. Rebuild locally or let GitHub Actions refresh the generated files
+There are two ways for a template to appear:
+
+1. **Curated**: create a template, add the repo to `catalog-source.json`, then rebuild
+2. **Discovered**: publish the template repo and let real installs report it through the Hub API
+
+`catalog-source.json` is the recommendation layer. Discovered templates are the open discovery layer.
 
 ## Local development
 
@@ -52,5 +59,6 @@ GITHUB_TOKEN=ghp_xxx node scripts/build-catalog.js
 
 ## Notes
 
-- Prefer `catalog.json`, `llms.txt`, and `agent-catalog.md` for agent access instead of scraping the visual homepage
+- Prefer `catalog.json`, `catalog-curated.json`, `catalog-discovered.json`, `llms.txt`, and `agent-catalog.md` for agent access instead of scraping the visual homepage
 - Generated install commands are intended to stay truthful to the `bananahub` CLI behavior
+- Curated templates win over discovered duplicates in the merged catalog

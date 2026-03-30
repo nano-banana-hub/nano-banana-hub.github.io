@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0",
+  "catalog_type": "discovered",
+  "generated": "2026-03-30T09:03:04.430Z",
+  "site": {
+    "url": "https://nano-banana-hub.github.io/",
+    "catalog_json": "https://nano-banana-hub.github.io/catalog.json",
+    "catalog_curated_json": "https://nano-banana-hub.github.io/catalog-curated.json",
+    "catalog_discovered_json": "https://nano-banana-hub.github.io/catalog-discovered.json",
+    "llms_txt": "https://nano-banana-hub.github.io/llms.txt",
+    "agent_catalog": "https://nano-banana-hub.github.io/agent-catalog.md"
+  },
+  "summary": {
+    "template_count": 0,
+    "profile_count": 0,
+    "official_count": 0,
+    "featured_count": 0,
+    "pinned_count": 0,
+    "curated_count": 0,
+    "discovered_count": 0,
+    "repos": []
+  },
+  "layers": {
+    "curated": {
+      "template_count": 0,
+      "official_count": 0,
+      "repos": []
+    },
+    "discovered": {
+      "template_count": 0,
+      "official_count": 0,
+      "repos": []
+    }
+  },
+  "profiles": [],
+  "templates": []
+}
