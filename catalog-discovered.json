@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "catalog_type": "discovered",
-  "generated": "2026-03-30T09:03:52.110Z",
+  "generated": "2026-03-30T09:09:57.280Z",
   "site": {
     "url": "https://nano-banana-hub.github.io/",
     "catalog_json": "https://nano-banana-hub.github.io/catalog.json",
@@ -11,14 +11,16 @@
     "agent_catalog": "https://nano-banana-hub.github.io/agent-catalog.md"
   },
   "summary": {
-    "template_count": 0,
-    "profile_count": 0,
+    "template_count": 1,
+    "profile_count": 1,
     "official_count": 0,
     "featured_count": 0,
     "pinned_count": 0,
     "curated_count": 0,
-    "discovered_count": 0,
-    "repos": []
+    "discovered_count": 1,
+    "repos": [
+      "zkywalker/nanobanana-artisan-portrait"
+    ]
   },
   "layers": {
     "curated": {
@@ -27,11 +29,56 @@
       "repos": []
     },
     "discovered": {
-      "template_count": 0,
+      "template_count": 1,
       "official_count": 0,
-      "repos": []
+      "repos": [
+        "zkywalker/nanobanana-artisan-portrait"
+      ]
     }
   },
-  "profiles": [],
-  "templates": []
+  "profiles": [
+    "photo"
+  ],
+  "templates": [
+    {
+      "id": "artisan-portrait",
+      "title": "匠人环境人像",
+      "title_en": "Environmental Artisan Portrait",
+      "author": "zkywalker",
+      "version": "1.0.0",
+      "profile": "photo",
+      "tags": [
+        "人像",
+        "摄影",
+        "匠人",
+        "工坊",
+        "portrait",
+        "artisan",
+        "workshop",
+        "editorial"
+      ],
+      "aspect": "3:4",
+      "difficulty": "beginner",
+      "description": "生成有明确职业身份、环境叙事和摄影语言的匠人人像。适合陶艺师、木工、花艺师、面包师、制表师等“人物 + 手上动作 + 工作空间”场景。",
+      "sample_image": "https://raw.githubusercontent.com/zkywalker/nanobanana-artisan-portrait/main/samples/sample-01.png",
+      "sample_image_page_url": "https://github.com/zkywalker/nanobanana-artisan-portrait/blob/main/samples/sample-01.png",
+      "repo": "zkywalker/nanobanana-artisan-portrait",
+      "repo_url": "https://github.com/zkywalker/nanobanana-artisan-portrait",
+      "branch": "main",
+      "template_root": "",
+      "template_path": "",
+      "template_url": "https://github.com/zkywalker/nanobanana-artisan-portrait/tree/main",
+      "official": false,
+      "catalog_source": "discovered",
+      "install_target": "zkywalker/nanobanana-artisan-portrait",
+      "install_cmd": "bananahub add zkywalker/nanobanana-artisan-portrait",
+      "created": "2026-03-30",
+      "updated": "2026-03-30",
+      "pinned": false,
+      "pinned_rank": null,
+      "featured": false,
+      "featured_label": "",
+      "featured_note": ""
+    }
+  ]
 }

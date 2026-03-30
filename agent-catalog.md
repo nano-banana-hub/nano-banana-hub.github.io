@@ -1,6 +1,6 @@
 # BananaHub Agent Catalog
 
-Generated: 2026-03-30T09:03:52.110Z
+Generated: 2026-03-30T09:09:57.280Z
 
 BananaHub is the installable prompt-module network for Nano Banana.
 Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.
@@ -85,5 +85,19 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/product-white-bg
 - Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/product-white-bg/samples/sample-3.1-flash-01.png
 
-## Discovered Templates (0)
+## Discovered Templates (1)
+
+### artisan-portrait
+- Title: Environmental Artisan Portrait / 匠人环境人像
+- Profile: photo
+- Difficulty: beginner
+- Source Layer: discovered
+- Official: no
+- Featured: no
+- Pinned: no
+- Tags: 人像, 摄影, 匠人, 工坊, portrait, artisan, workshop, editorial
+- Description: 生成有明确职业身份、环境叙事和摄影语言的匠人人像。适合陶艺师、木工、花艺师、面包师、制表师等“人物 + 手上动作 + 工作空间”场景。
+- Install: `bananahub add zkywalker/nanobanana-artisan-portrait`
+- Template Source: https://github.com/zkywalker/nanobanana-artisan-portrait/tree/main
+- Preview Image: https://raw.githubusercontent.com/zkywalker/nanobanana-artisan-portrait/main/samples/sample-01.png
 
