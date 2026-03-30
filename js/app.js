@@ -1,6 +1,8 @@
 import { loadCatalog, getTemplates, filterTemplates, sortTemplates, searchTemplates } from './catalog.js';
 import { fetchAllStats, getTemplateKey } from './api.js';
 
+const GITHUB_RAW = 'https://raw.githubusercontent.com';
+const GITHUB_WEB = 'https://github.com';
 const DEFAULT_FILTERS = {
   source: 'all',
   profile: 'all',
@@ -23,6 +25,7 @@ let currentSearch = '';
 let searchTimer = null;
 let activeTemplate = null;
 let lastFocusTarget = null;
+const previewRecoveryCache = new Map();
 
 const dom = {
   grid: document.getElementById('card-grid'),
@@ -584,19 +587,23 @@ function loadImage(image) {
     }
   };
 
-  image.onerror = () => {
+  image.onerror = async () => {
     image.removeAttribute('data-src');
-    if (!wrap) {
+    const card = image.closest('.template-card');
+    const template = card ? findTemplate(card.dataset.id, card.dataset.repo) : null;
+    const recovered = template ? await recoverTemplatePreview(template) : null;
+
+    if (recovered?.sampleImage && recovered.sampleImage !== src) {
+      image.dataset.src = recovered.sampleImage;
+      loadImage(image);
+
+      if (activeTemplate && isSameTemplate(activeTemplate, template)) {
+        populateModal(template);
+      }
       return;
     }
 
-    wrap.classList.remove('is-loaded');
-    wrap.classList.add('is-error');
-
-    const label = wrap.querySelector('.card-image-placeholder-label');
-    if (label) {
-      label.textContent = 'Preview unavailable';
-    }
+    markPreviewUnavailable(wrap);
   };
 }
 
@@ -669,17 +676,24 @@ function populateModal(template) {
     : '<span class="tag">No tags</span>';
 
   if (hasSampleImage) {
+    dom.modalImage.onerror = async () => {
+      const attemptedSrc = dom.modalImage.currentSrc || dom.modalImage.src;
+      const recovered = await recoverTemplatePreview(template);
+
+      if (recovered?.sampleImage && recovered.sampleImage !== attemptedSrc) {
+        populateModal(template);
+        return;
+      }
+
+      markModalPreviewUnavailable(title);
+    };
     dom.modalImage.src = template.sample_image;
     dom.modalImage.alt = title;
     dom.modalImageButton.classList.remove('is-disabled');
     dom.modalImageButton.disabled = false;
     dom.modalImageHint.textContent = 'Open preview';
   } else {
-    dom.modalImage.removeAttribute('src');
-    dom.modalImage.alt = `${title} preview unavailable`;
-    dom.modalImageButton.classList.add('is-disabled');
-    dom.modalImageButton.disabled = true;
-    dom.modalImageHint.textContent = 'Preview unavailable';
+    markModalPreviewUnavailable(title);
   }
 
   dom.modalViewImageBtn.hidden = !hasSampleImage;
@@ -756,6 +770,165 @@ function getTemplateUrl(template) {
 
 function getOriginalImageLink(template) {
   return template.sample_image_page_url || template.sample_image || '';
+}
+
+function markPreviewUnavailable(wrap) {
+  if (!wrap) {
+    return;
+  }
+
+  wrap.classList.remove('is-loaded');
+  wrap.classList.add('is-error');
+
+  const label = wrap.querySelector('.card-image-placeholder-label');
+  if (label) {
+    label.textContent = 'Preview unavailable';
+  }
+}
+
+function markModalPreviewUnavailable(title) {
+  dom.modalImage.onerror = null;
+  dom.modalImage.removeAttribute('src');
+  dom.modalImage.alt = `${title} preview unavailable`;
+  dom.modalImageButton.classList.add('is-disabled');
+  dom.modalImageButton.disabled = true;
+  dom.modalImageHint.textContent = 'Preview unavailable';
+  dom.modalViewImageBtn.hidden = true;
+  dom.modalOpenOriginalLink.hidden = true;
+}
+
+async function recoverTemplatePreview(template) {
+  if (!template?.repo || !template?.branch) {
+    return null;
+  }
+
+  const cacheKey = `${template.repo}::${template.branch}::${template.template_path || '.'}`;
+  if (previewRecoveryCache.has(cacheKey)) {
+    return previewRecoveryCache.get(cacheKey);
+  }
+
+  const task = (async () => {
+    const manifestPath = joinRepoPath(template.template_path, 'template.md');
+    const response = await fetch(`${GITHUB_RAW}/${template.repo}/${template.branch}/${manifestPath}`);
+    if (!response.ok) {
+      return null;
+    }
+
+    const frontmatter = parseFrontmatter(await response.text());
+    const samples = Array.isArray(frontmatter?.samples) ? frontmatter.samples : [];
+    if (samples.length === 0) {
+      return null;
+    }
+
+    const firstSample = samples[0];
+    const sampleFile = typeof firstSample === 'string' ? firstSample : firstSample?.file;
+    if (!sampleFile) {
+      return null;
+    }
+
+    const samplePath = joinRepoPath(template.template_path, sampleFile);
+    const sampleImage = `${GITHUB_RAW}/${template.repo}/${template.branch}/${samplePath}`;
+    const sampleImagePageUrl = `${GITHUB_WEB}/${template.repo}/blob/${template.branch}/${samplePath}`;
+
+    template.sample_image = sampleImage;
+    template.sample_image_page_url = sampleImagePageUrl;
+    return { sampleImage, sampleImagePageUrl };
+  })().catch(() => null);
+
+  previewRecoveryCache.set(cacheKey, task);
+  return task;
+}
+
+function parseFrontmatter(content) {
+  const match = String(content || '').match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) {
+    return null;
+  }
+
+  const result = {};
+  const lines = match[1].split(/\r?\n/);
+  let index = 0;
+
+  while (index < lines.length) {
+    const line = lines[index];
+    if (!line.trim() || line.trim().startsWith('#')) {
+      index += 1;
+      continue;
+    }
+
+    const keyMatch = line.match(/^(\w[\w_]*):\s*(.*)/);
+    if (!keyMatch) {
+      index += 1;
+      continue;
+    }
+
+    const key = keyMatch[1];
+    const rawValue = keyMatch[2].trim();
+    if (rawValue === '') {
+      const items = [];
+      let cursor = index + 1;
+
+      while (cursor < lines.length && /^  - /.test(lines[cursor])) {
+        const firstLine = lines[cursor].replace(/^  - /, '').trim();
+        const objectValue = {};
+        let hasObjectFields = false;
+
+        const firstField = firstLine.match(/^(\w[\w_]*):\s*(.*)/);
+        if (firstField) {
+          objectValue[firstField[1]] = stripQuotes(firstField[2].trim());
+          hasObjectFields = true;
+        } else if (firstLine) {
+          items.push(stripQuotes(firstLine));
+          cursor += 1;
+          continue;
+        }
+
+        cursor += 1;
+        while (cursor < lines.length && /^    \w/.test(lines[cursor])) {
+          const nested = lines[cursor].match(/^    (\w[\w_]*):\s*(.*)/);
+          if (nested) {
+            objectValue[nested[1]] = stripQuotes(nested[2].trim());
+            hasObjectFields = true;
+          }
+          cursor += 1;
+        }
+
+        items.push(hasObjectFields ? objectValue : stripQuotes(firstLine));
+      }
+
+      result[key] = items;
+      index = cursor;
+      continue;
+    }
+
+    result[key] = stripQuotes(rawValue);
+    index += 1;
+  }
+
+  return result;
+}
+
+function stripQuotes(value) {
+  const text = String(value || '').trim();
+  if ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'"))) {
+    return text.slice(1, -1);
+  }
+  return text;
+}
+
+function normalizePath(value) {
+  return String(value || '').replace(/^\/+|\/+$/g, '');
+}
+
+function joinRepoPath(...parts) {
+  return parts
+    .map((part) => normalizePath(part))
+    .filter(Boolean)
+    .join('/');
+}
+
+function isSameTemplate(left, right) {
+  return Boolean(left && right && left.id === right.id && left.repo === right.repo);
 }
 
 function getTemplateStats(template) {
