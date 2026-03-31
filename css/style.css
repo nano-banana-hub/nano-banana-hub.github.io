@@ -688,6 +688,7 @@ main {
 }
 
 .card-official-badge,
+.card-type-badge,
 .card-profile-badge,
 .card-source-badge,
 .card-flag-badge,
@@ -720,6 +721,16 @@ main {
   letter-spacing: 0.04em;
   background: rgba(28, 33, 28, 0.72);
   color: #f7efdc;
+}
+
+.card-type-badge {
+  min-height: 18px;
+  padding: 0 6px;
+  border-radius: 7px;
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  background: rgba(47, 110, 114, 0.16);
+  color: var(--teal);
 }
 
 .card-source-badge {
@@ -836,6 +847,14 @@ main {
   background: rgba(217, 134, 42, 0.16);
 }
 
+.badge-type.prompt {
+  background: rgba(47, 110, 114, 0.12);
+}
+
+.badge-type.workflow {
+  background: rgba(217, 134, 42, 0.15);
+}
+
 .badge-profile.photo {
   background: rgba(47, 110, 114, 0.14);
 }
@@ -854,6 +873,10 @@ main {
 
 .badge-profile.minimal {
   background: rgba(28, 33, 28, 0.08);
+}
+
+.badge-profile.general {
+  background: rgba(122, 90, 41, 0.12);
 }
 
 .card-meta-inline {

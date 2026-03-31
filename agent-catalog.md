@@ -1,8 +1,8 @@
 # BananaHub Agent Catalog
 
-Generated: 2026-03-30T09:09:57.280Z
+Generated: 2026-03-31T04:12:09.953Z
 
-BananaHub is the installable prompt-module network for Nano Banana.
+BananaHub is the installable template network for Nano Banana.
 Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.
 
 ## Entry Points
@@ -13,10 +13,26 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Discovered Catalog JSON: https://nano-banana-hub.github.io/catalog-discovered.json
 - llms.txt: https://nano-banana-hub.github.io/llms.txt
 
-## Curated Templates (5)
+## Curated Templates (6)
+
+### consistent-character-storyboard
+- Title: Consistent Character Storyboard Workflow / 角色一致性分镜工作流
+- Type: workflow
+- Profile: general
+- Difficulty: intermediate
+- Source Layer: curated
+- Official: yes
+- Featured: no
+- Pinned: no
+- Tags: 分镜, 角色一致性, 故事板, storyboard, contact-sheet, multi-shot
+- Description: Guide the agent through a repeatable storyboard exploration workflow: first lock a master character reference, then explore multi-shot boards, then iterate with single-variable edits so the character stays consistent across frames without overcommitting too early to a final story layout.
+- Install: `bananahub add nano-banana-hub/nanobanana/consistent-character-storyboard`
+- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/consistent-character-storyboard
+- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/consistent-character-storyboard/samples/sample-3-pro-01.png
 
 ### cute-sticker
 - Title: Cute Chibi Sticker Pack / Q版贴纸表情包
+- Type: prompt
 - Profile: sticker
 - Difficulty: beginner
 - Source Layer: curated
@@ -31,6 +47,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 
 ### cyberpunk-city
 - Title: Cyberpunk City Nightscape / 赛博朋克城市夜景
+- Type: prompt
 - Profile: photo
 - Difficulty: beginner
 - Source Layer: curated
@@ -45,6 +62,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 
 ### info-diagram
 - Title: Infographic & Flowchart / 信息图/流程图
+- Type: prompt
 - Profile: diagram
 - Difficulty: intermediate
 - Source Layer: curated
@@ -59,6 +77,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 
 ### minimal-wallpaper
 - Title: Minimal Phone Wallpaper / 极简手机壁纸
+- Type: prompt
 - Profile: minimal
 - Difficulty: beginner
 - Source Layer: curated
@@ -73,6 +92,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 
 ### product-white-bg
 - Title: E-commerce Product on White / 电商白底产品图
+- Type: prompt
 - Profile: product
 - Difficulty: beginner
 - Source Layer: curated
@@ -89,6 +109,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 
 ### artisan-portrait
 - Title: Environmental Artisan Portrait / 匠人环境人像
+- Type: prompt
 - Profile: photo
 - Difficulty: beginner
 - Source Layer: discovered
@@ -99,5 +120,5 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Description: 生成有明确职业身份、环境叙事和摄影语言的匠人人像。适合陶艺师、木工、花艺师、面包师、制表师等“人物 + 手上动作 + 工作空间”场景。
 - Install: `bananahub add zkywalker/nanobanana-artisan-portrait`
 - Template Source: https://github.com/zkywalker/nanobanana-artisan-portrait/tree/main
-- Preview Image: https://raw.githubusercontent.com/zkywalker/nanobanana-artisan-portrait/main/samples/sample-01.png
+- Preview Image: https://raw.githubusercontent.com/zkywalker/nanobanana-artisan-portrait/main/samples/sample-3-pro-01.png
 

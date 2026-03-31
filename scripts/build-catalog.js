@@ -416,6 +416,7 @@ function buildTemplateRecord({ repoConfig, repoInfo, templateDirPath, templateSl
 
   return {
     id: resolvedId,
+    type: frontmatter.type || 'prompt',
     title: frontmatter.title || '',
     title_en: frontmatter.title_en || frontmatter.title || resolvedId,
     author: frontmatter.author || 'unknown',
@@ -673,7 +674,8 @@ function buildLlmsTxt(catalog) {
   const lines = [
     '# BananaHub',
     '',
-    'BananaHub is the searchable, installable prompt-module network for Nano Banana.',
+    'BananaHub is the searchable, installable template network for Nano Banana.',
+    'Templates may be lightweight prompts or multi-step workflows.',
     'The catalog has two layers: curated templates for reviewed defaults, and discovered templates collected automatically from real installs.',
     'Curated is the recommendation layer. Discovered is the open discovery layer. Moderation rules can ban or pin templates independently of either layer.',
     '',
@@ -696,6 +698,7 @@ function buildLlmsTxt(catalog) {
     '- Use catalog_source to distinguish curated from discovered entries.',
     '- Respect pinned and featured flags before raw popularity when choosing defaults.',
     '- Use template_url when the full template body is needed.',
+    '- Use type to distinguish prompt templates from workflow templates.',
     '- Use sample_image and sample_image_page_url for preview assets.',
     '',
     'Ecosystem links:',
@@ -717,7 +720,7 @@ function buildAgentCatalog(catalog) {
     '',
     `Generated: ${catalog.generated}`,
     '',
-    'BananaHub is the installable prompt-module network for Nano Banana.',
+    'BananaHub is the installable template network for Nano Banana.',
     'Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.',
     '',
     '## Entry Points',
@@ -752,6 +755,7 @@ function buildAgentCatalog(catalog) {
 function appendTemplateDigest(lines, template) {
   lines.push(`### ${template.id}`);
   lines.push(`- Title: ${template.title_en}${template.title && template.title !== template.title_en ? ` / ${template.title}` : ''}`);
+  lines.push(`- Type: ${template.type || 'prompt'}`);
   lines.push(`- Profile: ${template.profile}`);
   lines.push(`- Difficulty: ${template.difficulty}`);
   lines.push(`- Source Layer: ${template.catalog_source}`);

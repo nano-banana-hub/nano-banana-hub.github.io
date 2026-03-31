@@ -90,6 +90,7 @@ export function searchTemplates(templates, query) {
   return templates.filter((template) => {
     const searchable = [
       template.id,
+      template.type,
       template.title,
       template.title_en,
       template.description,

@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "catalog_type": "discovered",
-  "generated": "2026-03-30T09:09:57.280Z",
+  "generated": "2026-03-31T04:12:09.953Z",
   "site": {
     "url": "https://nano-banana-hub.github.io/",
     "catalog_json": "https://nano-banana-hub.github.io/catalog.json",
@@ -42,6 +42,7 @@
   "templates": [
     {
       "id": "artisan-portrait",
+      "type": "prompt",
       "title": "匠人环境人像",
       "title_en": "Environmental Artisan Portrait",
       "author": "zkywalker",
@@ -60,8 +61,8 @@
       "aspect": "3:4",
       "difficulty": "beginner",
       "description": "生成有明确职业身份、环境叙事和摄影语言的匠人人像。适合陶艺师、木工、花艺师、面包师、制表师等“人物 + 手上动作 + 工作空间”场景。",
-      "sample_image": "https://raw.githubusercontent.com/zkywalker/nanobanana-artisan-portrait/main/samples/sample-01.png",
-      "sample_image_page_url": "https://github.com/zkywalker/nanobanana-artisan-portrait/blob/main/samples/sample-01.png",
+      "sample_image": "https://raw.githubusercontent.com/zkywalker/nanobanana-artisan-portrait/main/samples/sample-3-pro-01.png",
+      "sample_image_page_url": "https://github.com/zkywalker/nanobanana-artisan-portrait/blob/main/samples/sample-3-pro-01.png",
       "repo": "zkywalker/nanobanana-artisan-portrait",
       "repo_url": "https://github.com/zkywalker/nanobanana-artisan-portrait",
       "branch": "main",

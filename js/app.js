@@ -502,6 +502,7 @@ function renderCard(template) {
             <span class="card-source-badge">${escHtml(template.catalog_source || 'curated')}</span>
           </div>
           <div class="card-top-badges-right">
+            <span class="card-type-badge">${escHtml(template.type || 'prompt')}</span>
             <span class="card-profile-badge">${escHtml(template.profile || 'general')}</span>
           </div>
         </div>
@@ -522,6 +523,7 @@ function renderCard(template) {
         </div>
 
         <div class="card-meta-inline">
+          <span>${escHtml(template.type || 'prompt')}</span>
           <span>${escHtml(template.difficulty || 'beginner')}</span>
           <span>${escHtml(template.aspect || 'n/a')}</span>
           <span data-stat-key="${escAttr(key)}" data-stat-type="trending">${escHtml(getTrendingDisplay(stats))} installs / 24h</span>
@@ -665,6 +667,7 @@ function populateModal(template) {
   dom.modalBadges.innerHTML = [
     ...(template.pinned ? [renderBadge('badge badge-flag', 'pinned')] : []),
     ...(template.featured ? [renderBadge('badge badge-flag', template.featured_label || 'featured')] : []),
+    renderBadge(`badge badge-type ${escAttr(template.type || 'prompt')}`, template.type || 'prompt'),
     renderBadge(`badge badge-profile ${escAttr(template.profile || 'general')}`, template.profile || 'general'),
     renderBadge('badge badge-difficulty', template.difficulty || 'beginner'),
     renderBadge('badge', template.official ? 'official' : 'community'),
@@ -979,16 +982,17 @@ function updateStructuredData() {
     '@type': 'CollectionPage',
     name: 'BananaHub',
     url: catalog.site?.url || 'https://nano-banana-hub.github.io/',
-    description: 'Plug-in prompt template hub for Nano Banana Skill.',
+    description: 'Installable prompt and workflow template hub for Nano Banana Skill.',
     mainEntity: {
       '@type': 'DataCatalog',
       name: 'BananaHub Catalog',
       url: catalog.site?.catalog_json || 'https://nano-banana-hub.github.io/catalog.json',
-      description: `Catalog of ${allTemplates.length} installable prompt templates for Nano Banana Skill.`,
+      description: `Catalog of ${allTemplates.length} installable prompt and workflow templates for Nano Banana Skill.`,
       inLanguage: ['en', 'zh-CN'],
       keywords: [
         'Nano Banana Skill',
         'prompt templates',
+        'workflow templates',
         ...new Set((catalog.profiles || []).slice(0, 10))
       ]
     }
