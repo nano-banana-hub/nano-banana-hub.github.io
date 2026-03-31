@@ -1,6 +1,6 @@
 # BananaHub Agent Catalog
 
-Generated: 2026-03-31T07:09:24.293Z
+Generated: 2026-03-31T12:00:32.687Z
 
 BananaHub is the installable template network for Nano Banana.
 Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.
@@ -13,7 +13,22 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Discovered Catalog JSON: https://nano-banana-hub.github.io/catalog-discovered.json
 - llms.txt: https://nano-banana-hub.github.io/llms.txt
 
-## Curated Templates (6)
+## Curated Templates (9)
+
+### asset-style-consistency-pack
+- Title: Local Asset Style Consistency Workflow / 本地素材风格统一工作流
+- Type: workflow
+- Profile: general
+- Difficulty: advanced
+- Source Layer: curated
+- Official: yes
+- Featured: no
+- Pinned: no
+- Tags: 素材包, 风格统一, 多图一致性, reference, batch, consistency, edit
+- Description: Guide the agent through creating a consistent asset pack from local images: first lock one approved style anchor, then propagate the same style and constraints across additional assets without letting color, composition logic, or character identity drift.
+- Install: `bananahub add nano-banana-hub/nanobanana/asset-style-consistency-pack`
+- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/asset-style-consistency-pack
+- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/asset-style-consistency-pack/samples/sample-3-pro-01.png
 
 ### consistent-character-storyboard
 - Title: Consistent Character Storyboard Workflow / 角色一致性分镜工作流
@@ -104,6 +119,36 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Install: `bananahub add nano-banana-hub/nanobanana/product-white-bg`
 - Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/product-white-bg
 - Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/product-white-bg/samples/sample-3.1-flash-01.png
+
+### readme-launch-visual
+- Title: README Launch Visual Workflow / README 启动视觉工作流
+- Type: workflow
+- Profile: text-heavy
+- Difficulty: intermediate
+- Source Layer: curated
+- Official: yes
+- Featured: no
+- Pinned: no
+- Tags: README, 头图, 海报, 封面, OG, launch, hero, banner
+- Description: Guide the agent through converting README or positioning text into one launch-ready visual with locked copy, a clear headline hierarchy, and a visual metaphor that matches the actual product instead of generic AI poster aesthetics.
+- Install: `bananahub add nano-banana-hub/nanobanana/readme-launch-visual`
+- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/readme-launch-visual
+- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/readme-launch-visual/samples/sample-3-pro-01.png
+
+### repo-explainer-diagram
+- Title: Repository Explainer Diagram Workflow / 代码库讲解图工作流
+- Type: workflow
+- Profile: diagram
+- Difficulty: intermediate
+- Source Layer: curated
+- Official: yes
+- Featured: no
+- Pinned: no
+- Tags: 代码库, 项目结构, 架构图, README, repo, codebase, architecture, explainer
+- Description: Guide the agent through turning repository context into one clear explainer visual: a project map, architecture diagram, workflow chart, or onboarding card that reflects the actual repo structure instead of inventing generic boxes.
+- Install: `bananahub add nano-banana-hub/nanobanana/repo-explainer-diagram`
+- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/repo-explainer-diagram
+- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/repo-explainer-diagram/samples/sample-3-pro-01.png
 
 ## Discovered Templates (1)
 

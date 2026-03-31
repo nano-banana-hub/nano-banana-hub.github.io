@@ -4,6 +4,7 @@
     {
       "repo": "nano-banana-hub/nanobanana",
       "type": "builtin",
+      "local_path": "../nanobananaskill",
       "path": "references/templates",
       "official": true
     }

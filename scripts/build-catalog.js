@@ -272,6 +272,43 @@ async function fetchRepoText(repo, branch, relativePath, headers, { quiet = fals
   return response.text();
 }
 
+function resolveLocalRepoPath(rootDir, repoConfig) {
+  const localPath = String(repoConfig.local_path || '').trim();
+  if (!localPath) {
+    return '';
+  }
+
+  const resolved = path.resolve(rootDir, localPath);
+  if (!fs.existsSync(resolved)) {
+    console.warn(`Local source path does not exist for ${repoConfig.repo}: ${resolved}`);
+    return '';
+  }
+
+  return resolved;
+}
+
+function readLocalText(localRepoPath, relativePath) {
+  const normalized = normalizePath(relativePath);
+  const filePath = normalized ? path.join(localRepoPath, normalized) : localRepoPath;
+  if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
+    return null;
+  }
+  return fs.readFileSync(filePath, 'utf8');
+}
+
+function listLocalDirectoryItems(localRepoPath, relativePath) {
+  const normalized = normalizePath(relativePath);
+  const dirPath = normalized ? path.join(localRepoPath, normalized) : localRepoPath;
+  if (!fs.existsSync(dirPath) || !fs.statSync(dirPath).isDirectory()) {
+    return null;
+  }
+
+  return fs.readdirSync(dirPath, { withFileTypes: true }).map((entry) => ({
+    name: entry.name,
+    type: entry.isDirectory() ? 'dir' : 'file',
+  }));
+}
+
 async function fetchDiscoveredCandidates() {
   const url = `${HUB_API_BASE}/discovered?limit=500`;
 
@@ -446,6 +483,30 @@ function buildTemplateRecord({ repoConfig, repoInfo, templateDirPath, templateSl
 async function resolveTemplateAtDir({ repoConfig, repoInfo, templateDirPath, templateSlug, headers, generatedAt }) {
   const templateMdPath = joinRepoPath(templateDirPath, 'template.md');
   const content = await fetchRepoText(repoConfig.repo, repoInfo.default_branch, templateMdPath, headers, { quiet: true });
+  if (!content) {
+    return null;
+  }
+
+  const frontmatter = parseFrontmatter(content);
+  if (!frontmatter) {
+    console.warn(`  No frontmatter in ${templateMdPath}`);
+    return null;
+  }
+
+  return buildTemplateRecord({
+    repoConfig,
+    repoInfo,
+    templateDirPath,
+    templateSlug,
+    frontmatter,
+    content,
+    generatedAt,
+  });
+}
+
+function resolveLocalTemplateAtDir({ repoConfig, repoInfo, localRepoPath, templateDirPath, templateSlug, generatedAt }) {
+  const templateMdPath = joinRepoPath(templateDirPath, 'template.md');
+  const content = readLocalText(localRepoPath, templateMdPath);
   if (!content) {
     return null;
   }
@@ -844,15 +905,26 @@ async function main() {
 
     console.log(`Processing curated repo: ${repoConfig.repo}`);
     const repoInfo = await getRepoInfoCached(repoConfig.repo);
+    const localRepoPath = resolveLocalRepoPath(rootDir, repoConfig);
     const collectionPath = normalizePath(repoConfig.path);
-    const directTemplate = await resolveTemplateAtDir({
-      repoConfig: { ...repoConfig, catalog_source: 'curated' },
-      repoInfo,
-      templateDirPath: collectionPath,
-      templateSlug: basenameSafe(collectionPath),
-      headers,
-      generatedAt,
-    });
+    const curatedRepoConfig = { ...repoConfig, catalog_source: 'curated' };
+    const directTemplate = localRepoPath
+      ? resolveLocalTemplateAtDir({
+        repoConfig: curatedRepoConfig,
+        repoInfo,
+        localRepoPath,
+        templateDirPath: collectionPath,
+        templateSlug: basenameSafe(collectionPath),
+        generatedAt,
+      })
+      : await resolveTemplateAtDir({
+        repoConfig: curatedRepoConfig,
+        repoInfo,
+        templateDirPath: collectionPath,
+        templateSlug: basenameSafe(collectionPath),
+        headers,
+        generatedAt,
+      });
 
     if (directTemplate) {
       curatedRaw.push(directTemplate);
@@ -861,23 +933,37 @@ async function main() {
       continue;
     }
 
-    const templateItems = await fetchDirectoryItems(repoConfig.repo, collectionPath, headers);
+    const templateItems = localRepoPath
+      ? listLocalDirectoryItems(localRepoPath, collectionPath)
+      : await fetchDirectoryItems(repoConfig.repo, collectionPath, headers);
     const templateDirs = Array.isArray(templateItems)
       ? templateItems.filter((item) => item.type === 'dir').map((item) => item.name).sort()
       : [];
 
+    if (localRepoPath) {
+      console.log(`  Using local workspace source: ${localRepoPath}`);
+    }
     console.log(`  Found ${templateDirs.length} templates: ${templateDirs.join(', ')}\n`);
 
     for (const templateSlug of templateDirs) {
       const templateDirPath = joinRepoPath(collectionPath, templateSlug);
-      const template = await resolveTemplateAtDir({
-        repoConfig: { ...repoConfig, catalog_source: 'curated' },
-        repoInfo,
-        templateDirPath,
-        templateSlug,
-        headers,
-        generatedAt,
-      });
+      const template = localRepoPath
+        ? resolveLocalTemplateAtDir({
+          repoConfig: curatedRepoConfig,
+          repoInfo,
+          localRepoPath,
+          templateDirPath,
+          templateSlug,
+          generatedAt,
+        })
+        : await resolveTemplateAtDir({
+          repoConfig: curatedRepoConfig,
+          repoInfo,
+          templateDirPath,
+          templateSlug,
+          headers,
+          generatedAt,
+        });
 
       if (!template) {
         continue;
