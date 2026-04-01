@@ -113,8 +113,10 @@ code {
 }
 
 .site-header,
+.hero-banner,
 .hero,
 .catalog-shell,
+.agent-strip,
 .agent-drawer,
 .manifesto,
 .contribute-strip,
@@ -261,8 +263,10 @@ code {
 main {
   display: grid;
   gap: 18px;
+  margin-bottom: 18px;
 }
 
+.hero-banner,
 .hero,
 .catalog-shell,
 .agent-drawer,
@@ -276,6 +280,7 @@ main {
   box-shadow: var(--shadow-panel);
 }
 
+.hero-banner,
 .hero,
 .catalog-shell,
 .site-footer {
@@ -284,6 +289,70 @@ main {
     radial-gradient(circle at top right, rgba(94, 109, 71, 0.08), transparent 24%);
 }
 
+/* — compact hero banner — */
+.hero-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 24px;
+}
+
+.hero-banner-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.hero-banner h1 {
+  margin: 0;
+  font-family: 'Fraunces', serif;
+  font-weight: 650;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.hero-banner-lead {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+.hero-banner-stats {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.hero-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.hero-stat strong {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.hero-stat small {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.hero-stat-date {
+  color: var(--ink-faint);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/* — old hero (about page) — */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.9fr);
@@ -1629,6 +1698,7 @@ main {
   }
 
   .header-inner,
+  .hero-banner,
   .hero,
   .catalog-shell,
   .agent-summary,
@@ -1638,6 +1708,11 @@ main {
   .site-footer {
     padding-left: 16px;
     padding-right: 16px;
+  }
+
+  .hero-banner {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .hero h1 {
