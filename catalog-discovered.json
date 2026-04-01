@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "catalog_type": "discovered",
-  "generated": "2026-04-01T07:16:47.448Z",
+  "generated": "2026-04-01T14:05:37.486Z",
   "site": {
     "url": "https://nano-banana-hub.github.io/",
     "catalog_json": "https://nano-banana-hub.github.io/catalog.json",
@@ -61,6 +61,16 @@
       "aspect": "3:4",
       "difficulty": "beginner",
       "description": "生成有明确职业身份、环境叙事和摄影语言的匠人人像。适合陶艺师、木工、花艺师、面包师、制表师等“人物 + 手上动作 + 工作空间”场景。",
+      "samples": [
+        {
+          "file": "samples/sample-3-pro-01.png",
+          "model": "gemini-3-pro-image-preview",
+          "prompt": "A photorealistic environmental portrait of an elderly Japanese ceramicist carefully shaping a bowl on a potter's wheel, in a rustic workshop filled with clay tools and unfinished pottery. Lit by warm golden-hour window light and captured with an 85mm portrait lens with shallow depth of field. Quiet mastery, tactile craftsmanship, and grounded realism.",
+          "aspect": "3:4",
+          "image": "https://raw.githubusercontent.com/zkywalker/nanobanana-artisan-portrait/main/samples/sample-3-pro-01.png",
+          "page_url": "https://github.com/zkywalker/nanobanana-artisan-portrait/blob/main/samples/sample-3-pro-01.png"
+        }
+      ],
       "sample_image": "https://raw.githubusercontent.com/zkywalker/nanobanana-artisan-portrait/main/samples/sample-3-pro-01.png",
       "sample_image_page_url": "https://github.com/zkywalker/nanobanana-artisan-portrait/blob/main/samples/sample-3-pro-01.png",
       "repo": "zkywalker/nanobanana-artisan-portrait",

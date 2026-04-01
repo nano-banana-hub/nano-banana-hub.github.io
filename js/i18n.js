@@ -57,6 +57,9 @@ const translations = {
         open: 'Open preview',
         source: 'Preview Source',
         openOriginal: 'Open original',
+        previous: 'Previous sample',
+        next: 'Next sample',
+        sampleCount: '{current} / {total}',
       },
       template: {
         source: 'Template Source',
@@ -305,6 +308,9 @@ const translations = {
         open: '查看预览',
         source: '预览来源',
         openOriginal: '看原图',
+        previous: '上一张样张',
+        next: '下一张样张',
+        sampleCount: '{current} / {total}',
       },
       template: {
         source: '模板源码',

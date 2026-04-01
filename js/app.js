@@ -19,6 +19,7 @@ const DEFAULT_FILTERS = {
 };
 
 const DEFAULT_SORT = 'all-time';
+const SAMPLE_SWIPE_THRESHOLD = 48;
 const EMPTY_STATS = {
   installs: '--',
   trending: 0
@@ -33,6 +34,7 @@ let currentSort = DEFAULT_SORT;
 let currentSearch = '';
 let searchTimer = null;
 let activeTemplate = null;
+let activeSampleIndex = 0;
 let lastFocusTarget = null;
 let didCatalogLoadFail = false;
 let isHandlingLocationSync = false;
@@ -52,6 +54,10 @@ const dom = {
   clearFilters: document.getElementById('clear-filters'),
   modalOverlay: document.getElementById('modal-overlay'),
   modalClose: document.getElementById('modal-close'),
+  modalSampleControls: document.getElementById('modal-sample-controls'),
+  modalPrevSample: document.getElementById('modal-prev-sample'),
+  modalNextSample: document.getElementById('modal-next-sample'),
+  modalSampleCount: document.getElementById('modal-sample-count'),
   modalImageButton: document.getElementById('modal-image-button'),
   modalImage: document.getElementById('modal-image'),
   modalImageHint: document.getElementById('modal-image-hint'),
@@ -73,6 +79,11 @@ const dom = {
   modalInstallCmd: document.getElementById('modal-install-cmd'),
   modalCopyBtn: document.getElementById('modal-copy-btn'),
   lightboxOverlay: document.getElementById('lightbox-overlay'),
+  lightboxSampleControls: document.getElementById('lightbox-sample-controls'),
+  lightboxPrevSample: document.getElementById('lightbox-prev-sample'),
+  lightboxNextSample: document.getElementById('lightbox-next-sample'),
+  lightboxSampleCount: document.getElementById('lightbox-sample-count'),
+  lightboxStage: document.getElementById('lightbox-stage'),
   lightboxImage: document.getElementById('lightbox-image'),
   lightboxOpenOriginalLink: document.getElementById('lightbox-open-original-link'),
   lightboxClose: document.getElementById('lightbox-close'),
@@ -221,22 +232,29 @@ function bindEvents() {
   });
 
   dom.modalImageButton.addEventListener('click', () => {
-    if (activeTemplate?.sample_image) {
+    if (getActiveSample(activeTemplate)?.image) {
       openLightbox(activeTemplate);
     }
   });
 
   dom.modalViewImageBtn.addEventListener('click', () => {
-    if (activeTemplate?.sample_image) {
+    if (getActiveSample(activeTemplate)?.image) {
       openLightbox(activeTemplate);
     }
   });
+
+  dom.modalPrevSample.addEventListener('click', () => navigateActiveSample(-1));
+  dom.modalNextSample.addEventListener('click', () => navigateActiveSample(1));
+  bindSampleSwipe(dom.modalImageButton);
 
   dom.modalCopyBtn.addEventListener('click', () => {
     copyToClipboard(dom.modalInstallCmd.textContent || '', dom.modalCopyBtn);
   });
 
   dom.lightboxClose.addEventListener('click', closeLightbox);
+  dom.lightboxPrevSample.addEventListener('click', () => navigateActiveSample(-1));
+  dom.lightboxNextSample.addEventListener('click', () => navigateActiveSample(1));
+  bindSampleSwipe(dom.lightboxStage);
   dom.lightboxOverlay.addEventListener('click', (event) => {
     if (event.target === dom.lightboxOverlay) {
       closeLightbox();
@@ -244,6 +262,16 @@ function bindEvents() {
   });
 
   document.addEventListener('keydown', (event) => {
+    if ((event.key === 'ArrowLeft' || event.key === 'ArrowRight')
+      && (dom.modalOverlay.classList.contains('open') || dom.lightboxOverlay.classList.contains('open'))
+    ) {
+      const delta = event.key === 'ArrowLeft' ? -1 : 1;
+      if (navigateActiveSample(delta)) {
+        event.preventDefault();
+      }
+      return;
+    }
+
     if (event.key !== 'Escape') {
       return;
     }
@@ -551,11 +579,13 @@ function renderCard(template) {
   const key = getTemplateKey(template);
   const title = getLocalizedTemplateTitle(template);
   const subtitle = getLocalizedTemplateSubtitle(template, template.repo);
+  const samples = getTemplateSamples(template);
+  const primarySample = samples[0] || null;
   const tagsHtml = (template.tags || [])
     .slice(0, 3)
     .map((tag) => `<span class="tag">${escHtml(tag)}</span>`)
     .join('');
-  const hasSampleImage = Boolean(template.sample_image);
+  const hasSampleImage = Boolean(primarySample?.image);
   const previewLabel = hasSampleImage ? t('common.preview.loading') : t('common.preview.unavailable');
   const sourceUrl = template.template_url || template.repo_url || '#';
   const sourceValue = template.catalog_source || 'curated';
@@ -580,7 +610,7 @@ function renderCard(template) {
         <div class="card-image-placeholder" aria-hidden="true">
           <span class="card-image-placeholder-label">${escHtml(previewLabel)}</span>
         </div>
-        ${hasSampleImage ? `<img data-src="${escAttr(template.sample_image)}" alt="${escAttr(title)}" loading="lazy">` : ''}
+        ${hasSampleImage ? `<img data-src="${escAttr(primarySample.image)}" alt="${escAttr(title)}" loading="lazy">` : ''}
         <div class="card-top-badges">
           <div class="card-top-badges-left">
             ${template.pinned ? `<span class="card-flag-badge">${escHtml(t('common.badge.pinned'))}</span>` : ''}
@@ -722,6 +752,7 @@ function findTemplate(id, repo) {
 
 function openModal(template, triggerElement) {
   activeTemplate = template;
+  activeSampleIndex = 0;
   lastFocusTarget = triggerElement instanceof HTMLElement ? triggerElement : document.activeElement;
   populateModal(template);
   closeLightbox();
@@ -729,6 +760,15 @@ function openModal(template, triggerElement) {
   dom.modalOverlay.setAttribute('aria-hidden', 'false');
   updateBodyScrollLock();
   dom.modalClose.focus();
+
+  void hydrateTemplateSamples(template).then(() => {
+    if (activeTemplate && isSameTemplate(activeTemplate, template)) {
+      populateModal(template);
+      if (dom.lightboxOverlay.classList.contains('open')) {
+        openLightbox(template);
+      }
+    }
+  });
 }
 
 function populateModal(template) {
@@ -736,8 +776,10 @@ function populateModal(template) {
   const title = getLocalizedTemplateTitle(template);
   const subtitle = getLocalizedTemplateSubtitle(template, template.id);
   const templateUrl = getTemplateUrl(template);
-  const originalImageUrl = getOriginalImageLink(template);
-  const hasSampleImage = Boolean(template.sample_image);
+  const samples = getTemplateSamples(template);
+  const activeSample = getActiveSample(template);
+  const originalImageUrl = getOriginalImageLink(activeSample, template);
+  const hasSampleImage = Boolean(activeSample?.image);
   const featuredLabel = template.featured_label?.trim() || t('common.badge.featured');
   const typeValue = template.type || 'prompt';
   const profileValue = template.profile || 'general';
@@ -781,8 +823,8 @@ function populateModal(template) {
 
       markModalPreviewUnavailable(title);
     };
-    dom.modalImage.src = template.sample_image;
-    dom.modalImage.alt = title;
+    dom.modalImage.src = activeSample.image;
+    dom.modalImage.alt = activeSample.alt || title;
     dom.modalImageButton.setAttribute('aria-label', t('index.modal.viewFullImage'));
     dom.modalImageButton.classList.remove('is-disabled');
     dom.modalImageButton.disabled = false;
@@ -791,6 +833,7 @@ function populateModal(template) {
     markModalPreviewUnavailable(title);
   }
 
+  updateSampleControls(samples);
   dom.modalViewImageBtn.hidden = !hasSampleImage;
   setLinkState(dom.modalOpenOriginalLink, originalImageUrl);
   setLinkState(dom.modalTemplateSourceLink, templateUrl);
@@ -804,6 +847,7 @@ function closeModal() {
   dom.modalOverlay.classList.remove('open');
   dom.modalOverlay.setAttribute('aria-hidden', 'true');
   activeTemplate = null;
+  activeSampleIndex = 0;
   updateBodyScrollLock();
 
   if (lastFocusTarget instanceof HTMLElement) {
@@ -812,13 +856,16 @@ function closeModal() {
 }
 
 function openLightbox(template) {
-  if (!template?.sample_image) {
+  const samples = getTemplateSamples(template);
+  const activeSample = getActiveSample(template);
+  if (!activeSample?.image) {
     return;
   }
 
-  dom.lightboxImage.src = template.sample_image;
-  dom.lightboxImage.alt = getLocalizedTemplateTitle(template);
-  setLinkState(dom.lightboxOpenOriginalLink, getOriginalImageLink(template));
+  dom.lightboxImage.src = activeSample.image;
+  dom.lightboxImage.alt = activeSample.alt || getLocalizedTemplateTitle(template);
+  setLinkState(dom.lightboxOpenOriginalLink, getOriginalImageLink(activeSample, template));
+  updateSampleControls(samples);
   dom.lightboxOverlay.classList.add('open');
   dom.lightboxOverlay.setAttribute('aria-hidden', 'false');
   updateBodyScrollLock();
@@ -831,12 +878,53 @@ function closeLightbox() {
   dom.lightboxImage.alt = '';
   dom.lightboxOpenOriginalLink.hidden = true;
   dom.lightboxOpenOriginalLink.removeAttribute('href');
+  dom.lightboxSampleControls.hidden = true;
   updateBodyScrollLock();
 }
 
 function updateBodyScrollLock() {
   const isOpen = dom.modalOverlay.classList.contains('open') || dom.lightboxOverlay.classList.contains('open');
   document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+
+function bindSampleSwipe(element) {
+  if (!element) {
+    return;
+  }
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let isTracking = false;
+
+  element.addEventListener('touchstart', (event) => {
+    if (!activeTemplate || event.touches.length !== 1) {
+      isTracking = false;
+      return;
+    }
+
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+    isTracking = true;
+  }, { passive: true });
+
+  element.addEventListener('touchend', (event) => {
+    if (!isTracking || !activeTemplate || event.changedTouches.length !== 1) {
+      isTracking = false;
+      return;
+    }
+
+    const deltaX = event.changedTouches[0].clientX - touchStartX;
+    const deltaY = event.changedTouches[0].clientY - touchStartY;
+    isTracking = false;
+
+    if (Math.abs(deltaX) < SAMPLE_SWIPE_THRESHOLD || Math.abs(deltaX) <= Math.abs(deltaY)) {
+      return;
+    }
+
+    if (navigateActiveSample(deltaX > 0 ? -1 : 1)) {
+      event.preventDefault();
+    }
+  });
 }
 
 function setLinkState(link, href) {
@@ -863,8 +951,16 @@ function getTemplateUrl(template) {
   return `https://github.com/${template.repo}/tree/main/${templatePath}`;
 }
 
-function getOriginalImageLink(template) {
-  return template.sample_image_page_url || template.sample_image || '';
+function getOriginalImageLink(sample, template) {
+  if (sample?.page_url) {
+    return sample.page_url;
+  }
+
+  if (sample?.image) {
+    return sample.image;
+  }
+
+  return template?.sample_image_page_url || template?.sample_image || '';
 }
 
 function markPreviewUnavailable(wrap) {
@@ -889,6 +985,7 @@ function markModalPreviewUnavailable(title) {
   dom.modalImageButton.classList.add('is-disabled');
   dom.modalImageButton.disabled = true;
   dom.modalImageHint.textContent = t('common.preview.unavailable');
+  dom.modalSampleControls.hidden = true;
   dom.modalViewImageBtn.hidden = true;
   dom.modalOpenOriginalLink.hidden = true;
 }
@@ -911,24 +1008,15 @@ async function recoverTemplatePreview(template) {
     }
 
     const frontmatter = parseFrontmatter(await response.text());
-    const samples = Array.isArray(frontmatter?.samples) ? frontmatter.samples : [];
+    const samples = normalizeTemplateSamples(frontmatter?.samples, template);
     if (samples.length === 0) {
       return null;
     }
 
-    const firstSample = samples[0];
-    const sampleFile = typeof firstSample === 'string' ? firstSample : firstSample?.file;
-    if (!sampleFile) {
-      return null;
-    }
-
-    const samplePath = joinRepoPath(template.template_path, sampleFile);
-    const sampleImage = `${GITHUB_RAW}/${template.repo}/${template.branch}/${samplePath}`;
-    const sampleImagePageUrl = `${GITHUB_WEB}/${template.repo}/blob/${template.branch}/${samplePath}`;
-
-    template.sample_image = sampleImage;
-    template.sample_image_page_url = sampleImagePageUrl;
-    return { sampleImage, sampleImagePageUrl };
+    template.samples = samples;
+    template.sample_image = samples[0].image || '';
+    template.sample_image_page_url = samples[0].page_url || samples[0].image || '';
+    return { samples, sampleImage: template.sample_image, sampleImagePageUrl: template.sample_image_page_url };
   })().catch(() => null);
 
   previewRecoveryCache.set(cacheKey, task);
@@ -1021,6 +1109,134 @@ function joinRepoPath(...parts) {
     .map((part) => normalizePath(part))
     .filter(Boolean)
     .join('/');
+}
+
+function normalizeTemplateSamples(entries, template) {
+  const rawEntries = Array.isArray(entries) ? entries : [];
+
+  return rawEntries.map((entry) => {
+    const sample = typeof entry === 'string' ? { file: entry } : (entry || {});
+    const sampleFile = sample.file || '';
+    const sampleImage = sample.image || (
+      sampleFile && template?.repo && template?.branch
+        ? `${GITHUB_RAW}/${template.repo}/${template.branch}/${joinRepoPath(template.template_path, sampleFile)}`
+        : ''
+    );
+    const samplePageUrl = sample.page_url || (
+      sampleFile && template?.repo && template?.branch
+        ? `${GITHUB_WEB}/${template.repo}/blob/${template.branch}/${joinRepoPath(template.template_path, sampleFile)}`
+        : ''
+    );
+
+    if (!sampleImage) {
+      return null;
+    }
+
+    return {
+      file: sampleFile,
+      model: sample.model || '',
+      prompt: sample.prompt || '',
+      aspect: sample.aspect || template?.aspect || '',
+      image: sampleImage,
+      page_url: samplePageUrl || sampleImage,
+      alt: sample.alt || getLocalizedTemplateTitle(template),
+    };
+  }).filter(Boolean);
+}
+
+function getTemplateSamples(template) {
+  if (!template) {
+    return [];
+  }
+
+  if (Array.isArray(template.samples) && template.samples.length > 0) {
+    const normalized = normalizeTemplateSamples(template.samples, template);
+    if (normalized.length > 0) {
+      template.samples = normalized;
+      template.sample_image = normalized[0].image;
+      template.sample_image_page_url = normalized[0].page_url;
+      return normalized;
+    }
+  }
+
+  if (template.sample_image) {
+    return [{
+      image: template.sample_image,
+      page_url: template.sample_image_page_url || template.sample_image,
+      aspect: template.aspect || '',
+      alt: getLocalizedTemplateTitle(template),
+    }];
+  }
+
+  return [];
+}
+
+function getActiveSample(template) {
+  const samples = getTemplateSamples(template);
+  if (samples.length === 0) {
+    return null;
+  }
+
+  if (activeSampleIndex >= samples.length || activeSampleIndex < 0) {
+    activeSampleIndex = 0;
+  }
+
+  return samples[activeSampleIndex];
+}
+
+function updateSampleControls(samples) {
+  const total = samples.length;
+  const hasMultiple = total > 1;
+  const countLabel = t('common.preview.sampleCount', {
+    current: String(total === 0 ? 0 : activeSampleIndex + 1),
+    total: String(total),
+  });
+
+  dom.modalSampleControls.hidden = !hasMultiple;
+  dom.lightboxSampleControls.hidden = !hasMultiple;
+  dom.modalPrevSample.disabled = !hasMultiple;
+  dom.modalNextSample.disabled = !hasMultiple;
+  dom.lightboxPrevSample.disabled = !hasMultiple;
+  dom.lightboxNextSample.disabled = !hasMultiple;
+  dom.modalSampleCount.textContent = countLabel;
+  dom.lightboxSampleCount.textContent = countLabel;
+}
+
+async function hydrateTemplateSamples(template) {
+  if (!template) {
+    return [];
+  }
+
+  if (Array.isArray(template.samples) && template.samples.length > 0) {
+    return getTemplateSamples(template);
+  }
+
+  const recovered = await recoverTemplatePreview(template);
+  if (recovered?.samples) {
+    return recovered.samples;
+  }
+
+  return getTemplateSamples(template);
+}
+
+function navigateActiveSample(delta) {
+  if (!activeTemplate) {
+    return false;
+  }
+
+  const samples = getTemplateSamples(activeTemplate);
+  if (samples.length < 2) {
+    return false;
+  }
+
+  activeSampleIndex = (activeSampleIndex + delta + samples.length) % samples.length;
+  populateModal(activeTemplate);
+
+  if (dom.lightboxOverlay.classList.contains('open')) {
+    openLightbox(activeTemplate);
+  }
+
+  return true;
 }
 
 function isSameTemplate(left, right) {

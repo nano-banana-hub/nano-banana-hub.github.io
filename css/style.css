@@ -1447,11 +1447,18 @@ main {
   grid-template-columns: minmax(240px, 0.86fr) minmax(0, 1.14fr);
   width: min(940px, 100%);
   max-height: min(88vh, 900px);
+  max-height: min(88dvh, 900px);
   overflow: hidden;
   border: 1px solid rgba(28, 33, 28, 0.1);
   border-radius: 28px;
   background: linear-gradient(180deg, rgba(250, 245, 235, 0.98), rgba(240, 231, 210, 0.98));
   box-shadow: 0 28px 90px rgba(0, 0, 0, 0.28);
+}
+
+.modal-media,
+.modal-body {
+  min-width: 0;
+  min-height: 0;
 }
 
 .modal-close {
@@ -1467,13 +1474,24 @@ main {
   color: var(--ink);
 }
 
+.modal-media {
+  position: relative;
+  display: grid;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.42), transparent 42%),
+    linear-gradient(135deg, rgba(28, 33, 28, 0.12), rgba(255, 255, 255, 0.4));
+}
+
 .modal-image-button {
   position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
   min-height: 100%;
   padding: 0;
   border: 0;
-  background:
-    linear-gradient(135deg, rgba(28, 33, 28, 0.12), rgba(255, 255, 255, 0.4));
+  background: transparent;
+  touch-action: pan-y;
 }
 
 .modal-image-button.is-disabled {
@@ -1483,7 +1501,8 @@ main {
 .modal-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  padding: 24px;
+  object-fit: contain;
 }
 
 .modal-image-hint {
@@ -1496,6 +1515,49 @@ main {
   color: #f7efdc;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.modal-sample-controls,
+.lightbox-sample-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-sample-controls {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1;
+}
+
+.sample-nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  border: 1px solid rgba(28, 33, 28, 0.18);
+  border-radius: 999px;
+  background: rgba(250, 245, 235, 0.92);
+  color: var(--ink);
+}
+
+.sample-nav-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+}
+
+.sample-count {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(28, 33, 28, 0.78);
+  color: #f7efdc;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -1599,22 +1661,41 @@ main {
 .lightbox-overlay {
   z-index: 70;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 12px;
   padding: 16px;
   background: rgba(10, 12, 9, 0.92);
+  overflow: auto;
 }
 
 .lightbox-toolbar {
   display: flex;
-  justify-content: flex-end;
-  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.lightbox-stage {
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  border-radius: 24px;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.05), transparent 46%);
 }
 
 .lightbox-image {
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 150px);
+  max-height: calc(100dvh - 150px);
   object-fit: contain;
+}
+
+.sample-count-lightbox {
+  background: rgba(250, 245, 235, 0.14);
 }
 
 .hero,
@@ -1680,10 +1761,17 @@ main {
 
   .modal {
     max-height: 90vh;
+    max-height: 90dvh;
+  }
+
+  .modal-media {
+    min-height: clamp(220px, 38vh, 300px);
+    min-height: clamp(220px, 38dvh, 300px);
   }
 
   .modal-image-button {
-    min-height: 280px;
+    min-height: clamp(220px, 36vh, 280px);
+    min-height: clamp(220px, 36dvh, 280px);
   }
 }
 
@@ -1799,6 +1887,31 @@ main {
 
   .modal-body {
     padding: 20px 16px 16px;
+  }
+
+  .modal-image {
+    padding: 18px;
+  }
+
+  .modal-sample-controls {
+    left: 16px;
+    right: 16px;
+    justify-content: space-between;
+  }
+
+  .lightbox-toolbar {
+    align-items: stretch;
+  }
+
+  .lightbox-sample-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .lightbox-toolbar .lightbox-link,
+  .lightbox-toolbar .lightbox-close {
+    flex: 1 1 140px;
+    width: auto;
   }
 
   .modal-install-box {

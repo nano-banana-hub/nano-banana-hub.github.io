@@ -1,6 +1,6 @@
 # BananaHub Agent Catalog
 
-Generated: 2026-04-01T07:16:47.448Z
+Generated: 2026-04-01T14:05:37.486Z
 
 BananaHub is the installable template network for Nano Banana.
 Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.
@@ -13,7 +13,21 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Discovered Catalog JSON: https://nano-banana-hub.github.io/catalog-discovered.json
 - llms.txt: https://nano-banana-hub.github.io/llms.txt
 
-## Curated Templates (9)
+## Curated Templates (10)
+
+### app-web-logo-system
+- Title: App and Web Logo Workflow / App/Web Logo 生成工作流
+- Type: workflow
+- Profile: text-heavy
+- Difficulty: intermediate
+- Source Layer: curated
+- Official: yes
+- Featured: no
+- Pinned: no
+- Tags: logo, app图标, web logo, favicon, 品牌标识, icon, wordmark, maskable
+- Description: Guide the agent through building a usable app and web logo system: first lock the brand idea and the most restrictive platform constraints, then generate an icon-first mark, then derive web lockups and platform-safe variants without letting the concept drift.
+- Install: `bananahub add nano-banana-hub/nanobanana/app-web-logo-system`
+- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/app-web-logo-system
 
 ### asset-style-consistency-pack
 - Title: Local Asset Style Consistency Workflow / 本地素材风格统一工作流

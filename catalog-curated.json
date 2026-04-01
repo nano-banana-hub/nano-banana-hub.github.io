@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "catalog_type": "curated",
-  "generated": "2026-04-01T07:16:47.448Z",
+  "generated": "2026-04-01T14:05:37.486Z",
   "site": {
     "url": "https://nano-banana-hub.github.io/",
     "catalog_json": "https://nano-banana-hub.github.io/catalog.json",
@@ -11,12 +11,12 @@
     "agent_catalog": "https://nano-banana-hub.github.io/agent-catalog.md"
   },
   "summary": {
-    "template_count": 9,
+    "template_count": 10,
     "profile_count": 7,
-    "official_count": 9,
+    "official_count": 10,
     "featured_count": 0,
     "pinned_count": 0,
-    "curated_count": 9,
+    "curated_count": 10,
     "discovered_count": 0,
     "repos": [
       "nano-banana-hub/nanobanana"
@@ -24,8 +24,8 @@
   },
   "layers": {
     "curated": {
-      "template_count": 9,
-      "official_count": 9,
+      "template_count": 10,
+      "official_count": 10,
       "repos": [
         "nano-banana-hub/nanobanana"
       ]
@@ -47,6 +47,48 @@
   ],
   "templates": [
     {
+      "id": "app-web-logo-system",
+      "type": "workflow",
+      "title": "App/Web Logo 生成工作流",
+      "title_en": "App and Web Logo Workflow",
+      "author": "nanobanana",
+      "version": "1.0.0",
+      "profile": "text-heavy",
+      "tags": [
+        "logo",
+        "app图标",
+        "web logo",
+        "favicon",
+        "品牌标识",
+        "icon",
+        "wordmark",
+        "maskable"
+      ],
+      "aspect": "1:1",
+      "difficulty": "intermediate",
+      "description": "Guide the agent through building a usable app and web logo system: first lock the brand idea and the most restrictive platform constraints, then generate an icon-first mark, then derive web lockups and platform-safe variants without letting the concept drift.",
+      "samples": [],
+      "sample_image": "",
+      "sample_image_page_url": "",
+      "repo": "nano-banana-hub/nanobanana",
+      "repo_url": "https://github.com/nano-banana-hub/nanobanana",
+      "branch": "main",
+      "template_root": "references/templates",
+      "template_path": "references/templates/app-web-logo-system",
+      "template_url": "https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/app-web-logo-system",
+      "official": true,
+      "catalog_source": "curated",
+      "install_target": "nano-banana-hub/nanobanana/app-web-logo-system",
+      "install_cmd": "bananahub add nano-banana-hub/nanobanana/app-web-logo-system",
+      "created": "2026-04-01",
+      "updated": "2026-04-01",
+      "pinned": false,
+      "pinned_rank": null,
+      "featured": false,
+      "featured_label": "",
+      "featured_note": ""
+    },
+    {
       "id": "asset-style-consistency-pack",
       "type": "workflow",
       "title": "本地素材风格统一工作流",
@@ -66,6 +108,24 @@
       "aspect": "1:1",
       "difficulty": "advanced",
       "description": "Guide the agent through creating a consistent asset pack from local images: first lock one approved style anchor, then propagate the same style and constraints across additional assets without letting color, composition logic, or character identity drift.",
+      "samples": [
+        {
+          "file": "samples/sample-3-pro-01.png",
+          "model": "gemini-3-pro-image-preview",
+          "prompt": "Keep the exact building layout, pool placement, fountain placement, trees, and overall camera angle unchanged. Transform this image into a clean architectural concept illustration with a restrained pastel palette, soft afternoon lighting, matte materials, and crisp presentation lines. Preserve the house geometry and outdoor elements while normalizing the whole scene into one polished visual family. Do not add new objects or change the composition.",
+          "aspect": "16:9",
+          "image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/asset-style-consistency-pack/samples/sample-3-pro-01.png",
+          "page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/asset-style-consistency-pack/samples/sample-3-pro-01.png"
+        },
+        {
+          "file": "samples/sample-3-pro-02.png",
+          "model": "gemini-3-pro-image-preview",
+          "prompt": "Keep the exact building layout, pool placement, fountain placement, trees, and overall camera angle unchanged. Restyle this image into a premium dusk visualization with deep navy shadows, warm interior glow, reflective water, cleaner material separation, and polished architectural presentation. Preserve the house geometry and all outdoor elements while shifting the whole image into one coherent evening-render family. Do not add new objects or change the composition.",
+          "aspect": "16:9",
+          "image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/asset-style-consistency-pack/samples/sample-3-pro-02.png",
+          "page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/asset-style-consistency-pack/samples/sample-3-pro-02.png"
+        }
+      ],
       "sample_image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/asset-style-consistency-pack/samples/sample-3-pro-01.png",
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/asset-style-consistency-pack/samples/sample-3-pro-01.png",
       "repo": "nano-banana-hub/nanobanana",
@@ -105,6 +165,16 @@
       "aspect": "1:1",
       "difficulty": "intermediate",
       "description": "Guide the agent through a repeatable storyboard exploration workflow: first lock a master character reference, then explore multi-shot boards, then iterate with single-variable edits so the character stays consistent across frames without overcommitting too early to a final story layout.",
+      "samples": [
+        {
+          "file": "samples/sample-3-pro-01.png",
+          "model": "gemini-3-pro-image-preview",
+          "prompt": "Using the provided reference image of Miso, create a 3x3 contact sheet. All 9 cells must show the same Siamese cat character, the same teal neck scarf with a small gold bell, the same soft pastel interior environment, and the same warm daylight lighting. Each cell should use a different natural pose or camera angle while keeping facial structure, fur pattern, blue eyes, proportions, palette, and background continuity stable across the grid. Avoid duplicate frames. Keep the tone cute, clean, and IP-friendly.",
+          "aspect": "1:1",
+          "image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/consistent-character-storyboard/samples/sample-3-pro-01.png",
+          "page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/consistent-character-storyboard/samples/sample-3-pro-01.png"
+        }
+      ],
       "sample_image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/consistent-character-storyboard/samples/sample-3-pro-01.png",
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/consistent-character-storyboard/samples/sample-3-pro-01.png",
       "repo": "nano-banana-hub/nanobanana",
@@ -143,6 +213,16 @@
       "aspect": "1:1",
       "difficulty": "beginner",
       "description": "生成 Q 版可爱贴纸/表情包。大头小身、表情夸张、白色背景带描边，适合微信/Telegram 表情包或社交媒体贴纸。",
+      "samples": [
+        {
+          "file": "samples/sample-3.1-flash-01.png",
+          "model": "gemini-3.1-flash-image-preview",
+          "prompt": "A cute chibi sticker of a round fluffy cat, happy and excited with oversized sparkly eyes and a wide open smile, waving both paws enthusiastically. Kawaii anime style with bold black outline, flat cel-shaded colors, and clean white background. Super deformed proportions with an oversized head (head-to-body ratio 1:1), die-cut sticker-ready composition, simple rounded shapes, vibrant pastel-accented colors.",
+          "aspect": "1:1",
+          "image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/cute-sticker/samples/sample-3.1-flash-01.png",
+          "page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/cute-sticker/samples/sample-3.1-flash-01.png"
+        }
+      ],
       "sample_image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/cute-sticker/samples/sample-3.1-flash-01.png",
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/cute-sticker/samples/sample-3.1-flash-01.png",
       "repo": "nano-banana-hub/nanobanana",
@@ -181,6 +261,16 @@
       "aspect": "16:9",
       "difficulty": "beginner",
       "description": "一键生成赛博朋克风格的城市夜景。霓虹灯光、雨水反射、未来感建筑，适合用作桌面壁纸、概念设定、社交媒体封面。",
+      "samples": [
+        {
+          "file": "samples/sample-3.1-flash-01.png",
+          "model": "gemini-3.1-flash-image-preview",
+          "prompt": "A photorealistic wide-angle shot of a cyberpunk city street at night. A rain-soaked narrow alley lined with storefronts, holographic advertisements floating above the shops and flickering neon signage in the distance. The scene is bathed in pink and cyan neon light reflecting off the wet pavement and puddles. Dense fog drifts through the alley with volumetric light rays piercing through from above, creating visible shafts of colored light. Captured with a 35mm wide-angle lens, deep focus keeping both the foreground puddles and distant buildings sharp. Cinematic composition with leading lines drawing the eye into the depth of the street.",
+          "aspect": "16:9",
+          "image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/cyberpunk-city/samples/sample-3.1-flash-01.png",
+          "page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/cyberpunk-city/samples/sample-3.1-flash-01.png"
+        }
+      ],
       "sample_image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/cyberpunk-city/samples/sample-3.1-flash-01.png",
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/cyberpunk-city/samples/sample-3.1-flash-01.png",
       "repo": "nano-banana-hub/nanobanana",
@@ -219,6 +309,16 @@
       "aspect": "4:3",
       "difficulty": "intermediate",
       "description": "生成清晰的信息图、流程图或知识卡片。结构化布局、图标化表达、层次分明的信息展示，适合技术文档、教程说明、社交媒体知识分享。",
+      "samples": [
+        {
+          "file": "samples/sample-3.1-flash-01.png",
+          "model": "gemini-3.1-flash-image-preview",
+          "prompt": "Create a clean infographic about how coffee is made from bean to cup, in 5 steps: Harvest, Roast, Grind, Brew, Serve. Vertical flowchart layout with the 5 steps arranged top-to-bottom, each step inside a rounded box, connected by directional arrows. Modern flat vector design with rounded icons beside each step, using a warm pastel color palette of 3-4 colors. Each step has a bold short label in clear sans-serif font. Light gray background with subtle grid pattern. Professional information design with clear visual hierarchy, easy to read at a glance.",
+          "aspect": "4:3",
+          "image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/info-diagram/samples/sample-3.1-flash-01.png",
+          "page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/info-diagram/samples/sample-3.1-flash-01.png"
+        }
+      ],
       "sample_image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/info-diagram/samples/sample-3.1-flash-01.png",
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/info-diagram/samples/sample-3.1-flash-01.png",
       "repo": "nano-banana-hub/nanobanana",
@@ -257,6 +357,16 @@
       "aspect": "9:16",
       "difficulty": "beginner",
       "description": "生成极简风格手机壁纸。大面积留白、单一主体、克制的配色，适合 iPhone/Android 锁屏和主屏壁纸。",
+      "samples": [
+        {
+          "file": "samples/sample-3.1-flash-01.png",
+          "model": "gemini-3.1-flash-image-preview",
+          "prompt": "A minimalist phone wallpaper featuring a single small paper boat centered in the lower third of the frame with vast empty space above. Soft cream background with a muted blue accent on the subject. Clean vector illustration with subtle grain texture and crisp edges. Expansive negative space occupying most of the image, serene and contemplative mood.",
+          "aspect": "9:16",
+          "image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/minimal-wallpaper/samples/sample-3.1-flash-01.png",
+          "page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/minimal-wallpaper/samples/sample-3.1-flash-01.png"
+        }
+      ],
       "sample_image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/minimal-wallpaper/samples/sample-3.1-flash-01.png",
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/minimal-wallpaper/samples/sample-3.1-flash-01.png",
       "repo": "nano-banana-hub/nanobanana",
@@ -295,6 +405,16 @@
       "aspect": "1:1",
       "difficulty": "beginner",
       "description": "生成电商平台标准白底产品图。干净的白色背景、专业的产品摄影灯光、清晰的产品细节，适合淘宝主图、亚马逊 listing、商品详情页。",
+      "samples": [
+        {
+          "file": "samples/sample-3.1-flash-01.png",
+          "model": "gemini-3.1-flash-image-preview",
+          "prompt": "A photorealistic professional product photograph of a sleek wireless Bluetooth headphone in matte black finish. Front three-quarter hero angle showing the top and front of the product. Pure white background with a subtle soft shadow directly beneath the product for depth. Studio three-point softbox lighting setup with a soft diffused key light and gentle rim light to define edges. Sharp focus on the product texture and material finish, the product fills most of the frame. Commercial catalog photography style, isolated composition.",
+          "aspect": "1:1",
+          "image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/product-white-bg/samples/sample-3.1-flash-01.png",
+          "page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/product-white-bg/samples/sample-3.1-flash-01.png"
+        }
+      ],
       "sample_image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/product-white-bg/samples/sample-3.1-flash-01.png",
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/product-white-bg/samples/sample-3.1-flash-01.png",
       "repo": "nano-banana-hub/nanobanana",
@@ -336,6 +456,24 @@
       "aspect": "16:9",
       "difficulty": "intermediate",
       "description": "Guide the agent through converting README or positioning text into one launch-ready visual with locked copy, a clear headline hierarchy, and a visual metaphor that matches the actual product instead of generic AI poster aesthetics.",
+      "samples": [
+        {
+          "file": "samples/sample-3-pro-01.png",
+          "model": "gemini-3-pro-image-preview",
+          "prompt": "Create a launch visual for Nano Banana. Use the exact headline 'Agent-native image workflows' as the dominant text. Add the supporting line 'Prompt optimization, templates, and editing in one flow' in a smaller secondary position. The asset target is a homepage hero banner. Use a bold terminal-meets-product-doc composition with layered prompt cards flowing into generated image frames. Keep the design high-contrast, clean, and readable at a glance. Use a modern editorial product aesthetic with warm banana gold, ink black, and paper white. Do not invent extra UI labels or filler marketing copy.",
+          "aspect": "16:9",
+          "image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/readme-launch-visual/samples/sample-3-pro-01.png",
+          "page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/readme-launch-visual/samples/sample-3-pro-01.png"
+        },
+        {
+          "file": "samples/sample-3-pro-02.png",
+          "model": "gemini-3-pro-image-preview",
+          "prompt": "Create an OG cover image for Nano Banana. Keep the exact headline 'Build image workflows, not prompt piles'. Use minimal supporting text: 'Templates, editing, and iterative guidance for Gemini images'. Composition should be optimized for a wide social card, with clear breathing room around the text and one memorable visual metaphor based on modular prompt cards snapping into a guided workflow. Strong hierarchy, strong contrast, no clutter. Use a clean editorial product aesthetic with banana gold accents, black typography, and subtle paper texture.",
+          "aspect": "16:9",
+          "image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/readme-launch-visual/samples/sample-3-pro-02.png",
+          "page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/readme-launch-visual/samples/sample-3-pro-02.png"
+        }
+      ],
       "sample_image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/readme-launch-visual/samples/sample-3-pro-01.png",
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/readme-launch-visual/samples/sample-3-pro-01.png",
       "repo": "nano-banana-hub/nanobanana",
@@ -377,6 +515,24 @@
       "aspect": "4:3",
       "difficulty": "intermediate",
       "description": "Guide the agent through turning repository context into one clear explainer visual: a project map, architecture diagram, workflow chart, or onboarding card that reflects the actual repo structure instead of inventing generic boxes.",
+      "samples": [
+        {
+          "file": "samples/sample-3-pro-01.png",
+          "model": "gemini-3-pro-image-preview",
+          "prompt": "Create a clean explainer diagram for BananaHub. Title: 'BananaHub Architecture'. Use a left-to-right architecture layout. Include these exact labeled blocks: 'Nanobanana Skill', 'BananaHub CLI', 'Hub API', 'Catalog Site', 'GitHub Templates'. Show only these verified relationships: the skill loads built-in and installed templates, the CLI installs templates from GitHub, the Hub API reports discovered installs, and the catalog site indexes curated and discovered templates. Keep labels short, high-contrast, and easy to read. Use a modern flat product-doc aesthetic with restrained blue, teal, and warm gray accents. Prioritize clarity over decoration.",
+          "aspect": "4:3",
+          "image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/repo-explainer-diagram/samples/sample-3-pro-01.png",
+          "page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/repo-explainer-diagram/samples/sample-3-pro-01.png"
+        },
+        {
+          "file": "samples/sample-3-pro-02.png",
+          "model": "gemini-3-pro-image-preview",
+          "prompt": "Create a clean repository explainer diagram for Nano Banana. Title: 'Nano Banana Template Flow'. Use a top-to-bottom workflow layout. Include these exact labeled blocks: 'User Request', 'Prompt Optimization', 'Profile Match', 'Template Suggestion', 'Generate or Edit'. Show only these verified relationships: the user request goes into prompt optimization, optimization leads to profile matching, profile matching can trigger template suggestion, and the final step is generate or edit. Keep labels short, high-contrast, and easy to read. Use a crisp flat explainer-card aesthetic with soft grid background, restrained teal and banana-gold accents, and simple directional connectors.",
+          "aspect": "4:3",
+          "image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/repo-explainer-diagram/samples/sample-3-pro-02.png",
+          "page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/repo-explainer-diagram/samples/sample-3-pro-02.png"
+        }
+      ],
       "sample_image": "https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/repo-explainer-diagram/samples/sample-3-pro-01.png",
       "sample_image_page_url": "https://github.com/nano-banana-hub/nanobanana/blob/main/references/templates/repo-explainer-diagram/samples/sample-3-pro-01.png",
       "repo": "nano-banana-hub/nanobanana",

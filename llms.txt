@@ -25,7 +25,7 @@ How to use BananaHub as an agent:
 - Respect pinned and featured flags before raw popularity when choosing defaults.
 - Use template_url when the full template body is needed.
 - Use type to distinguish prompt templates from workflow templates.
-- Use sample_image and sample_image_page_url for preview assets.
+- Use samples when multiple preview assets exist; sample_image and sample_image_page_url remain the first-sample shortcuts.
 
 Ecosystem links:
 - Nano Banana repository: https://github.com/nano-banana-hub/nanobanana
@@ -33,5 +33,5 @@ Ecosystem links:
 - Template system docs: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-system.md
 - Template format spec: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-format-spec.md
 
-Current catalog summary: 10 templates total, 9 curated, 1 discovered, 0 pinned, 0 featured.
-Generated: 2026-04-01T07:16:47.448Z
+Current catalog summary: 11 templates total, 10 curated, 1 discovered, 0 pinned, 0 featured.
+Generated: 2026-04-01T14:05:37.486Z

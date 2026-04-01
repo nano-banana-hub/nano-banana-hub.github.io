@@ -426,25 +426,37 @@ function applyModeration(template, moderationIndex) {
   };
 }
 
+function buildSampleRecords(sampleEntries, repo, branch, templateDir) {
+  const entries = Array.isArray(sampleEntries) ? sampleEntries : [];
+
+  return entries.map((entry) => {
+    const sample = typeof entry === 'string' ? { file: entry } : (entry || {});
+    const sampleFile = sample.file || '';
+    if (!sampleFile) {
+      return null;
+    }
+
+    const samplePath = joinRepoPath(templateDir, sampleFile);
+    return {
+      file: sampleFile,
+      model: sample.model || '',
+      prompt: sample.prompt || '',
+      aspect: sample.aspect || '',
+      image: `${GITHUB_RAW}/${repo}/${branch}/${samplePath}`,
+      page_url: `${GITHUB_WEB}/${repo}/blob/${branch}/${samplePath}`,
+    };
+  }).filter(Boolean);
+}
+
 function buildTemplateRecord({ repoConfig, repoInfo, templateDirPath, templateSlug, frontmatter, content, generatedAt }) {
   const normalizedTemplateDir = normalizePath(templateDirPath);
   const resolvedSlug = templateSlug || basenameSafe(normalizedTemplateDir) || frontmatter.id || '';
   const resolvedId = frontmatter.id || resolvedSlug || repoConfig.repo.split('/')[1];
   const description = extractDescription(content);
   const installTarget = buildInstallTargetFromTemplateDir(repoConfig, normalizedTemplateDir, resolvedSlug);
-
-  let sampleImage = '';
-  let sampleImagePageUrl = '';
-  const samples = Array.isArray(frontmatter.samples) ? frontmatter.samples : [];
-  if (samples.length > 0) {
-    const firstSample = samples[0];
-    const sampleFile = typeof firstSample === 'string' ? firstSample : firstSample.file;
-    if (sampleFile) {
-      const samplePath = joinRepoPath(normalizedTemplateDir, sampleFile);
-      sampleImage = `${GITHUB_RAW}/${repoConfig.repo}/${repoInfo.default_branch}/${samplePath}`;
-      sampleImagePageUrl = `${GITHUB_WEB}/${repoConfig.repo}/blob/${repoInfo.default_branch}/${samplePath}`;
-    }
-  }
+  const samples = buildSampleRecords(frontmatter.samples, repoConfig.repo, repoInfo.default_branch, normalizedTemplateDir);
+  const sampleImage = samples[0]?.image || '';
+  const sampleImagePageUrl = samples[0]?.page_url || '';
 
   const templateRoot = dirnameSafe(normalizedTemplateDir);
   const templateUrl = normalizedTemplateDir
@@ -463,6 +475,7 @@ function buildTemplateRecord({ repoConfig, repoInfo, templateDirPath, templateSl
     aspect: frontmatter.aspect || '1:1',
     difficulty: frontmatter.difficulty || 'beginner',
     description,
+    samples,
     sample_image: sampleImage,
     sample_image_page_url: sampleImagePageUrl,
     repo: repoConfig.repo,
@@ -760,7 +773,7 @@ function buildLlmsTxt(catalog) {
     '- Respect pinned and featured flags before raw popularity when choosing defaults.',
     '- Use template_url when the full template body is needed.',
     '- Use type to distinguish prompt templates from workflow templates.',
-    '- Use sample_image and sample_image_page_url for preview assets.',
+    '- Use samples when multiple preview assets exist; sample_image and sample_image_page_url remain the first-sample shortcuts.',
     '',
     'Ecosystem links:',
     '- Nano Banana repository: https://github.com/nano-banana-hub/nanobanana',
