@@ -1,9 +1,4 @@
 User-agent: *
 Allow: /
 
-# Machine-readable entry points
-# https://nano-banana-hub.github.io/llms.txt
-# https://nano-banana-hub.github.io/catalog.json
-# https://nano-banana-hub.github.io/agent-catalog.md
-
 Sitemap: https://nano-banana-hub.github.io/sitemap.xml
