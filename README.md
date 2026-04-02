@@ -1,14 +1,14 @@
 # BananaHub
 
-Public gallery and machine-readable catalog for installable Nano Banana templates.
+Public gallery and machine-readable catalog for installable BananaHub templates.
 
-Live at: **https://nano-banana-hub.github.io**
+Live at: **https://bananahub-ai.github.io**
 
 ## Positioning
 
-BananaHub is the distribution layer for the Nano Banana product:
+BananaHub is the installable template network for BananaHub Skill:
 
-- Nano Banana handles constraint extraction, progressive guidance, and image generation inside the chat workflow
+- BananaHub Skill handles constraint extraction, progressive guidance, and image generation inside the chat workflow
 - BananaHub handles discovery, preview, installation, and machine-readable access for reusable templates
 
 The goal is not to create one giant prompt dump. The goal is to keep the base workflow lean and let validated prompt and workflow structures remain searchable and installable.

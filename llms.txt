@@ -1,18 +1,18 @@
 # BananaHub
 
-BananaHub is the searchable, installable template network for Nano Banana.
+BananaHub is the searchable, installable template network for BananaHub Skill.
 Templates may be lightweight prompts or multi-step workflows.
 The catalog has two layers: curated templates for reviewed defaults, and discovered templates collected automatically from real installs.
 Curated is the recommendation layer. Discovered is the open discovery layer. Moderation rules can ban or pin templates independently of either layer.
 
-Canonical site: https://nano-banana-hub.github.io/
+Canonical site: https://bananahub-ai.github.io/
 
 Preferred machine-readable entry points:
-- https://nano-banana-hub.github.io/catalog.json — merged catalog with curated + discovered templates
-- https://nano-banana-hub.github.io/catalog-curated.json — curated-only catalog
-- https://nano-banana-hub.github.io/catalog-discovered.json — discovered-only catalog
-- https://nano-banana-hub.github.io/agent-catalog.md — markdown digest of the current catalog
-- https://nano-banana-hub.github.io/llms.txt — this overview
+- https://bananahub-ai.github.io/catalog.json — merged catalog with curated + discovered templates
+- https://bananahub-ai.github.io/catalog-curated.json — curated-only catalog
+- https://bananahub-ai.github.io/catalog-discovered.json — discovered-only catalog
+- https://bananahub-ai.github.io/agent-catalog.md — markdown digest of the current catalog
+- https://bananahub-ai.github.io/llms.txt — this overview
 
 Install rules:
 - Prefer the install_cmd value from catalog.json for deterministic installation.
@@ -28,10 +28,10 @@ How to use BananaHub as an agent:
 - Use samples when multiple preview assets exist; sample_image and sample_image_page_url remain the first-sample shortcuts.
 
 Ecosystem links:
-- Nano Banana repository: https://github.com/nano-banana-hub/nanobanana
+- BananaHub Skill repo: https://github.com/bananahub-ai/banana-hub-skill
 - BananaHub CLI: https://www.npmjs.com/package/bananahub
-- Template system docs: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-system.md
-- Template format spec: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-format-spec.md
+- Template system docs: https://github.com/bananahub-ai/banana-hub-skill/blob/main/references/template-system.md
+- Template format spec: https://github.com/bananahub-ai/banana-hub-skill/blob/main/references/template-format-spec.md
 
 Current catalog summary: 11 templates total, 10 curated, 1 discovered, 0 pinned, 0 featured.
-Generated: 2026-04-02T11:58:35.073Z
+Generated: 2026-04-02T16:23:08.497Z

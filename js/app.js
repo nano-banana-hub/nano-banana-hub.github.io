@@ -1342,18 +1342,18 @@ function updateStructuredData() {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: 'BananaHub',
-    url: catalog.site?.url || 'https://nano-banana-hub.github.io/',
+    url: catalog.site?.url || 'https://bananahub-ai.github.io/',
     description: t('index.structuredData.pageDescription'),
     mainEntity: {
       '@type': 'DataCatalog',
       name: t('index.structuredData.catalogName'),
-      url: catalog.site?.catalog_json || 'https://nano-banana-hub.github.io/catalog.json',
+      url: catalog.site?.catalog_json || 'https://bananahub-ai.github.io/catalog.json',
       description: t('index.structuredData.catalogDescription', {
         count: formatCount(allTemplates.length)
       }),
       inLanguage: ['en', 'zh-CN'],
       keywords: [
-        'Nano Banana Skill',
+        'BananaHub Skill',
         'prompt templates',
         'workflow templates',
         ...new Set((catalog.profiles || []).slice(0, 10))

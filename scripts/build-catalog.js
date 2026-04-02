@@ -7,8 +7,11 @@ const GITHUB_API = 'https://api.github.com';
 const GITHUB_RAW = 'https://raw.githubusercontent.com';
 const GITHUB_WEB = 'https://github.com';
 const HUB_API_BASE = process.env.BANANAHUB_API_BASE || 'https://bananahub-api.zhan9kun.workers.dev/api';
-const SITE_URL = 'https://nano-banana-hub.github.io';
+const SITE_URL = 'https://bananahub-ai.github.io';
 const KNOWN_SHORT_INSTALL_ROOTS = new Set(['references/templates', 'templates']);
+const REPO_ALIASES = new Map([
+  ['nano-banana-hub/nanobanana', 'bananahub-ai/banana-hub-skill'],
+]);
 const GENERATED_FILES = {
   catalog: 'catalog.json',
   catalogCurated: 'catalog-curated.json',
@@ -162,6 +165,59 @@ function isKnownShortInstallRoot(templateRoot) {
 
 function buildTemplateKey(repo, id) {
   return `${slugifyText(repo)}::${slugifyText(id)}`;
+}
+
+function rewriteRepoPrefix(value, fromRepo, toRepo) {
+  const input = String(value || '').trim();
+  if (!input) {
+    return input;
+  }
+
+  if (input === fromRepo) {
+    return toRepo;
+  }
+
+  if (input.startsWith(`${fromRepo}/`)) {
+    return `${toRepo}${input.slice(fromRepo.length)}`;
+  }
+
+  return input;
+}
+
+function normalizeOfficialInstallTarget(repo, installTarget) {
+  const normalizedTarget = normalizePath(installTarget);
+  const repoPrefix = `${repo}/`;
+  if (!normalizedTarget.startsWith(repoPrefix)) {
+    return normalizedTarget;
+  }
+
+  const tail = normalizePath(normalizedTarget.slice(repoPrefix.length));
+  for (const root of KNOWN_SHORT_INSTALL_ROOTS) {
+    const prefix = `${root}/`;
+    if (tail.startsWith(prefix)) {
+      return `${repo}/${tail.slice(prefix.length)}`;
+    }
+  }
+
+  return normalizedTarget;
+}
+
+function normalizeDiscoveredCandidate(candidate) {
+  const repo = String(candidate.repo || '').trim();
+  const alias = REPO_ALIASES.get(slugifyText(repo));
+  if (!alias || alias === repo) {
+    return candidate;
+  }
+
+  const normalized = {
+    ...candidate,
+    repo: alias,
+    install_target: rewriteRepoPrefix(candidate.install_target, repo, alias),
+    template_path: String(candidate.template_path || '').trim(),
+  };
+
+  normalized.install_target = normalizeOfficialInstallTarget(alias, normalized.install_target);
+  return normalized;
 }
 
 function buildInstallTargetFromTemplateDir(repoConfig, templateDirPath, templateSlug) {
@@ -748,7 +804,7 @@ function buildLlmsTxt(catalog) {
   const lines = [
     '# BananaHub',
     '',
-    'BananaHub is the searchable, installable template network for Nano Banana.',
+    'BananaHub is the searchable, installable template network for BananaHub Skill.',
     'Templates may be lightweight prompts or multi-step workflows.',
     'The catalog has two layers: curated templates for reviewed defaults, and discovered templates collected automatically from real installs.',
     'Curated is the recommendation layer. Discovered is the open discovery layer. Moderation rules can ban or pin templates independently of either layer.',
@@ -776,10 +832,10 @@ function buildLlmsTxt(catalog) {
     '- Use samples when multiple preview assets exist; sample_image and sample_image_page_url remain the first-sample shortcuts.',
     '',
     'Ecosystem links:',
-    '- Nano Banana repository: https://github.com/nano-banana-hub/nanobanana',
+    '- BananaHub Skill repo: https://github.com/bananahub-ai/banana-hub-skill',
     '- BananaHub CLI: https://www.npmjs.com/package/bananahub',
-    '- Template system docs: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-system.md',
-    '- Template format spec: https://github.com/nano-banana-hub/nanobanana/blob/main/references/template-format-spec.md',
+    '- Template system docs: https://github.com/bananahub-ai/banana-hub-skill/blob/main/references/template-system.md',
+    '- Template format spec: https://github.com/bananahub-ai/banana-hub-skill/blob/main/references/template-format-spec.md',
     '',
     `Current catalog summary: ${catalog.summary.template_count} templates total, ${catalog.summary.curated_count} curated, ${catalog.summary.discovered_count} discovered, ${catalog.summary.pinned_count} pinned, ${catalog.summary.featured_count} featured.`,
     `Generated: ${catalog.generated}`,
@@ -794,7 +850,7 @@ function buildAgentCatalog(catalog) {
     '',
     `Generated: ${catalog.generated}`,
     '',
-    'BananaHub is the installable template network for Nano Banana.',
+    'BananaHub is the installable template network for BananaHub Skill.',
     'Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.',
     '',
     '## Entry Points',
@@ -993,7 +1049,8 @@ async function main() {
   const discoveredCandidates = await fetchDiscoveredCandidates();
   const discoveredRaw = [];
 
-  for (const candidate of discoveredCandidates) {
+  for (const rawCandidate of discoveredCandidates) {
+    const candidate = normalizeDiscoveredCandidate(rawCandidate);
     if (moderationIndex.bannedRepos.has(slugifyText(candidate.repo))) {
       continue;
     }

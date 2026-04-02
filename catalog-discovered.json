@@ -1,14 +1,14 @@
 {
   "version": "1.0.0",
   "catalog_type": "discovered",
-  "generated": "2026-04-02T11:58:35.073Z",
+  "generated": "2026-04-02T16:23:08.497Z",
   "site": {
-    "url": "https://nano-banana-hub.github.io/",
-    "catalog_json": "https://nano-banana-hub.github.io/catalog.json",
-    "catalog_curated_json": "https://nano-banana-hub.github.io/catalog-curated.json",
-    "catalog_discovered_json": "https://nano-banana-hub.github.io/catalog-discovered.json",
-    "llms_txt": "https://nano-banana-hub.github.io/llms.txt",
-    "agent_catalog": "https://nano-banana-hub.github.io/agent-catalog.md"
+    "url": "https://bananahub-ai.github.io/",
+    "catalog_json": "https://bananahub-ai.github.io/catalog.json",
+    "catalog_curated_json": "https://bananahub-ai.github.io/catalog-curated.json",
+    "catalog_discovered_json": "https://bananahub-ai.github.io/catalog-discovered.json",
+    "llms_txt": "https://bananahub-ai.github.io/llms.txt",
+    "agent_catalog": "https://bananahub-ai.github.io/agent-catalog.md"
   },
   "summary": {
     "template_count": 1,

@@ -1,17 +1,17 @@
 # BananaHub Agent Catalog
 
-Generated: 2026-04-02T11:58:35.073Z
+Generated: 2026-04-02T16:23:08.497Z
 
-BananaHub is the installable template network for Nano Banana.
+BananaHub is the installable template network for BananaHub Skill.
 Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.
 
 ## Entry Points
 
-- Site: https://nano-banana-hub.github.io/
-- Merged Catalog JSON: https://nano-banana-hub.github.io/catalog.json
-- Curated Catalog JSON: https://nano-banana-hub.github.io/catalog-curated.json
-- Discovered Catalog JSON: https://nano-banana-hub.github.io/catalog-discovered.json
-- llms.txt: https://nano-banana-hub.github.io/llms.txt
+- Site: https://bananahub-ai.github.io/
+- Merged Catalog JSON: https://bananahub-ai.github.io/catalog.json
+- Curated Catalog JSON: https://bananahub-ai.github.io/catalog-curated.json
+- Discovered Catalog JSON: https://bananahub-ai.github.io/catalog-discovered.json
+- llms.txt: https://bananahub-ai.github.io/llms.txt
 
 ## Curated Templates (10)
 
@@ -26,9 +26,9 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Pinned: no
 - Tags: logo, app图标, web logo, favicon, 品牌标识, icon, wordmark, maskable
 - Description: Guide the agent through building a usable app and web logo system: first lock the brand idea and the most restrictive platform constraints, then generate an icon-first mark, then derive web lockups and platform-safe variants without letting the concept drift.
-- Install: `bananahub add nano-banana-hub/nanobanana/app-web-logo-system`
-- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/app-web-logo-system
-- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/app-web-logo-system/samples/sample-3-pro-01.png
+- Install: `bananahub add bananahub-ai/banana-hub-skill/app-web-logo-system`
+- Template Source: https://github.com/bananahub-ai/banana-hub-skill/tree/main/references/templates/app-web-logo-system
+- Preview Image: https://raw.githubusercontent.com/bananahub-ai/banana-hub-skill/main/references/templates/app-web-logo-system/samples/sample-3-pro-01.png
 
 ### asset-style-consistency-pack
 - Title: Local Asset Style Consistency Workflow / 本地素材风格统一工作流
@@ -41,9 +41,9 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Pinned: no
 - Tags: 素材包, 风格统一, 多图一致性, reference, batch, consistency, edit
 - Description: Guide the agent through creating a consistent asset pack from local images: first lock one approved style anchor, then propagate the same style and constraints across additional assets without letting color, composition logic, or character identity drift.
-- Install: `bananahub add nano-banana-hub/nanobanana/asset-style-consistency-pack`
-- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/asset-style-consistency-pack
-- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/asset-style-consistency-pack/samples/sample-3-pro-01.png
+- Install: `bananahub add bananahub-ai/banana-hub-skill/asset-style-consistency-pack`
+- Template Source: https://github.com/bananahub-ai/banana-hub-skill/tree/main/references/templates/asset-style-consistency-pack
+- Preview Image: https://raw.githubusercontent.com/bananahub-ai/banana-hub-skill/main/references/templates/asset-style-consistency-pack/samples/sample-3-pro-01.png
 
 ### consistent-character-storyboard
 - Title: Consistent Character Storyboard Workflow / 角色一致性分镜工作流
@@ -56,9 +56,9 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Pinned: no
 - Tags: 分镜, 角色一致性, 故事板, storyboard, contact-sheet, multi-shot
 - Description: Guide the agent through a repeatable storyboard exploration workflow: first lock a master character reference, then explore multi-shot boards, then iterate with single-variable edits so the character stays consistent across frames without overcommitting too early to a final story layout.
-- Install: `bananahub add nano-banana-hub/nanobanana/consistent-character-storyboard`
-- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/consistent-character-storyboard
-- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/consistent-character-storyboard/samples/sample-3-pro-01.png
+- Install: `bananahub add bananahub-ai/banana-hub-skill/consistent-character-storyboard`
+- Template Source: https://github.com/bananahub-ai/banana-hub-skill/tree/main/references/templates/consistent-character-storyboard
+- Preview Image: https://raw.githubusercontent.com/bananahub-ai/banana-hub-skill/main/references/templates/consistent-character-storyboard/samples/sample-3-pro-01.png
 
 ### cute-sticker
 - Title: Cute Chibi Sticker Pack / Q版贴纸表情包
@@ -71,9 +71,9 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Pinned: no
 - Tags: 贴纸, 表情包, Q版, 可爱, chibi
 - Description: 生成 Q 版可爱贴纸/表情包。大头小身、表情夸张、白色背景带描边，适合微信/Telegram 表情包或社交媒体贴纸。
-- Install: `bananahub add nano-banana-hub/nanobanana/cute-sticker`
-- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/cute-sticker
-- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/cute-sticker/samples/sample-3.1-flash-01.png
+- Install: `bananahub add bananahub-ai/banana-hub-skill/cute-sticker`
+- Template Source: https://github.com/bananahub-ai/banana-hub-skill/tree/main/references/templates/cute-sticker
+- Preview Image: https://raw.githubusercontent.com/bananahub-ai/banana-hub-skill/main/references/templates/cute-sticker/samples/sample-3.1-flash-01.png
 
 ### cyberpunk-city
 - Title: Cyberpunk City Nightscape / 赛博朋克城市夜景
@@ -86,9 +86,9 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Pinned: no
 - Tags: 赛博朋克, 城市, 夜景, 科幻, neon
 - Description: 一键生成赛博朋克风格的城市夜景。霓虹灯光、雨水反射、未来感建筑，适合用作桌面壁纸、概念设定、社交媒体封面。
-- Install: `bananahub add nano-banana-hub/nanobanana/cyberpunk-city`
-- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/cyberpunk-city
-- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/cyberpunk-city/samples/sample-3.1-flash-01.png
+- Install: `bananahub add bananahub-ai/banana-hub-skill/cyberpunk-city`
+- Template Source: https://github.com/bananahub-ai/banana-hub-skill/tree/main/references/templates/cyberpunk-city
+- Preview Image: https://raw.githubusercontent.com/bananahub-ai/banana-hub-skill/main/references/templates/cyberpunk-city/samples/sample-3.1-flash-01.png
 
 ### info-diagram
 - Title: Infographic & Flowchart / 信息图/流程图
@@ -101,9 +101,9 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Pinned: no
 - Tags: 信息图, 流程图, 图表, 知识卡片, 教程
 - Description: 生成清晰的信息图、流程图或知识卡片。结构化布局、图标化表达、层次分明的信息展示，适合技术文档、教程说明、社交媒体知识分享。
-- Install: `bananahub add nano-banana-hub/nanobanana/info-diagram`
-- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/info-diagram
-- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/info-diagram/samples/sample-3.1-flash-01.png
+- Install: `bananahub add bananahub-ai/banana-hub-skill/info-diagram`
+- Template Source: https://github.com/bananahub-ai/banana-hub-skill/tree/main/references/templates/info-diagram
+- Preview Image: https://raw.githubusercontent.com/bananahub-ai/banana-hub-skill/main/references/templates/info-diagram/samples/sample-3.1-flash-01.png
 
 ### minimal-wallpaper
 - Title: Minimal Phone Wallpaper / 极简手机壁纸
@@ -116,9 +116,9 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Pinned: no
 - Tags: 极简, 壁纸, 手机, 留白, 简约
 - Description: 生成极简风格手机壁纸。大面积留白、单一主体、克制的配色，适合 iPhone/Android 锁屏和主屏壁纸。
-- Install: `bananahub add nano-banana-hub/nanobanana/minimal-wallpaper`
-- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/minimal-wallpaper
-- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/minimal-wallpaper/samples/sample-3.1-flash-01.png
+- Install: `bananahub add bananahub-ai/banana-hub-skill/minimal-wallpaper`
+- Template Source: https://github.com/bananahub-ai/banana-hub-skill/tree/main/references/templates/minimal-wallpaper
+- Preview Image: https://raw.githubusercontent.com/bananahub-ai/banana-hub-skill/main/references/templates/minimal-wallpaper/samples/sample-3.1-flash-01.png
 
 ### product-white-bg
 - Title: E-commerce Product on White / 电商白底产品图
@@ -131,9 +131,9 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Pinned: no
 - Tags: 产品图, 电商, 白底, 商品, 淘宝
 - Description: 生成电商平台标准白底产品图。干净的白色背景、专业的产品摄影灯光、清晰的产品细节，适合淘宝主图、亚马逊 listing、商品详情页。
-- Install: `bananahub add nano-banana-hub/nanobanana/product-white-bg`
-- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/product-white-bg
-- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/product-white-bg/samples/sample-3.1-flash-01.png
+- Install: `bananahub add bananahub-ai/banana-hub-skill/product-white-bg`
+- Template Source: https://github.com/bananahub-ai/banana-hub-skill/tree/main/references/templates/product-white-bg
+- Preview Image: https://raw.githubusercontent.com/bananahub-ai/banana-hub-skill/main/references/templates/product-white-bg/samples/sample-3.1-flash-01.png
 
 ### readme-launch-visual
 - Title: README Launch Visual Workflow / README 启动视觉工作流
@@ -146,9 +146,9 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Pinned: no
 - Tags: README, 头图, 海报, 封面, OG, launch, hero, banner
 - Description: Guide the agent through converting README or positioning text into one launch-ready visual with locked copy, a clear headline hierarchy, and a visual metaphor that matches the actual product instead of generic AI poster aesthetics.
-- Install: `bananahub add nano-banana-hub/nanobanana/readme-launch-visual`
-- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/readme-launch-visual
-- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/readme-launch-visual/samples/sample-3-pro-01.png
+- Install: `bananahub add bananahub-ai/banana-hub-skill/readme-launch-visual`
+- Template Source: https://github.com/bananahub-ai/banana-hub-skill/tree/main/references/templates/readme-launch-visual
+- Preview Image: https://raw.githubusercontent.com/bananahub-ai/banana-hub-skill/main/references/templates/readme-launch-visual/samples/sample-3-pro-01.png
 
 ### repo-explainer-diagram
 - Title: Repository Explainer Diagram Workflow / 代码库讲解图工作流
@@ -161,9 +161,9 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Pinned: no
 - Tags: 代码库, 项目结构, 架构图, README, repo, codebase, architecture, explainer
 - Description: Guide the agent through turning repository context into one clear explainer visual: a project map, architecture diagram, workflow chart, or onboarding card that reflects the actual repo structure instead of inventing generic boxes.
-- Install: `bananahub add nano-banana-hub/nanobanana/repo-explainer-diagram`
-- Template Source: https://github.com/nano-banana-hub/nanobanana/tree/main/references/templates/repo-explainer-diagram
-- Preview Image: https://raw.githubusercontent.com/nano-banana-hub/nanobanana/main/references/templates/repo-explainer-diagram/samples/sample-3-pro-01.png
+- Install: `bananahub add bananahub-ai/banana-hub-skill/repo-explainer-diagram`
+- Template Source: https://github.com/bananahub-ai/banana-hub-skill/tree/main/references/templates/repo-explainer-diagram
+- Preview Image: https://raw.githubusercontent.com/bananahub-ai/banana-hub-skill/main/references/templates/repo-explainer-diagram/samples/sample-3-pro-01.png
 
 ## Discovered Templates (1)
 

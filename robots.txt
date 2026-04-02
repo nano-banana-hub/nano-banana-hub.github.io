@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nano-banana-hub.github.io/sitemap.xml
+Sitemap: https://bananahub-ai.github.io/sitemap.xml

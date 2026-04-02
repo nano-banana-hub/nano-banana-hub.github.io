@@ -5,7 +5,7 @@ const SUPPORTED_LANGUAGES = new Set(['en', 'zh-CN']);
 const translations = {
   en: {
     common: {
-      brandNote: 'for Nano Banana Skill',
+      brandNote: 'for BananaHub Skill',
       skipToCatalog: 'Skip to catalog',
       skipToContent: 'Skip to content',
       primaryNav: 'Primary',
@@ -115,14 +115,14 @@ const translations = {
     },
     index: {
       meta: {
-        title: 'BananaHub | Installable Templates for Nano Banana',
-        description: "Browse installable prompt and workflow templates for Nano Banana's agent-native image workflow, compare generated looks, and install only the template that fits the current job.",
-        ogTitle: 'BananaHub | Installable Templates for Nano Banana',
-        ogDescription: "A visual gallery of installable prompt and workflow templates for Nano Banana's agent-native image workflow.",
+        title: 'BananaHub | Installable Templates for BananaHub Skill',
+        description: "Browse installable prompt and workflow templates for BananaHub Skill, compare generated looks, and install only the template that fits the current job.",
+        ogTitle: 'BananaHub | Installable Templates for BananaHub Skill',
+        ogDescription: 'A visual gallery of installable prompt and workflow templates for BananaHub Skill.',
       },
       hero: {
         eyebrow: 'Installable Templates',
-        title: 'Browse and install templates for Nano Banana.',
+        title: 'Browse and install templates for BananaHub Skill.',
         lead: 'Find the right template, preview the output, install with one command.',
         metrics: {
           indexedTemplates: 'templates',
@@ -165,10 +165,10 @@ const translations = {
         installPattern: 'Install pattern',
       },
       footer: {
-        copy: "Installable template gallery for Nano Banana's agent-native image workflow, with stable files for machine-readable access when needed.",
+        copy: 'Installable template gallery for BananaHub Skill, with stable files for machine-readable access when needed.',
         templateSystem: 'Template System',
         submitTemplate: 'Submit Template',
-        meta: 'BananaHub keeps the base skill lean and distributes reusable templates across the Nano Banana ecosystem.',
+        meta: 'BananaHub keeps the runtime lean and distributes reusable templates across the broader BananaHub stack.',
       },
       modal: {
         kicker: 'Template Brief',
@@ -185,22 +185,22 @@ const translations = {
         close: 'Close full image',
       },
       structuredData: {
-        pageDescription: 'Installable prompt and workflow template hub for Nano Banana Skill.',
+        pageDescription: 'Installable prompt and workflow template hub for BananaHub Skill.',
         catalogName: 'BananaHub Catalog',
-        catalogDescription: 'Catalog of {count} installable prompt and workflow templates for Nano Banana Skill.',
+        catalogDescription: 'Catalog of {count} installable prompt and workflow templates for BananaHub Skill.',
       },
     },
     about: {
       meta: {
-        title: 'About BananaHub | Installable Template Network for Nano Banana',
-        description: 'Learn how BananaHub fits into the Nano Banana product: a searchable, installable template network for an agent-native image workflow.',
-        ogTitle: 'About BananaHub | Installable Template Network for Nano Banana',
+        title: 'About BananaHub | Installable Template Network for BananaHub Skill',
+        description: 'Learn how BananaHub works as the installable template network for BananaHub Skill.',
+        ogTitle: 'About BananaHub | Installable Template Network for BananaHub Skill',
         ogDescription: 'What BananaHub is, why it exists, and how humans, authors, and agents should use this installable template network.',
       },
       hero: {
         eyebrow: 'About BananaHub',
-        title: 'The installable template network behind Nano Banana.',
-        lead: 'Nano Banana is the agent-native runtime for guided image generation in chat. BananaHub is the searchable, installable, machine-readable layer that lets reusable prompt and workflow structures travel without bloating the base skill.',
+        title: 'The installable template network for BananaHub Skill.',
+        lead: 'BananaHub Skill is the agent-native runtime for guided Gemini image generation in chat. BananaHub is the searchable, installable, machine-readable layer that lets reusable prompt and workflow structures travel without bloating the runtime.',
         actions: {
           openGallery: 'Open gallery',
           templateSystem: 'Template System',
@@ -211,7 +211,7 @@ const translations = {
       manifesto: {
         kicker: 'What BananaHub Is',
         title: 'Not a prompt dump. A distribution layer for reusable templates.',
-        lead: 'BananaHub exists so Nano Banana can stay focused on the live workflow while reusable prompt and workflow structures remain searchable, installable, and portable across repositories.',
+        lead: 'BananaHub exists so BananaHub Skill can stay focused on the live workflow while reusable prompt and workflow structures remain searchable, installable, and portable across repositories.',
       },
       principles: {
         first: {
@@ -238,7 +238,7 @@ const translations = {
         title: 'A decentralized template network, not a monolithic prompt library.',
         authors: {
           title: 'For template authors',
-          body: 'Publish self-describing template folders in GitHub, follow the Nano Banana template format, and get indexed through the catalog source. Your modules stay portable in your repo; BananaHub stays lightweight.',
+          body: 'Publish self-describing template folders in GitHub, follow the BananaHub template format, and get indexed through the catalog source. Your modules stay portable in your repo; BananaHub stays lightweight.',
           link: 'Read the template spec',
         },
         agents: {
@@ -248,15 +248,15 @@ const translations = {
         },
       },
       footer: {
-        copy: "Installable template gallery for Nano Banana's agent-native image workflow, with stable files for machine-readable access when needed.",
+        copy: 'Installable template gallery for BananaHub Skill, with stable files for machine-readable access when needed.',
         templateSystem: 'Template System',
-        meta: 'BananaHub keeps the base skill lean and distributes reusable templates across the Nano Banana ecosystem.',
+        meta: 'BananaHub keeps the runtime lean and distributes reusable templates across the broader BananaHub stack.',
       },
     },
   },
   'zh-CN': {
     common: {
-      brandNote: 'Nano Banana Skill 模板站',
+      brandNote: 'BananaHub Skill 模板站',
       skipToCatalog: '跳到模板列表',
       skipToContent: '跳到正文',
       primaryNav: '主导航',
@@ -366,10 +366,10 @@ const translations = {
     },
     index: {
       meta: {
-        title: 'BananaHub — Nano Banana 模板库',
-        description: '在这里找到适合你的 Nano Banana 模板，预览效果图，一条命令装好就能用。',
-        ogTitle: 'BananaHub — Nano Banana 模板库',
-        ogDescription: 'Nano Banana 的模板画廊，浏览、对比、一键安装。',
+        title: 'BananaHub — BananaHub Skill 模板库',
+        description: '给 BananaHub Skill 找合适模板，预览效果图，一条命令装好就能用。',
+        ogTitle: 'BananaHub — BananaHub Skill 模板库',
+        ogDescription: 'BananaHub Skill 的模板画廊，浏览、对比、一键安装。',
       },
       hero: {
         eyebrow: '模板库',
@@ -416,7 +416,7 @@ const translations = {
         installPattern: '安装格式',
       },
       footer: {
-        copy: 'Nano Banana 的模板画廊，同时提供机器可读的数据接口。',
+        copy: 'BananaHub Skill 的模板画廊，同时提供机器可读的数据接口。',
         templateSystem: '模板系统',
         submitTemplate: '提交模板',
         meta: 'BananaHub 把模板从 Skill 里拆出来单独管理，保持核心轻量。',
@@ -436,22 +436,22 @@ const translations = {
         close: '关闭大图',
       },
       structuredData: {
-        pageDescription: 'Nano Banana Skill 的模板库。',
+        pageDescription: 'BananaHub Skill 的模板库。',
         catalogName: 'BananaHub 模板目录',
-        catalogDescription: '收录了 {count} 个 Nano Banana 模板。',
+        catalogDescription: '收录了 {count} 个 BananaHub 模板。',
       },
     },
     about: {
       meta: {
-        title: '关于 BananaHub — Nano Banana 模板网络',
-        description: 'BananaHub 是什么，怎么用，跟 Nano Banana 是什么关系。',
-        ogTitle: '关于 BananaHub — Nano Banana 模板网络',
-        ogDescription: 'BananaHub 是 Nano Banana 的模板分发层——给人看画廊，给 Agent 读文件。',
+        title: '关于 BananaHub — BananaHub Skill 模板网络',
+        description: 'BananaHub 是什么，怎么用，以及它和 BananaHub Skill 的关系。',
+        ogTitle: '关于 BananaHub — BananaHub Skill 模板网络',
+        ogDescription: 'BananaHub 是 BananaHub Skill 的模板网络——给人看画廊，给 Agent 读文件。',
       },
       hero: {
         eyebrow: '关于 BananaHub',
-        title: 'Nano Banana 的模板网络。',
-        lead: 'Nano Banana 负责在对话里引导出图，BananaHub 负责把模板管起来——搜得到、装得上、机器也能直接读。',
+        title: 'BananaHub Skill 的模板网络。',
+        lead: 'BananaHub Skill 负责在对话里引导 Gemini 生图，BananaHub 负责把模板管起来——搜得到、装得上、机器也能直接读。',
         actions: {
           openGallery: '去画廊',
           templateSystem: '模板系统',
@@ -462,7 +462,7 @@ const translations = {
       manifesto: {
         kicker: 'BananaHub 是什么',
         title: '模板的分发层，不是 prompt 堆放站。',
-        lead: '把模板从 Nano Banana 核心里拆出来，让 Skill 保持轻量，模板可以独立搜索、安装和跨仓库使用。',
+        lead: '把模板从 BananaHub Skill 核心里拆出来，让运行时保持轻量，模板可以独立搜索、安装和跨仓库使用。',
       },
       principles: {
         first: {
@@ -489,7 +489,7 @@ const translations = {
         title: '去中心化的模板网络，不是单体大仓库。',
         authors: {
           title: '模板作者',
-          body: '在你自己的 GitHub 仓库里发布模板，按 Nano Banana 格式写好，提交到 catalog source 就能被收录。模板在你的仓库里，BananaHub 只做索引。',
+          body: '在你自己的 GitHub 仓库里发布模板，按 BananaHub 模板格式写好，提交到 catalog source 就能被收录。模板在你的仓库里，BananaHub 只做索引。',
           link: '看模板规范',
         },
         agents: {
@@ -499,9 +499,9 @@ const translations = {
         },
       },
       footer: {
-        copy: 'Nano Banana 的模板画廊，同时提供机器可读的数据接口。',
+        copy: 'BananaHub Skill 的模板画廊，同时提供机器可读的数据接口。',
         templateSystem: '模板系统',
-        meta: 'BananaHub 把模板从 Skill 里拆出来单独管理，保持核心轻量。',
+        meta: 'BananaHub 把模板从运行时里拆出来单独管理，保持核心轻量。',
       },
     },
   },
