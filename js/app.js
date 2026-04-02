@@ -41,6 +41,7 @@ let isHandlingLocationSync = false;
 const previewRecoveryCache = new Map();
 
 const dom = {
+  siteHeader: document.querySelector('.site-header'),
   grid: document.getElementById('card-grid'),
   searchInput: document.getElementById('search-input'),
   templateCount: document.getElementById('template-count'),
@@ -94,6 +95,7 @@ let imageObserver = null;
 
 async function init() {
   initI18n({ page: 'index' });
+  syncStickyOffsets();
   bindEvents();
   subscribeLanguageChange(handleLanguageChange);
   readUrlState();
@@ -117,6 +119,8 @@ async function init() {
 }
 
 function handleLanguageChange() {
+  syncStickyOffsets();
+
   if (isHandlingLocationSync) {
     return;
   }
@@ -288,6 +292,7 @@ function bindEvents() {
 
   window.addEventListener('popstate', handleUrlNavigation);
   window.addEventListener('hashchange', handleUrlNavigation);
+  window.addEventListener('resize', syncStickyOffsets);
 }
 
 function handleUrlNavigation() {
@@ -296,6 +301,7 @@ function handleUrlNavigation() {
   isHandlingLocationSync = false;
   readUrlState();
   syncUIFromState();
+  syncStickyOffsets();
 
   if (catalog) {
     hydrateCatalogMeta();
@@ -306,6 +312,13 @@ function handleUrlNavigation() {
   if (didCatalogLoadFail) {
     renderLoadError();
   }
+}
+
+function syncStickyOffsets() {
+  const headerHeight = dom.siteHeader
+    ? Math.ceil(dom.siteHeader.getBoundingClientRect().height)
+    : 86;
+  document.documentElement.style.setProperty('--sticky-header-offset', `${headerHeight + 8}px`);
 }
 
 function renderLoadError() {
@@ -596,6 +609,7 @@ function renderCard(template) {
   const installDisplay = getInstallDisplay(stats);
   const trendingDisplay = getTrendingDisplay(stats);
   const featuredLabel = template.featured_label?.trim() || t('common.badge.featured');
+  const officialLabel = template.official ? t('common.badge.official') : t('common.badge.community');
 
   return `
     <article
@@ -615,14 +629,14 @@ function renderCard(template) {
           <div class="card-top-badges-left">
             ${template.pinned ? `<span class="card-flag-badge">${escHtml(t('common.badge.pinned'))}</span>` : ''}
             ${template.featured ? `<span class="card-flag-badge">${escHtml(featuredLabel)}</span>` : ''}
-            <span class="card-official-badge">${escHtml(template.official ? t('common.badge.official') : t('common.badge.community'))}</span>
           </div>
           <div class="card-top-badges-right">
-            <span class="card-type-badge">${escHtml(translateEnum('type', typeValue, typeValue))}</span>
+            <span class="card-type-badge ${escAttr(typeValue)}">${escHtml(translateEnum('type', typeValue, typeValue))}</span>
             <span class="card-profile-badge">${escHtml(translateEnum('profile', profileValue, profileValue))}</span>
           </div>
         </div>
         <span class="card-aspect-badge">${escHtml(aspectValue)}</span>
+        <span class="card-corner-badge">${escHtml(officialLabel)}</span>
       </div>
 
       <div class="card-body">
@@ -650,8 +664,27 @@ function renderCard(template) {
             <span class="card-action-stat-value" data-stat-key="${escAttr(key)}" data-stat-type="installs">${escHtml(installDisplay)}</span>
             <small>${escHtml(t('common.card.installs'))}</small>
           </span>
-          <button class="copy-btn" data-cmd="${escAttr(template.install_cmd)}" type="button">${escHtml(t('common.action.copyInstall'))}</button>
-          <a class="card-source-link" href="${escAttr(sourceUrl)}" target="_blank" rel="noopener">${escHtml(t('common.action.source'))}</a>
+          <button
+            class="copy-btn card-action-icon"
+            data-cmd="${escAttr(template.install_cmd)}"
+            type="button"
+            aria-label="${escAttr(t('common.action.copyInstall'))}"
+            title="${escAttr(t('common.action.copyInstall'))}"
+          >
+            ${renderCardActionIcon('copy')}
+            <span class="visually-hidden">${escHtml(t('common.action.copyInstall'))}</span>
+          </button>
+          <a
+            class="card-source-link card-action-icon"
+            href="${escAttr(sourceUrl)}"
+            target="_blank"
+            rel="noopener"
+            aria-label="${escAttr(t('common.action.source'))}"
+            title="${escAttr(t('common.action.source'))}"
+          >
+            ${renderCardActionIcon('source')}
+            <span class="visually-hidden">${escHtml(t('common.action.source'))}</span>
+          </a>
         </div>
       </div>
     </article>
@@ -660,6 +693,25 @@ function renderCard(template) {
 
 function renderBadge(className, label) {
   return `<span class="${className}">${escHtml(label)}</span>`;
+}
+
+function renderCardActionIcon(kind) {
+  if (kind === 'copy') {
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="10" height="10" rx="2"></rect>
+        <path d="M7 15H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1"></path>
+      </svg>
+    `;
+  }
+
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 5h5v5"></path>
+      <path d="M10 14 19 5"></path>
+      <path d="M19 14v3a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3"></path>
+    </svg>
+  `;
 }
 
 function observeImages() {
