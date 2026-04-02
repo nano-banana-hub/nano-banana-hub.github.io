@@ -1,6 +1,6 @@
 # BananaHub Agent Catalog
 
-Generated: 2026-04-01T14:18:12.637Z
+Generated: 2026-04-02T07:08:34.043Z
 
 BananaHub is the installable template network for Nano Banana.
 Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.
