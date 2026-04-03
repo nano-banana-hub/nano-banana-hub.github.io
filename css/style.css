@@ -591,6 +591,13 @@ main {
   gap: 18px;
 }
 
+.catalog-copy {
+  display: grid;
+  gap: 10px;
+  max-width: 62ch;
+  padding-block: 6px 10px;
+}
+
 .catalog-intro h2,
 .section-heading h2 {
   font-size: clamp(1.8rem, 2.8vw, 2.8rem);
@@ -598,6 +605,7 @@ main {
 }
 
 .catalog-status {
+  align-self: center;
   display: flex;
   gap: 10px;
 }
@@ -731,6 +739,10 @@ main {
 #catalog-hint {
   margin: 0;
   font-size: 0.88rem;
+}
+
+#results-summary {
+  max-width: 62ch;
 }
 
 .link-button {
@@ -1496,6 +1508,8 @@ main {
   display: grid;
   grid-template-columns: minmax(240px, 0.86fr) minmax(0, 1.14fr);
   width: min(940px, 100%);
+  height: min(88vh, 900px);
+  height: min(88dvh, 900px);
   max-height: min(88vh, 900px);
   max-height: min(88dvh, 900px);
   overflow: hidden;
@@ -1527,6 +1541,8 @@ main {
 .modal-media {
   position: relative;
   display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  overflow: hidden;
   background:
     radial-gradient(circle at top, rgba(255, 255, 255, 0.42), transparent 42%),
     linear-gradient(135deg, rgba(28, 33, 28, 0.12), rgba(255, 255, 255, 0.4));
@@ -1534,10 +1550,13 @@ main {
 
 .modal-image-button {
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
   width: 100%;
   height: 100%;
-  min-height: 100%;
+  min-height: 0;
   padding: 0;
   border: 0;
   background: transparent;
@@ -1548,17 +1567,27 @@ main {
   cursor: default;
 }
 
+.modal-image-frame {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+}
+
 .modal-image {
+  display: block;
   width: 100%;
   height: 100%;
+  min-height: 0;
   padding: 24px;
   object-fit: contain;
 }
 
 .modal-image-hint {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
+  position: static;
+  align-self: flex-start;
+  margin: 0 16px 16px;
   padding: 8px 10px;
   border-radius: 999px;
   background: rgba(28, 33, 28, 0.78);
@@ -1567,6 +1596,13 @@ main {
   font-size: 0.68rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  pointer-events: none;
+}
+
+.modal-media-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 16px 16px;
 }
 
 .modal-sample-controls,
@@ -1577,9 +1613,7 @@ main {
 }
 
 .modal-sample-controls {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
+  position: static;
   z-index: 1;
 }
 
@@ -1613,13 +1647,29 @@ main {
 }
 
 .modal-body {
-  padding: 28px 26px 24px;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  padding: 0;
+  overflow: hidden;
+}
+
+.modal-body-copy {
+  min-height: 0;
+  padding: 28px 26px 18px;
   overflow: auto;
 }
 
+.modal-body-footer {
+  padding: 18px 26px 24px;
+  border-top: 1px solid rgba(28, 33, 28, 0.08);
+  background: linear-gradient(180deg, rgba(250, 245, 235, 0.74), rgba(240, 231, 210, 0.96));
+}
+
 .modal h2 {
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  line-height: 1;
+  font-size: clamp(1.6rem, 2.6vw, 2.35rem);
+  line-height: 0.96;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 .modal-subtitle,
@@ -1663,7 +1713,7 @@ main {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 18px;
+  margin-top: 0;
 }
 
 .modal-link,
@@ -1683,7 +1733,7 @@ main {
 }
 
 .modal-install {
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .modal-install-box {
@@ -1792,6 +1842,10 @@ main {
     align-items: flex-start;
   }
 
+  .catalog-status {
+    align-self: flex-start;
+  }
+
   .footer-links {
     justify-content: flex-start;
   }
@@ -1803,6 +1857,8 @@ main {
   .contribute-grid,
   .modal {
     grid-template-columns: 1fr;
+    grid-template-rows: minmax(220px, 38vh) minmax(0, 1fr);
+    grid-template-rows: minmax(220px, 38dvh) minmax(0, 1fr);
   }
 
   .filter-bar {
@@ -1810,18 +1866,18 @@ main {
   }
 
   .modal {
+    height: min(90vh, 920px);
+    height: min(90dvh, 920px);
     max-height: 90vh;
     max-height: 90dvh;
   }
 
   .modal-media {
-    min-height: clamp(220px, 38vh, 300px);
-    min-height: clamp(220px, 38dvh, 300px);
+    min-height: 0;
   }
 
   .modal-image-button {
-    min-height: clamp(220px, 36vh, 280px);
-    min-height: clamp(220px, 36dvh, 280px);
+    min-height: 0;
   }
 }
 
@@ -1934,17 +1990,25 @@ main {
     padding: 10px;
   }
 
-  .modal-body {
-    padding: 20px 16px 16px;
+  .modal-body-copy {
+    padding: 20px 16px 14px;
+  }
+
+  .modal-body-footer {
+    padding: 16px;
   }
 
   .modal-image {
     padding: 18px;
   }
 
+  .modal-media-footer {
+    justify-content: stretch;
+    padding: 0 16px 16px;
+  }
+
   .modal-sample-controls {
-    left: 16px;
-    right: 16px;
+    width: 100%;
     justify-content: space-between;
   }
 

@@ -88,7 +88,7 @@
 
       <section class="catalog-shell" id="catalog-section" aria-labelledby="catalog-title">
         <div class="catalog-intro">
-          <div>
+          <div class="catalog-copy">
             <p class="section-kicker" data-i18n="index.catalog.kicker">Live Catalog</p>
             <h2 id="catalog-title" data-i18n="index.catalog.title">A searchable gallery of installable templates</h2>
             <p id="results-summary">
@@ -243,45 +243,53 @@
 
       <div class="modal-media">
         <button class="modal-image-button" id="modal-image-button" type="button" aria-label="View full image" data-i18n-aria-label="index.modal.viewFullImage">
-          <img class="modal-image" id="modal-image" src="" alt="">
+          <span class="modal-image-frame">
+            <img class="modal-image" id="modal-image" src="" alt="">
+          </span>
           <span class="modal-image-hint" id="modal-image-hint" data-i18n="common.preview.open">Open preview</span>
         </button>
-        <div class="modal-sample-controls" id="modal-sample-controls" hidden>
-          <button class="sample-nav-button" id="modal-prev-sample" type="button" aria-label="Previous sample" data-i18n-aria-label="common.preview.previous">&larr;</button>
-          <span class="sample-count" id="modal-sample-count">1 / 1</span>
-          <button class="sample-nav-button" id="modal-next-sample" type="button" aria-label="Next sample" data-i18n-aria-label="common.preview.next">&rarr;</button>
+        <div class="modal-media-footer">
+          <div class="modal-sample-controls" id="modal-sample-controls" hidden>
+            <button class="sample-nav-button" id="modal-prev-sample" type="button" aria-label="Previous sample" data-i18n-aria-label="common.preview.previous">&larr;</button>
+            <span class="sample-count" id="modal-sample-count">1 / 1</span>
+            <button class="sample-nav-button" id="modal-next-sample" type="button" aria-label="Next sample" data-i18n-aria-label="common.preview.next">&rarr;</button>
+          </div>
         </div>
       </div>
 
       <div class="modal-body">
-        <p class="modal-kicker" data-i18n="index.modal.kicker">Template Brief</p>
-        <h2 id="modal-title"></h2>
-        <p class="modal-subtitle" id="modal-subtitle"></p>
-        <p class="modal-desc" id="modal-desc"></p>
+        <div class="modal-body-copy">
+          <p class="modal-kicker" data-i18n="index.modal.kicker">Template Brief</p>
+          <h2 id="modal-title"></h2>
+          <p class="modal-subtitle" id="modal-subtitle"></p>
+          <p class="modal-desc" id="modal-desc"></p>
 
-        <div class="card-badges" id="modal-badges"></div>
-        <div class="card-tags" id="modal-tags"></div>
+          <div class="card-badges" id="modal-badges"></div>
+          <div class="card-tags" id="modal-tags"></div>
 
-        <div class="modal-meta">
-          <div class="modal-meta-item"><span class="label" data-i18n="index.modal.author">Author</span><span id="modal-author"></span></div>
-          <div class="modal-meta-item"><span class="label" data-i18n="index.modal.version">Version</span><span id="modal-version"></span></div>
-          <div class="modal-meta-item"><span class="label" data-i18n="index.modal.aspect">Aspect</span><span id="modal-aspect"></span></div>
-          <div class="modal-meta-item"><span class="label" data-i18n="index.modal.updated">Updated</span><span id="modal-updated"></span></div>
-          <div class="modal-meta-item"><span class="label" data-i18n="index.modal.installs">Installs</span><span id="modal-installs"></span></div>
-          <div class="modal-meta-item"><span class="label" data-i18n="index.modal.installs24h">24h installs</span><span id="modal-trending"></span></div>
+          <div class="modal-meta">
+            <div class="modal-meta-item"><span class="label" data-i18n="index.modal.author">Author</span><span id="modal-author"></span></div>
+            <div class="modal-meta-item"><span class="label" data-i18n="index.modal.version">Version</span><span id="modal-version"></span></div>
+            <div class="modal-meta-item"><span class="label" data-i18n="index.modal.aspect">Aspect</span><span id="modal-aspect"></span></div>
+            <div class="modal-meta-item"><span class="label" data-i18n="index.modal.updated">Updated</span><span id="modal-updated"></span></div>
+            <div class="modal-meta-item"><span class="label" data-i18n="index.modal.installs">Installs</span><span id="modal-installs"></span></div>
+            <div class="modal-meta-item"><span class="label" data-i18n="index.modal.installs24h">24h installs</span><span id="modal-trending"></span></div>
+          </div>
         </div>
 
-        <div class="modal-actions" id="modal-actions">
-          <button class="modal-link modal-link-button" id="modal-view-image-btn" type="button" data-i18n="common.preview.open">Open Preview</button>
-          <a class="modal-link" id="modal-open-original-link" href="#" target="_blank" rel="noopener" data-i18n="common.preview.source">Preview Source</a>
-          <a class="modal-link" id="modal-template-source-link" href="#" target="_blank" rel="noopener" data-i18n="common.template.source">Template Source</a>
-        </div>
+        <div class="modal-body-footer">
+          <div class="modal-actions" id="modal-actions">
+            <button class="modal-link modal-link-button" id="modal-view-image-btn" type="button" data-i18n="common.preview.open">Open Preview</button>
+            <a class="modal-link" id="modal-open-original-link" href="#" target="_blank" rel="noopener" data-i18n="common.preview.source">Preview Source</a>
+            <a class="modal-link" id="modal-template-source-link" href="#" target="_blank" rel="noopener" data-i18n="common.template.source">Template Source</a>
+          </div>
 
-        <div class="modal-install">
-          <p class="modal-install-label" data-i18n="index.modal.installCommand">Install command</p>
-          <div class="modal-install-box">
-            <code id="modal-install-cmd"></code>
-            <button class="copy-btn copy-btn-compact" id="modal-copy-btn" type="button" data-i18n="common.action.copy">Copy</button>
+          <div class="modal-install">
+            <p class="modal-install-label" data-i18n="index.modal.installCommand">Install command</p>
+            <div class="modal-install-box">
+              <code id="modal-install-cmd"></code>
+              <button class="copy-btn copy-btn-compact" id="modal-copy-btn" type="button" data-i18n="common.action.copy">Copy</button>
+            </div>
           </div>
         </div>
       </div>
