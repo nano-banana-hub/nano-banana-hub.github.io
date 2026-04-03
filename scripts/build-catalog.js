@@ -10,7 +10,7 @@ const HUB_API_BASE = process.env.BANANAHUB_API_BASE || 'https://bananahub-api.zh
 const SITE_URL = 'https://bananahub-ai.github.io';
 const KNOWN_SHORT_INSTALL_ROOTS = new Set(['references/templates', 'templates']);
 const REPO_ALIASES = new Map([
-  ['nano-banana-hub/nanobanana', 'bananahub-ai/banana-hub-skill'],
+  ['nano-banana-hub/nanobanana', 'bananahub-ai/bananahub-skill'],
 ]);
 const GENERATED_FILES = {
   catalog: 'catalog.json',
@@ -832,10 +832,10 @@ function buildLlmsTxt(catalog) {
     '- Use samples when multiple preview assets exist; sample_image and sample_image_page_url remain the first-sample shortcuts.',
     '',
     'Ecosystem links:',
-    '- BananaHub Skill repo: https://github.com/bananahub-ai/banana-hub-skill',
+    '- BananaHub Skill repo: https://github.com/bananahub-ai/bananahub-skill',
     '- BananaHub CLI: https://www.npmjs.com/package/bananahub',
-    '- Template system docs: https://github.com/bananahub-ai/banana-hub-skill/blob/main/references/template-system.md',
-    '- Template format spec: https://github.com/bananahub-ai/banana-hub-skill/blob/main/references/template-format-spec.md',
+    '- Template system docs: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-system.md',
+    '- Template format spec: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-format-spec.md',
     '',
     `Current catalog summary: ${catalog.summary.template_count} templates total, ${catalog.summary.curated_count} curated, ${catalog.summary.discovered_count} discovered, ${catalog.summary.pinned_count} pinned, ${catalog.summary.featured_count} featured.`,
     `Generated: ${catalog.generated}`,

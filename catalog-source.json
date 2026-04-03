@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "repos": [
     {
-      "repo": "bananahub-ai/banana-hub-skill",
+      "repo": "bananahub-ai/bananahub-skill",
       "type": "builtin",
       "local_path": "../nanobananaskill",
       "path": "references/templates",

@@ -28,10 +28,10 @@ How to use BananaHub as an agent:
 - Use samples when multiple preview assets exist; sample_image and sample_image_page_url remain the first-sample shortcuts.
 
 Ecosystem links:
-- BananaHub Skill repo: https://github.com/bananahub-ai/banana-hub-skill
+- BananaHub Skill repo: https://github.com/bananahub-ai/bananahub-skill
 - BananaHub CLI: https://www.npmjs.com/package/bananahub
-- Template system docs: https://github.com/bananahub-ai/banana-hub-skill/blob/main/references/template-system.md
-- Template format spec: https://github.com/bananahub-ai/banana-hub-skill/blob/main/references/template-format-spec.md
+- Template system docs: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-system.md
+- Template format spec: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-format-spec.md
 
 Current catalog summary: 11 templates total, 10 curated, 1 discovered, 0 pinned, 0 featured.
-Generated: 2026-04-02T16:25:20.408Z
+Generated: 2026-04-03T03:33:53.306Z
