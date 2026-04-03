@@ -33,5 +33,5 @@ Ecosystem links:
 - Template system docs: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-system.md
 - Template format spec: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-format-spec.md
 
-Current catalog summary: 11 templates total, 10 curated, 1 discovered, 0 pinned, 0 featured.
-Generated: 2026-04-03T07:04:13.693Z
+Current catalog summary: 12 templates total, 11 curated, 1 discovered, 0 pinned, 0 featured.
+Generated: 2026-04-03T08:18:26.865Z

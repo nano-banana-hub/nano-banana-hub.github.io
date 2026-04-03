@@ -1,6 +1,6 @@
 # BananaHub Agent Catalog
 
-Generated: 2026-04-03T07:04:13.693Z
+Generated: 2026-04-03T08:18:26.865Z
 
 BananaHub is the installable template network for BananaHub Skill.
 Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.
@@ -13,7 +13,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Discovered Catalog JSON: https://bananahub-ai.github.io/catalog-discovered.json
 - llms.txt: https://bananahub-ai.github.io/llms.txt
 
-## Curated Templates (10)
+## Curated Templates (11)
 
 ### app-web-logo-system
 - Title: App and Web Logo Workflow / App/Web Logo 生成工作流
@@ -29,6 +29,21 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Install: `bananahub add bananahub-ai/bananahub-skill/app-web-logo-system`
 - Template Source: https://github.com/bananahub-ai/bananahub-skill/tree/main/references/templates/app-web-logo-system
 - Preview Image: https://raw.githubusercontent.com/bananahub-ai/bananahub-skill/main/references/templates/app-web-logo-system/samples/sample-3-pro-01.png
+
+### article-illustration-workflow
+- Title: Article Illustration Workflow / 文章配图工作流
+- Type: workflow
+- Profile: diagram
+- Difficulty: intermediate
+- Source Layer: curated
+- Official: yes
+- Featured: no
+- Pinned: no
+- Tags: 文章配图, 文章插图, 博客配图, 教程配图, blog, article, editorial, tutorial, docs, explainer
+- Description: Guide the agent through turning an article, tutorial, or one important paragraph into a compact illustration pack: read the source first, decide which sections deserve images, write a small outline, then generate visuals that clarify the article instead of decorating it.
+- Install: `bananahub add bananahub-ai/bananahub-skill/article-illustration-workflow`
+- Template Source: https://github.com/bananahub-ai/bananahub-skill/tree/main/references/templates/article-illustration-workflow
+- Preview Image: https://raw.githubusercontent.com/bananahub-ai/bananahub-skill/main/references/templates/article-illustration-workflow/samples/sample-3-pro-01.png
 
 ### asset-style-consistency-pack
 - Title: Local Asset Style Consistency Workflow / 本地素材风格统一工作流

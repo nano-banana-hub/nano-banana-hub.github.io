@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "catalog_type": "curated",
-  "generated": "2026-04-03T07:04:13.693Z",
+  "generated": "2026-04-03T08:18:26.865Z",
   "site": {
     "url": "https://bananahub-ai.github.io/",
     "catalog_json": "https://bananahub-ai.github.io/catalog.json",
@@ -11,12 +11,12 @@
     "agent_catalog": "https://bananahub-ai.github.io/agent-catalog.md"
   },
   "summary": {
-    "template_count": 10,
+    "template_count": 11,
     "profile_count": 7,
-    "official_count": 10,
+    "official_count": 11,
     "featured_count": 0,
     "pinned_count": 0,
-    "curated_count": 10,
+    "curated_count": 11,
     "discovered_count": 0,
     "repos": [
       "bananahub-ai/bananahub-skill"
@@ -24,8 +24,8 @@
   },
   "layers": {
     "curated": {
-      "template_count": 10,
-      "official_count": 10,
+      "template_count": 11,
+      "official_count": 11,
       "repos": [
         "bananahub-ai/bananahub-skill"
       ]
@@ -91,6 +91,75 @@
       "install_cmd": "bananahub add bananahub-ai/bananahub-skill/app-web-logo-system",
       "created": "2026-04-01",
       "updated": "2026-04-02",
+      "pinned": false,
+      "pinned_rank": null,
+      "featured": false,
+      "featured_label": "",
+      "featured_note": ""
+    },
+    {
+      "id": "article-illustration-workflow",
+      "type": "workflow",
+      "title": "文章配图工作流",
+      "title_en": "Article Illustration Workflow",
+      "author": "bananahub",
+      "version": "1.0.0",
+      "profile": "diagram",
+      "tags": [
+        "文章配图",
+        "文章插图",
+        "博客配图",
+        "教程配图",
+        "blog",
+        "article",
+        "editorial",
+        "tutorial",
+        "docs",
+        "explainer"
+      ],
+      "aspect": "16:9",
+      "difficulty": "intermediate",
+      "description": "Guide the agent through turning an article, tutorial, or one important paragraph into a compact illustration pack: read the source first, decide which sections deserve images, write a small outline, then generate visuals that clarify the article instead of decorating it.",
+      "samples": [
+        {
+          "file": "samples/sample-3-pro-01.png",
+          "model": "gemini-3-pro-image-preview",
+          "prompt": "Create a clean article-support workflow diagram. Use only these verified facts as truth: the workflow starts by extracting verified claims from the article; it plans image slots before any generation; it generates one image at a time and reviews fidelity. Show exactly three grouped stages in a left-to-right reading order. The only text allowed anywhere in the image is: \\\"Extract claims\\\", \\\"Plan slots\\\", and \\\"Generate + review\\\". Do not add a title, caption, paragraph, badge, or any extra words. Use a restrained product-doc editorial aesthetic with warm paper-white background, ink-black linework, and muted banana-gold and teal accents. Keep the image text-light, high-contrast, and easy to understand in under ten seconds.",
+          "aspect": "16:9",
+          "image": "https://raw.githubusercontent.com/bananahub-ai/bananahub-skill/main/references/templates/article-illustration-workflow/samples/sample-3-pro-01.png",
+          "page_url": "https://github.com/bananahub-ai/bananahub-skill/blob/main/references/templates/article-illustration-workflow/samples/sample-3-pro-01.png"
+        },
+        {
+          "file": "samples/sample-3-pro-02.png",
+          "model": "gemini-3-pro-image-preview",
+          "prompt": "Create a compact article-support planning card. Use only these verified facts as truth: not every paragraph needs a picture; some sections want a flowchart; some need a framework card; some are better left text-only. Use a clean three-column comparison card with obvious visual separation. The only text allowed anywhere in the image is: \\\"Flowchart\\\", \\\"Framework card\\\", and \\\"Text only\\\". Do not add a title, caption, paragraph, badge, or any extra words. Use a restrained product-doc editorial aesthetic with warm paper-white background, ink-black linework, and muted banana-gold and teal accents. Keep the image text-light, high-contrast, and understandable in under ten seconds.",
+          "aspect": "4:3",
+          "image": "https://raw.githubusercontent.com/bananahub-ai/bananahub-skill/main/references/templates/article-illustration-workflow/samples/sample-3-pro-02.png",
+          "page_url": "https://github.com/bananahub-ai/bananahub-skill/blob/main/references/templates/article-illustration-workflow/samples/sample-3-pro-02.png"
+        },
+        {
+          "file": "samples/sample-3-pro-03.png",
+          "model": "gemini-3-pro-image-preview",
+          "prompt": "Create a scene-led editorial cover image for an article about planning illustrations. Use only these verified facts as truth: good article visuals should clarify the writing instead of distracting from it; the workflow reads the article first; image slots are decided later. Show a calm editorial desk scene with one printed article page as the focal object, a pencil, and three small unlabeled thumbnail frames placed nearby to suggest planning. No text anywhere in the image. Use a restrained warm editorial aesthetic with paper-white surfaces, ink-black details, and muted banana-gold and teal accents. Keep the composition clean, thoughtful, and suitable as a section cover rather than a technical diagram.",
+          "aspect": "3:4",
+          "image": "https://raw.githubusercontent.com/bananahub-ai/bananahub-skill/main/references/templates/article-illustration-workflow/samples/sample-3-pro-03.png",
+          "page_url": "https://github.com/bananahub-ai/bananahub-skill/blob/main/references/templates/article-illustration-workflow/samples/sample-3-pro-03.png"
+        }
+      ],
+      "sample_image": "https://raw.githubusercontent.com/bananahub-ai/bananahub-skill/main/references/templates/article-illustration-workflow/samples/sample-3-pro-01.png",
+      "sample_image_page_url": "https://github.com/bananahub-ai/bananahub-skill/blob/main/references/templates/article-illustration-workflow/samples/sample-3-pro-01.png",
+      "repo": "bananahub-ai/bananahub-skill",
+      "repo_url": "https://github.com/bananahub-ai/bananahub-skill",
+      "branch": "main",
+      "template_root": "references/templates",
+      "template_path": "references/templates/article-illustration-workflow",
+      "template_url": "https://github.com/bananahub-ai/bananahub-skill/tree/main/references/templates/article-illustration-workflow",
+      "official": true,
+      "catalog_source": "curated",
+      "install_target": "bananahub-ai/bananahub-skill/article-illustration-workflow",
+      "install_cmd": "bananahub add bananahub-ai/bananahub-skill/article-illustration-workflow",
+      "created": "2026-04-03",
+      "updated": "2026-04-03",
       "pinned": false,
       "pinned_rank": null,
       "featured": false,
