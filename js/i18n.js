@@ -200,7 +200,7 @@ const translations = {
       hero: {
         eyebrow: 'About BananaHub',
         title: 'The installable template network for BananaHub Skill.',
-        lead: 'BananaHub Skill is the agent-native runtime for guided Gemini image generation in chat. BananaHub is the searchable, installable, machine-readable layer that lets reusable prompt and workflow structures travel without bloating the runtime.',
+        lead: 'BananaHub Skill is the agent-native runtime for guided Gemini image generation in chat. BananaHub is the searchable, installable, machine-readable layer that lets reusable prompt and workflow structures travel without bloating the runtime. Its workflow design is grounded in official Gemini image-generation guidance and refined into a practical agent workflow.',
         actions: {
           openGallery: 'Open gallery',
           templateSystem: 'Template System',
@@ -451,7 +451,7 @@ const translations = {
       hero: {
         eyebrow: '关于 BananaHub',
         title: 'BananaHub Skill 的模板网络。',
-        lead: 'BananaHub Skill 负责在对话里引导 Gemini 生图，BananaHub 负责把模板管起来——搜得到、装得上、机器也能直接读。',
+        lead: 'BananaHub Skill 负责在对话里引导 Gemini 生图，BananaHub 负责把模板管起来——搜得到、装得上、机器也能直接读。这套工作流设计基于官方 Gemini 图像生成指引提炼，再封装成更适合 agent 使用的实践形式。',
         actions: {
           openGallery: '去画廊',
           templateSystem: '模板系统',
