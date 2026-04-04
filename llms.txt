@@ -1,9 +1,11 @@
 # BananaHub
 
-BananaHub is the searchable, installable template network for BananaHub Skill.
+BananaHub is the searchable template catalog for BananaHub Skill.
+The catalog mixes a small built-in starter pack with installable remote templates.
 Templates may be lightweight prompts or multi-step workflows.
 The catalog has two layers: curated templates for reviewed defaults, and discovered templates collected automatically from real installs.
 Curated is the recommendation layer. Discovered is the open discovery layer. Moderation rules can ban or pin templates independently of either layer.
+Built-in templates should be used directly inside BananaHub Skill. Install counts apply only to remote templates.
 
 Canonical site: https://bananahub-ai.github.io/
 
@@ -14,14 +16,18 @@ Preferred machine-readable entry points:
 - https://bananahub-ai.github.io/agent-catalog.md — markdown digest of the current catalog
 - https://bananahub-ai.github.io/llms.txt — this overview
 
-Install rules:
-- Prefer the install_cmd value from catalog.json for deterministic installation.
+Command rules:
+- Prefer primary_cmd for the next action.
+- Built-in templates use primary_action=use and do not need installation.
+- Installable templates use primary_action=install; install_cmd is provided only for that subset.
 - Curated templates are not the only valid templates. Discovered templates are intentionally open and may be unreviewed.
 - Pinned templates should be treated as stronger defaults than raw install counts alone.
 
 How to use BananaHub as an agent:
 - Read catalog.json first for merged discovery and moderation flags.
 - Use catalog_source to distinguish curated from discovered entries.
+- Use distribution to distinguish built-in starter templates from installable remote templates.
+- For built-in template adoption counts, use usage_stats_url or call /usage-stats with repo + template_id.
 - Respect pinned and featured flags before raw popularity when choosing defaults.
 - Use template_url when the full template body is needed.
 - Use type to distinguish prompt templates from workflow templates.
@@ -33,5 +39,5 @@ Ecosystem links:
 - Template system docs: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-system.md
 - Template format spec: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-format-spec.md
 
-Current catalog summary: 12 templates total, 11 curated, 1 discovered, 0 pinned, 0 featured.
-Generated: 2026-04-04T06:57:41.520Z
+Current catalog summary: 12 templates total, 11 bundled, 1 remote, 11 curated, 1 discovered, 0 pinned, 0 featured.
+Generated: 2026-04-04T11:28:00.802Z

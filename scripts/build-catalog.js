@@ -9,7 +9,7 @@ const GITHUB_WEB = 'https://github.com';
 const HUB_API_BASE = process.env.BANANAHUB_API_BASE || 'https://bananahub-api.zhan9kun.workers.dev/api';
 const SITE_URL = 'https://bananahub-ai.github.io';
 const KNOWN_SHORT_INSTALL_ROOTS = new Set(['references/templates', 'templates']);
-const REPO_ALIASES = new Map([
+const CANONICAL_REPO_ALIASES = new Map([
   ['nano-banana-hub/nanobanana', 'bananahub-ai/bananahub-skill'],
 ]);
 const GENERATED_FILES = {
@@ -167,57 +167,13 @@ function buildTemplateKey(repo, id) {
   return `${slugifyText(repo)}::${slugifyText(id)}`;
 }
 
-function rewriteRepoPrefix(value, fromRepo, toRepo) {
-  const input = String(value || '').trim();
-  if (!input) {
-    return input;
+function canonicalizeRepo(value) {
+  const repo = String(value || '').trim();
+  if (!repo) {
+    return '';
   }
 
-  if (input === fromRepo) {
-    return toRepo;
-  }
-
-  if (input.startsWith(`${fromRepo}/`)) {
-    return `${toRepo}${input.slice(fromRepo.length)}`;
-  }
-
-  return input;
-}
-
-function normalizeOfficialInstallTarget(repo, installTarget) {
-  const normalizedTarget = normalizePath(installTarget);
-  const repoPrefix = `${repo}/`;
-  if (!normalizedTarget.startsWith(repoPrefix)) {
-    return normalizedTarget;
-  }
-
-  const tail = normalizePath(normalizedTarget.slice(repoPrefix.length));
-  for (const root of KNOWN_SHORT_INSTALL_ROOTS) {
-    const prefix = `${root}/`;
-    if (tail.startsWith(prefix)) {
-      return `${repo}/${tail.slice(prefix.length)}`;
-    }
-  }
-
-  return normalizedTarget;
-}
-
-function normalizeDiscoveredCandidate(candidate) {
-  const repo = String(candidate.repo || '').trim();
-  const alias = REPO_ALIASES.get(slugifyText(repo));
-  if (!alias || alias === repo) {
-    return candidate;
-  }
-
-  const normalized = {
-    ...candidate,
-    repo: alias,
-    install_target: rewriteRepoPrefix(candidate.install_target, repo, alias),
-    template_path: String(candidate.template_path || '').trim(),
-  };
-
-  normalized.install_target = normalizeOfficialInstallTarget(alias, normalized.install_target);
-  return normalized;
+  return CANONICAL_REPO_ALIASES.get(slugifyText(repo)) || repo;
 }
 
 function buildInstallTargetFromTemplateDir(repoConfig, templateDirPath, templateSlug) {
@@ -504,12 +460,76 @@ function buildSampleRecords(sampleEntries, repo, branch, templateDir) {
   }).filter(Boolean);
 }
 
+function deriveDistribution(repoConfig) {
+  return repoConfig.type === 'builtin' ? 'bundled' : 'remote';
+}
+
+function rewriteRepoPrefix(value, fromRepo, toRepo) {
+  const input = String(value || '').trim();
+  if (!input) {
+    return input;
+  }
+
+  if (input === fromRepo) {
+    return toRepo;
+  }
+
+  if (input.startsWith(`${fromRepo}/`)) {
+    return `${toRepo}${input.slice(fromRepo.length)}`;
+  }
+
+  return input;
+}
+
+function normalizeOfficialInstallTarget(repo, installTarget) {
+  const normalizedTarget = normalizePath(installTarget);
+  const repoPrefix = `${repo}/`;
+  if (!normalizedTarget.startsWith(repoPrefix)) {
+    return normalizedTarget;
+  }
+
+  const tail = normalizePath(normalizedTarget.slice(repoPrefix.length));
+  for (const root of KNOWN_SHORT_INSTALL_ROOTS) {
+    const prefix = `${root}/`;
+    if (tail.startsWith(prefix)) {
+      return `${repo}/${tail.slice(prefix.length)}`;
+    }
+  }
+
+  return normalizedTarget;
+}
+
+function normalizeDiscoveredCandidate(candidate) {
+  const originalRepo = String(candidate.repo || '').trim();
+  const canonicalRepo = canonicalizeRepo(originalRepo);
+  const normalized = {
+    ...candidate,
+    repo: canonicalRepo,
+    template_path: String(candidate.template_path || '').trim(),
+  };
+
+  normalized.install_target = normalizeOfficialInstallTarget(
+    canonicalRepo,
+    rewriteRepoPrefix(candidate.install_target, originalRepo, canonicalRepo)
+  );
+  return normalized;
+}
+
+function buildUseCommand(templateId) {
+  return `/bananahub use ${templateId}`;
+}
+
 function buildTemplateRecord({ repoConfig, repoInfo, templateDirPath, templateSlug, frontmatter, content, generatedAt }) {
   const normalizedTemplateDir = normalizePath(templateDirPath);
   const resolvedSlug = templateSlug || basenameSafe(normalizedTemplateDir) || frontmatter.id || '';
   const resolvedId = frontmatter.id || resolvedSlug || repoConfig.repo.split('/')[1];
   const description = extractDescription(content);
   const installTarget = buildInstallTargetFromTemplateDir(repoConfig, normalizedTemplateDir, resolvedSlug);
+  const distribution = deriveDistribution(repoConfig);
+  const useCmd = buildUseCommand(resolvedId);
+  const installCmd = distribution === 'bundled' ? '' : `bananahub add ${installTarget}`;
+  const primaryAction = distribution === 'bundled' ? 'use' : 'install';
+  const primaryCmd = primaryAction === 'use' ? useCmd : installCmd;
   const samples = buildSampleRecords(frontmatter.samples, repoConfig.repo, repoInfo.default_branch, normalizedTemplateDir);
   const sampleImage = samples[0]?.image || '';
   const sampleImagePageUrl = samples[0]?.page_url || '';
@@ -537,13 +557,19 @@ function buildTemplateRecord({ repoConfig, repoInfo, templateDirPath, templateSl
     repo: repoConfig.repo,
     repo_url: repoInfo.html_url || `${GITHUB_WEB}/${repoConfig.repo}`,
     branch: repoInfo.default_branch,
+    distribution,
     template_root: templateRoot,
     template_path: normalizedTemplateDir,
     template_url: templateUrl,
     official: Boolean(repoConfig.official),
     catalog_source: repoConfig.catalog_source || 'curated',
+    use_cmd: useCmd,
     install_target: installTarget,
-    install_cmd: `bananahub add ${installTarget}`,
+    install_cmd: installCmd,
+    primary_action: primaryAction,
+    primary_cmd: primaryCmd,
+    install_required: distribution !== 'bundled',
+    usage_stats_url: `${HUB_API_BASE}/usage-stats?repo=${encodeURIComponent(repoConfig.repo)}&template_id=${encodeURIComponent(resolvedId)}`,
     created: frontmatter.created || generatedAt.slice(0, 10),
     updated: frontmatter.updated || generatedAt.slice(0, 10),
   };
@@ -756,6 +782,8 @@ function buildLayerSummary(templates) {
   return {
     template_count: templates.length,
     official_count: templates.filter((template) => template.official).length,
+    bundled_count: templates.filter((template) => template.distribution === 'bundled').length,
+    remote_count: templates.filter((template) => template.distribution !== 'bundled').length,
     repos,
   };
 }
@@ -766,6 +794,8 @@ function buildCatalog({ version, generatedAt, catalogType, templates, curatedTem
   const officialCount = templates.filter((template) => template.official).length;
   const featuredCount = templates.filter((template) => template.featured).length;
   const pinnedCount = templates.filter((template) => template.pinned).length;
+  const bundledCount = templates.filter((template) => template.distribution === 'bundled').length;
+  const remoteCount = templates.filter((template) => template.distribution !== 'bundled').length;
   const curatedSummary = buildLayerSummary(curatedTemplates);
   const discoveredSummary = buildLayerSummary(discoveredTemplates);
 
@@ -775,6 +805,7 @@ function buildCatalog({ version, generatedAt, catalogType, templates, curatedTem
     generated: generatedAt,
     site: {
       url: `${SITE_URL}/`,
+      hub_api_base: HUB_API_BASE,
       catalog_json: `${SITE_URL}/${GENERATED_FILES.catalog}`,
       catalog_curated_json: `${SITE_URL}/${GENERATED_FILES.catalogCurated}`,
       catalog_discovered_json: `${SITE_URL}/${GENERATED_FILES.catalogDiscovered}`,
@@ -787,6 +818,8 @@ function buildCatalog({ version, generatedAt, catalogType, templates, curatedTem
       official_count: officialCount,
       featured_count: featuredCount,
       pinned_count: pinnedCount,
+      bundled_count: bundledCount,
+      remote_count: remoteCount,
       curated_count: curatedSummary.template_count,
       discovered_count: discoveredSummary.template_count,
       repos,
@@ -804,10 +837,12 @@ function buildLlmsTxt(catalog) {
   const lines = [
     '# BananaHub',
     '',
-    'BananaHub is the searchable, installable template network for BananaHub Skill.',
+    'BananaHub is the searchable template catalog for BananaHub Skill.',
+    'The catalog mixes a small built-in starter pack with installable remote templates.',
     'Templates may be lightweight prompts or multi-step workflows.',
     'The catalog has two layers: curated templates for reviewed defaults, and discovered templates collected automatically from real installs.',
     'Curated is the recommendation layer. Discovered is the open discovery layer. Moderation rules can ban or pin templates independently of either layer.',
+    'Built-in templates should be used directly inside BananaHub Skill. Install counts apply only to remote templates.',
     '',
     `Canonical site: ${catalog.site.url}`,
     '',
@@ -818,14 +853,18 @@ function buildLlmsTxt(catalog) {
     `- ${catalog.site.agent_catalog} — markdown digest of the current catalog`,
     `- ${catalog.site.llms_txt} — this overview`,
     '',
-    'Install rules:',
-    '- Prefer the install_cmd value from catalog.json for deterministic installation.',
+    'Command rules:',
+    '- Prefer primary_cmd for the next action.',
+    '- Built-in templates use primary_action=use and do not need installation.',
+    '- Installable templates use primary_action=install; install_cmd is provided only for that subset.',
     '- Curated templates are not the only valid templates. Discovered templates are intentionally open and may be unreviewed.',
     '- Pinned templates should be treated as stronger defaults than raw install counts alone.',
     '',
     'How to use BananaHub as an agent:',
     '- Read catalog.json first for merged discovery and moderation flags.',
     '- Use catalog_source to distinguish curated from discovered entries.',
+    '- Use distribution to distinguish built-in starter templates from installable remote templates.',
+    '- For built-in template adoption counts, use usage_stats_url or call /usage-stats with repo + template_id.',
     '- Respect pinned and featured flags before raw popularity when choosing defaults.',
     '- Use template_url when the full template body is needed.',
     '- Use type to distinguish prompt templates from workflow templates.',
@@ -837,7 +876,7 @@ function buildLlmsTxt(catalog) {
     '- Template system docs: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-system.md',
     '- Template format spec: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-format-spec.md',
     '',
-    `Current catalog summary: ${catalog.summary.template_count} templates total, ${catalog.summary.curated_count} curated, ${catalog.summary.discovered_count} discovered, ${catalog.summary.pinned_count} pinned, ${catalog.summary.featured_count} featured.`,
+    `Current catalog summary: ${catalog.summary.template_count} templates total, ${catalog.summary.bundled_count} bundled, ${catalog.summary.remote_count} remote, ${catalog.summary.curated_count} curated, ${catalog.summary.discovered_count} discovered, ${catalog.summary.pinned_count} pinned, ${catalog.summary.featured_count} featured.`,
     `Generated: ${catalog.generated}`,
   ];
 
@@ -889,12 +928,20 @@ function appendTemplateDigest(lines, template) {
   lines.push(`- Profile: ${template.profile}`);
   lines.push(`- Difficulty: ${template.difficulty}`);
   lines.push(`- Source Layer: ${template.catalog_source}`);
+  lines.push(`- Distribution: ${template.distribution}`);
   lines.push(`- Official: ${template.official ? 'yes' : 'no'}`);
   lines.push(`- Featured: ${template.featured ? (template.featured_label || 'yes') : 'no'}`);
   lines.push(`- Pinned: ${template.pinned ? `yes${Number.isFinite(template.pinned_rank) ? ` (#${template.pinned_rank})` : ''}` : 'no'}`);
   lines.push(`- Tags: ${template.tags.join(', ') || 'none'}`);
   lines.push(`- Description: ${template.description || 'No description provided.'}`);
-  lines.push(`- Install: \`${template.install_cmd}\``);
+  lines.push(`- Primary Action: ${template.primary_action}`);
+  lines.push(`- Primary Command: \`${template.primary_cmd}\``);
+  if (template.install_cmd) {
+    lines.push(`- Install Command: \`${template.install_cmd}\``);
+  }
+  if (template.usage_stats_url) {
+    lines.push(`- Usage Stats: ${template.usage_stats_url}`);
+  }
   lines.push(`- Template Source: ${template.template_url}`);
   if (template.sample_image) {
     lines.push(`- Preview Image: ${template.sample_image}`);

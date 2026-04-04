@@ -18,11 +18,14 @@ const DEFAULT_FILTERS = {
   difficulty: 'all'
 };
 
-const DEFAULT_SORT = 'all-time';
+const DEFAULT_SORT = 'recommended';
 const SAMPLE_SWIPE_THRESHOLD = 48;
 const EMPTY_STATS = {
-  installs: '--',
-  trending: 0
+  installs: null,
+  trending: null,
+  usageTotal: null,
+  usage24h: null,
+  usageUnique: null
 };
 
 let catalog = null;
@@ -75,6 +78,11 @@ const dom = {
   modalVersion: document.getElementById('modal-version'),
   modalAspect: document.getElementById('modal-aspect'),
   modalUpdated: document.getElementById('modal-updated'),
+  modalDistribution: document.getElementById('modal-distribution'),
+  modalUsageItem: document.getElementById('modal-usage-item'),
+  modalUsage: document.getElementById('modal-usage'),
+  modalInstallsItem: document.getElementById('modal-installs-item'),
+  modalTrendingItem: document.getElementById('modal-trending-item'),
   modalInstalls: document.getElementById('modal-installs'),
   modalTrending: document.getElementById('modal-trending'),
   modalInstallCmd: document.getElementById('modal-install-cmd'),
@@ -550,7 +558,7 @@ function updateResultsPanel() {
     summaryBits.push(
       currentSort === 'trending'
         ? t('common.results.sortedByTrending')
-        : t('common.results.sortedByInstalls')
+        : t('common.results.sortedByRecommended')
     );
 
     if (activeDetails.length > 0) {
@@ -602,14 +610,45 @@ function renderCard(template) {
   const previewLabel = hasSampleImage ? t('common.preview.loading') : t('common.preview.unavailable');
   const sourceUrl = template.template_url || template.repo_url || '#';
   const sourceValue = template.catalog_source || 'curated';
+  const distributionValue = template.distribution || 'remote';
   const typeValue = template.type || 'prompt';
   const profileValue = template.profile || 'general';
   const difficultyValue = template.difficulty || 'beginner';
   const aspectValue = template.aspect || t('common.value.na');
+  const primaryCommand = getPrimaryCommand(template);
+  const isBundled = isBundledTemplate(template);
   const installDisplay = getInstallDisplay(stats);
   const trendingDisplay = getTrendingDisplay(stats);
+  const usageTotalDisplay = getUsageTotalDisplay(stats);
+  const usage24hDisplay = getUsage24hDisplay(stats);
   const featuredLabel = template.featured_label?.trim() || t('common.badge.featured');
   const officialLabel = template.official ? t('common.badge.official') : t('common.badge.community');
+  const copyCommandLabel = t('common.action.copyInstall');
+  const statMarkup = isBundled
+    ? (typeof stats.usageTotal === 'number'
+      ? `
+        <span class="card-action-stat" aria-label="${escAttr(t('common.card.successCountAria', { count: usageTotalDisplay }))}">
+          <span class="card-action-stat-value">${escHtml(usageTotalDisplay)}</span>
+          <small>${escHtml(t('common.card.successfulRuns'))}</small>
+        </span>
+      `
+      : `
+        <span class="card-action-stat" aria-label="${escAttr(t('common.card.bundledAria'))}">
+          <span class="card-action-stat-value">${escHtml(translateEnum('distribution', distributionValue, distributionValue))}</span>
+          <small>${escHtml(t('common.card.noInstallNeeded'))}</small>
+        </span>
+      `)
+    : `
+      <span class="card-action-stat" aria-label="${escAttr(t('common.card.installCountAria', { count: installDisplay }))}">
+        <span class="card-action-stat-value" data-stat-key="${escAttr(key)}" data-stat-type="installs">${escHtml(installDisplay)}</span>
+        <small>${escHtml(t('common.card.installs'))}</small>
+      </span>
+    `;
+  const metaStatMarkup = isBundled
+    ? (typeof stats.usage24h === 'number'
+      ? `<span>${escHtml(t('common.card.uses24h', { count: usage24hDisplay }))}</span>`
+      : `<span>${escHtml(translateEnum('distribution', distributionValue, distributionValue))}</span>`)
+    : `<span data-stat-key="${escAttr(key)}" data-stat-type="trending">${escHtml(t('common.card.installs24h', { count: trendingDisplay }))}</span>`;
 
   return `
     <article
@@ -656,23 +695,20 @@ function renderCard(template) {
           <span>${escHtml(translateEnum('source', sourceValue, sourceValue))}</span>
           <span>${escHtml(translateEnum('difficulty', difficultyValue, difficultyValue))}</span>
           <span>${escHtml(aspectValue)}</span>
-          <span data-stat-key="${escAttr(key)}" data-stat-type="trending">${escHtml(t('common.card.installs24h', { count: trendingDisplay }))}</span>
+          ${metaStatMarkup}
         </div>
 
         <div class="card-actions">
-          <span class="card-action-stat" aria-label="${escAttr(t('common.card.installCountAria', { count: installDisplay }))}">
-            <span class="card-action-stat-value" data-stat-key="${escAttr(key)}" data-stat-type="installs">${escHtml(installDisplay)}</span>
-            <small>${escHtml(t('common.card.installs'))}</small>
-          </span>
+          ${statMarkup}
           <button
             class="copy-btn card-action-icon"
-            data-cmd="${escAttr(template.install_cmd)}"
+            data-cmd="${escAttr(primaryCommand)}"
             type="button"
-            aria-label="${escAttr(t('common.action.copyInstall'))}"
-            title="${escAttr(t('common.action.copyInstall'))}"
+            aria-label="${escAttr(copyCommandLabel)}"
+            title="${escAttr(copyCommandLabel)}"
           >
             ${renderCardActionIcon('copy')}
-            <span class="visually-hidden">${escHtml(t('common.action.copyInstall'))}</span>
+            <span class="visually-hidden">${escHtml(copyCommandLabel)}</span>
           </button>
           <a
             class="card-source-link card-action-icon"
@@ -837,6 +873,8 @@ function populateModal(template) {
   const profileValue = template.profile || 'general';
   const difficultyValue = template.difficulty || 'beginner';
   const sourceValue = template.catalog_source || 'curated';
+  const distributionValue = template.distribution || 'remote';
+  const isBundled = isBundledTemplate(template);
 
   dom.modalTitle.textContent = title;
   dom.modalSubtitle.textContent = subtitle;
@@ -845,9 +883,14 @@ function populateModal(template) {
   dom.modalVersion.textContent = template.version || t('common.value.unknown');
   dom.modalAspect.textContent = template.aspect || t('common.value.na');
   dom.modalUpdated.textContent = formatDate(template.updated || template.created);
+  dom.modalDistribution.textContent = translateEnum('distribution', distributionValue, distributionValue);
+  dom.modalUsage.textContent = getUsageTotalDisplay(stats);
   dom.modalInstalls.textContent = getInstallDisplay(stats);
   dom.modalTrending.textContent = getTrendingDisplay(stats);
-  dom.modalInstallCmd.textContent = template.install_cmd || '';
+  dom.modalUsageItem.hidden = !isBundled;
+  dom.modalInstallsItem.hidden = isBundled;
+  dom.modalTrendingItem.hidden = isBundled;
+  dom.modalInstallCmd.textContent = getPrimaryCommand(template);
 
   dom.modalBadges.innerHTML = [
     ...(template.pinned ? [renderBadge('badge badge-flag', t('common.badge.pinned'))] : []),
@@ -856,7 +899,8 @@ function populateModal(template) {
     renderBadge(`badge badge-profile ${escAttr(profileValue)}`, translateEnum('profile', profileValue, profileValue)),
     renderBadge('badge badge-difficulty', translateEnum('difficulty', difficultyValue, difficultyValue)),
     renderBadge('badge', template.official ? t('common.badge.official') : t('common.badge.community')),
-    renderBadge('badge badge-source', translateEnum('source', sourceValue, sourceValue))
+    renderBadge('badge badge-source', translateEnum('source', sourceValue, sourceValue)),
+    renderBadge('badge badge-source', translateEnum('distribution', distributionValue, distributionValue))
   ].join('');
 
   dom.modalTags.innerHTML = (template.tags || []).length > 0
@@ -1295,12 +1339,36 @@ function isSameTemplate(left, right) {
   return Boolean(left && right && left.id === right.id && left.repo === right.repo);
 }
 
+function isBundledTemplate(template) {
+  return template?.distribution === 'bundled';
+}
+
+function getPrimaryCommand(template) {
+  return template?.primary_cmd || template?.use_cmd || template?.install_cmd || '';
+}
+
 function getTemplateStats(template) {
   return statsMap.get(getTemplateKey(template)) || EMPTY_STATS;
 }
 
 function getInstallDisplay(stats) {
   return typeof stats.installs === 'number' ? formatCount(stats.installs) : '--';
+}
+
+function getUsageTotalDisplay(stats) {
+  return typeof stats.usageTotal === 'number' ? formatCount(stats.usageTotal) : '--';
+}
+
+function getUsage24hDisplay(stats) {
+  if (typeof stats.usage24h !== 'number') {
+    return '--';
+  }
+
+  if (stats.usage24h <= 0) {
+    return '0';
+  }
+
+  return `+${formatCount(stats.usage24h)}`;
 }
 
 function getTrendingDisplay(stats) {

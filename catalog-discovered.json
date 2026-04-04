@@ -1,9 +1,10 @@
 {
   "version": "1.0.0",
   "catalog_type": "discovered",
-  "generated": "2026-04-04T06:57:41.520Z",
+  "generated": "2026-04-04T11:28:00.802Z",
   "site": {
     "url": "https://bananahub-ai.github.io/",
+    "hub_api_base": "https://bananahub-api.zhan9kun.workers.dev/api",
     "catalog_json": "https://bananahub-ai.github.io/catalog.json",
     "catalog_curated_json": "https://bananahub-ai.github.io/catalog-curated.json",
     "catalog_discovered_json": "https://bananahub-ai.github.io/catalog-discovered.json",
@@ -16,6 +17,8 @@
     "official_count": 0,
     "featured_count": 0,
     "pinned_count": 0,
+    "bundled_count": 0,
+    "remote_count": 1,
     "curated_count": 0,
     "discovered_count": 1,
     "repos": [
@@ -26,11 +29,15 @@
     "curated": {
       "template_count": 0,
       "official_count": 0,
+      "bundled_count": 0,
+      "remote_count": 0,
       "repos": []
     },
     "discovered": {
       "template_count": 1,
       "official_count": 0,
+      "bundled_count": 0,
+      "remote_count": 1,
       "repos": [
         "zkywalker/nanobanana-artisan-portrait"
       ]
@@ -76,13 +83,19 @@
       "repo": "zkywalker/nanobanana-artisan-portrait",
       "repo_url": "https://github.com/zkywalker/nanobanana-artisan-portrait",
       "branch": "main",
+      "distribution": "remote",
       "template_root": "",
       "template_path": "",
       "template_url": "https://github.com/zkywalker/nanobanana-artisan-portrait/tree/main",
       "official": false,
       "catalog_source": "discovered",
+      "use_cmd": "/bananahub use artisan-portrait",
       "install_target": "zkywalker/nanobanana-artisan-portrait",
       "install_cmd": "bananahub add zkywalker/nanobanana-artisan-portrait",
+      "primary_action": "install",
+      "primary_cmd": "bananahub add zkywalker/nanobanana-artisan-portrait",
+      "install_required": true,
+      "usage_stats_url": "https://bananahub-api.zhan9kun.workers.dev/api/usage-stats?repo=zkywalker%2Fnanobanana-artisan-portrait&template_id=artisan-portrait",
       "created": "2026-03-30",
       "updated": "2026-03-30",
       "pinned": false,

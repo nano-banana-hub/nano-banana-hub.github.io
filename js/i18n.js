@@ -24,6 +24,10 @@ const translations = {
         curated: 'Curated',
         discovered: 'Discovered',
       },
+      distribution: {
+        bundled: 'Built-in',
+        remote: 'Installable',
+      },
       profile: {
         general: 'General',
         photo: 'Photo',
@@ -70,7 +74,7 @@ const translations = {
         close: 'Close',
         copy: 'Copy',
         copied: 'Copied',
-        copyInstall: 'Copy install',
+        copyInstall: 'Copy command',
         source: 'Source',
       },
       value: {
@@ -88,7 +92,7 @@ const translations = {
         singleTemplateCount: '{count} template',
         profileCount: '{count} profiles',
         singleProfileCount: '{count} profile',
-        sortedByInstalls: 'sorted by installs',
+        sortedByRecommended: 'sorted by recommended order',
         sortedByTrending: 'sorted by 24h trend',
         filteredBy: 'filtered by {details}',
         query: 'query "{value}"',
@@ -97,14 +101,19 @@ const translations = {
         difficulty: 'difficulty {value}',
         noMatch: 'No templates match the current search and filter combination.',
         shareableHint: 'The current gallery view is encoded in the URL, so you can share this exact filter state.',
-        defaultHint: 'Click a card for the full brief, or use the install button directly. Catalog refreshed {date} UTC.',
+        defaultHint: 'Click a card for the full brief, then copy the primary command. Catalog refreshed {date} UTC.',
         loadFailedSummary: 'The catalog could not be loaded.',
         loadFailedHint: 'Refresh the page or open catalog.json directly to inspect the generated catalog.',
       },
       card: {
         installs24h: '{count} installs / 24h',
+        uses24h: '{count} successful runs / 24h',
         installs: 'installs',
+        successfulRuns: 'successful runs',
         installCountAria: '{count} installs total',
+        successCountAria: '{count} successful runs total',
+        noInstallNeeded: 'no install needed',
+        bundledAria: 'Built into BananaHub Skill, no installation required',
       },
       empty: {
         loadFailedTitle: 'Failed to load templates.',
@@ -115,15 +124,15 @@ const translations = {
     },
     index: {
       meta: {
-        title: 'BananaHub | Installable Templates for BananaHub Skill',
-        description: "Browse installable prompt and workflow templates for BananaHub Skill, compare generated looks, and install only the template that fits the current job.",
-        ogTitle: 'BananaHub | Installable Templates for BananaHub Skill',
-        ogDescription: 'A visual gallery of installable prompt and workflow templates for BananaHub Skill.',
+        title: 'BananaHub | Template Catalog for BananaHub Skill',
+        description: "Browse built-in starter templates and installable remote templates for BananaHub Skill, compare generated looks, and use the right module for the current job.",
+        ogTitle: 'BananaHub | Template Catalog for BananaHub Skill',
+        ogDescription: 'A visual gallery of built-in starter templates and installable remote templates for BananaHub Skill.',
       },
       hero: {
-        eyebrow: 'Installable Templates',
-        title: 'Browse and install templates for BananaHub Skill.',
-        lead: 'Find the right template, preview the output, install with one command.',
+        eyebrow: 'Starter + Remote',
+        title: 'Browse templates for BananaHub Skill.',
+        lead: 'Start with bundled starter templates, then install remote modules only when they add value.',
         metrics: {
           indexedTemplates: 'templates',
           profilesCovered: 'profiles',
@@ -134,11 +143,11 @@ const translations = {
           browseGitHub: 'Browse GitHub',
           about: 'About BananaHub',
         },
-        note: 'This is a gallery of reusable modules, not a giant prompt dump. Open a card for the brief, source, preview, and install command.',
+        note: 'This is a gallery of reusable modules, not a giant prompt dump. It mixes the built-in starter pack with installable remote templates.',
       },
       catalog: {
         kicker: 'Live Catalog',
-        title: 'A searchable gallery of installable templates',
+        title: 'A searchable gallery of starter and remote templates',
         status: {
           shown: 'shown',
           curated: 'curated',
@@ -154,7 +163,7 @@ const translations = {
         difficulty: 'Difficulty',
         sort: 'Sort',
         sortAria: 'Sort templates',
-        mostInstalled: 'Most installed',
+        mostInstalled: 'Recommended',
         trending24h: 'Trending 24h',
         reset: 'Reset filters',
       },
@@ -162,10 +171,10 @@ const translations = {
         kicker: 'For Agents',
         title: 'Machine-readable catalog endpoints',
         lead: 'Fetch these files instead of parsing HTML. They stay in sync with the gallery above.',
-        installPattern: 'Install pattern',
+        installPattern: 'Command patterns',
       },
       footer: {
-        copy: 'Installable template gallery for BananaHub Skill, with stable files for machine-readable access when needed.',
+        copy: 'Template catalog for BananaHub Skill, with stable files for machine-readable access when needed.',
         templateSystem: 'Template System',
         submitTemplate: 'Submit Template',
         meta: 'BananaHub keeps the runtime lean and distributes reusable templates across the broader BananaHub stack.',
@@ -176,31 +185,33 @@ const translations = {
         version: 'Version',
         aspect: 'Aspect',
         updated: 'Updated',
+        distribution: 'Distribution',
+        successfulRuns: 'Successful runs',
         installs: 'Installs',
         installs24h: '24h installs',
-        installCommand: 'Install command',
+        installCommand: 'Primary command',
         viewFullImage: 'View full image',
       },
       lightbox: {
         close: 'Close full image',
       },
       structuredData: {
-        pageDescription: 'Installable prompt and workflow template hub for BananaHub Skill.',
+        pageDescription: 'Built-in starter and installable template catalog for BananaHub Skill.',
         catalogName: 'BananaHub Catalog',
-        catalogDescription: 'Catalog of {count} installable prompt and workflow templates for BananaHub Skill.',
+        catalogDescription: 'Catalog of {count} built-in starter and installable remote templates for BananaHub Skill.',
       },
     },
     about: {
       meta: {
-        title: 'About BananaHub | Installable Template Network for BananaHub Skill',
-        description: 'Learn how BananaHub works as the installable template network for BananaHub Skill.',
-        ogTitle: 'About BananaHub | Installable Template Network for BananaHub Skill',
-        ogDescription: 'What BananaHub is, why it exists, and how humans, authors, and agents should use this installable template network.',
+        title: 'About BananaHub | Starter Pack and Template Network for BananaHub Skill',
+        description: 'Learn how BananaHub works as the built-in starter pack and installable template network for BananaHub Skill.',
+        ogTitle: 'About BananaHub | Starter Pack and Template Network for BananaHub Skill',
+        ogDescription: 'What BananaHub is, why it exists, and how humans, authors, and agents should use the built-in starter pack and installable template network.',
       },
       hero: {
         eyebrow: 'About BananaHub',
-        title: 'The installable template network for BananaHub Skill.',
-        lead: 'BananaHub Skill is the agent-native runtime for guided Gemini image generation in chat. BananaHub is the searchable, installable, machine-readable layer that lets reusable prompt and workflow structures travel without bloating the runtime. Its workflow design is grounded in official Gemini image-generation guidance and refined into a practical agent workflow.',
+        title: 'The starter pack and template network for BananaHub Skill.',
+        lead: 'BananaHub Skill is the agent-native runtime for guided Gemini image generation in chat. BananaHub bundles a small starter pack and adds a searchable, installable, machine-readable layer for everything else. Its workflow design is grounded in official Gemini image-generation guidance and refined into a practical agent workflow.',
         actions: {
           openGallery: 'Open gallery',
           templateSystem: 'Template System',
@@ -211,7 +222,7 @@ const translations = {
       manifesto: {
         kicker: 'What BananaHub Is',
         title: 'Not a prompt dump. A distribution layer for reusable templates.',
-        lead: 'BananaHub exists so BananaHub Skill can stay focused on the live workflow while reusable prompt and workflow structures remain searchable, installable, and portable across repositories.',
+        lead: 'BananaHub exists so BananaHub Skill can ship a tight starter set while reusable prompt and workflow structures remain searchable, installable, and portable across repositories.',
       },
       principles: {
         first: {
@@ -231,7 +242,7 @@ const translations = {
         kicker: 'Machine Files',
         title: 'Use these files directly for automation.',
         lead: 'They mirror the public catalog and are the preferred interface for agents, scripts, and workflow tooling.',
-        installPattern: 'Install pattern',
+        installPattern: 'Command patterns',
       },
       contribute: {
         kicker: 'Contribution Loop',
@@ -248,7 +259,7 @@ const translations = {
         },
       },
       footer: {
-        copy: 'Installable template gallery for BananaHub Skill, with stable files for machine-readable access when needed.',
+        copy: 'Template catalog for BananaHub Skill, with stable files for machine-readable access when needed.',
         templateSystem: 'Template System',
         meta: 'BananaHub keeps the runtime lean and distributes reusable templates across the broader BananaHub stack.',
       },
@@ -274,6 +285,10 @@ const translations = {
       source: {
         curated: '精选',
         discovered: '社区',
+      },
+      distribution: {
+        bundled: '内置',
+        remote: '可安装',
       },
       profile: {
         general: '通用',
@@ -321,7 +336,7 @@ const translations = {
         close: '关闭',
         copy: '复制',
         copied: '已复制',
-        copyInstall: '复制安装命令',
+        copyInstall: '复制命令',
         source: '源码',
       },
       value: {
@@ -339,7 +354,7 @@ const translations = {
         singleTemplateCount: '{count} 个模板',
         profileCount: '{count} 个分类',
         singleProfileCount: '{count} 个分类',
-        sortedByInstalls: '按安装量排序',
+        sortedByRecommended: '按推荐顺序排序',
         sortedByTrending: '按 24h 热度排序',
         filteredBy: '当前筛选：{details}',
         query: '搜索「{value}」',
@@ -348,14 +363,19 @@ const translations = {
         difficulty: '难度 {value}',
         noMatch: '没找到匹配的模板，换个条件试试。',
         shareableHint: '当前筛选状态已写入 URL，直接分享链接就行。',
-        defaultHint: '点卡片看详情，或者直接复制安装命令。最后更新：{date} UTC。',
+        defaultHint: '点卡片看详情，再复制对应主命令。最后更新：{date} UTC。',
         loadFailedSummary: '加载失败了。',
         loadFailedHint: '刷新页面试试，或者直接打开 catalog.json 看原始数据。',
       },
       card: {
         installs24h: '24h 安装 {count} 次',
+        uses24h: '24h 成功生成 {count} 次',
         installs: '安装量',
+        successfulRuns: '成功生成',
         installCountAria: '累计 {count} 次安装',
+        successCountAria: '累计成功生成 {count} 次',
+        noInstallNeeded: '无需安装',
+        bundledAria: 'BananaHub Skill 已内置，无需安装',
       },
       empty: {
         loadFailedTitle: '模板没加载出来。',
@@ -367,14 +387,14 @@ const translations = {
     index: {
       meta: {
         title: 'BananaHub — BananaHub Skill 模板库',
-        description: '给 BananaHub Skill 找合适模板，预览效果图，一条命令装好就能用。',
+        description: '浏览 BananaHub Skill 的内置起步模板和可安装远程模板，预览效果图，再用对当前任务最合适的模块。',
         ogTitle: 'BananaHub — BananaHub Skill 模板库',
-        ogDescription: 'BananaHub Skill 的模板画廊，浏览、对比、一键安装。',
+        ogDescription: 'BananaHub Skill 的模板画廊，内置起步模板和可安装远程模板一起看。',
       },
       hero: {
-        eyebrow: '模板库',
-        title: '找模板、看效果、一键安装。',
-        lead: '选一个合适的模板，预览输出效果，一条命令搞定。',
+        eyebrow: '内置 + 远程',
+        title: '找模板、看效果、直接调用。',
+        lead: '先用 Skill 自带的起步模板，不够时再安装远程模块。',
         metrics: {
           indexedTemplates: '个模板',
           profilesCovered: '个分类',
@@ -385,11 +405,11 @@ const translations = {
           browseGitHub: 'GitHub',
           about: '了解更多',
         },
-        note: '这是模板库，不是 prompt 大杂烩。点开卡片就能看到简介、源码、预览和安装命令。',
+        note: '这是模板库，不是 prompt 大杂烩。这里同时收录 Skill 内置起步模板和可安装远程模板。',
       },
       catalog: {
         kicker: '实时目录',
-        title: '模板画廊',
+        title: '内置与远程模板画廊',
         status: {
           shown: '当前显示',
           curated: '精选',
@@ -405,7 +425,7 @@ const translations = {
         difficulty: '难度',
         sort: '排序',
         sortAria: '排序方式',
-        mostInstalled: '最多安装',
+        mostInstalled: '推荐顺序',
         trending24h: '24h 热门',
         reset: '重置',
       },
@@ -413,7 +433,7 @@ const translations = {
         kicker: 'Agent 入口',
         title: '机器可读的目录接口',
         lead: '直接请求这些文件，不用解析 HTML，数据和上面的画廊同步。',
-        installPattern: '安装格式',
+        installPattern: '命令格式',
       },
       footer: {
         copy: 'BananaHub Skill 的模板画廊，同时提供机器可读的数据接口。',
@@ -427,31 +447,33 @@ const translations = {
         version: '版本',
         aspect: '比例',
         updated: '更新时间',
+        distribution: '分发方式',
+        successfulRuns: '成功生成',
         installs: '安装量',
         installs24h: '24h 安装',
-        installCommand: '安装命令',
+        installCommand: '主命令',
         viewFullImage: '查看大图',
       },
       lightbox: {
         close: '关闭大图',
       },
       structuredData: {
-        pageDescription: 'BananaHub Skill 的模板库。',
+        pageDescription: 'BananaHub Skill 的内置与可安装模板目录。',
         catalogName: 'BananaHub 模板目录',
-        catalogDescription: '收录了 {count} 个 BananaHub 模板。',
+        catalogDescription: '收录了 {count} 个 BananaHub 内置与可安装模板。',
       },
     },
     about: {
       meta: {
-        title: '关于 BananaHub — BananaHub Skill 模板网络',
-        description: 'BananaHub 是什么，怎么用，以及它和 BananaHub Skill 的关系。',
-        ogTitle: '关于 BananaHub — BananaHub Skill 模板网络',
-        ogDescription: 'BananaHub 是 BananaHub Skill 的模板网络——给人看画廊，给 Agent 读文件。',
+        title: '关于 BananaHub — BananaHub Skill 起步模板与模板网络',
+        description: 'BananaHub 是什么，怎么用，以及它和 BananaHub Skill 内置起步模板的关系。',
+        ogTitle: '关于 BananaHub — BananaHub Skill 起步模板与模板网络',
+        ogDescription: 'BananaHub 既是 BananaHub Skill 的内置起步模板集合，也是可安装模板网络。',
       },
       hero: {
         eyebrow: '关于 BananaHub',
-        title: 'BananaHub Skill 的模板网络。',
-        lead: 'BananaHub Skill 负责在对话里引导 Gemini 生图，BananaHub 负责把模板管起来——搜得到、装得上、机器也能直接读。这套工作流设计基于官方 Gemini 图像生成指引提炼，再封装成更适合 agent 使用的实践形式。',
+        title: 'BananaHub Skill 的起步模板与模板网络。',
+        lead: 'BananaHub Skill 负责在对话里引导 Gemini 生图，BananaHub 一方面提供一小套内置起步模板，另一方面负责把其余模板管起来——搜得到、装得上、机器也能直接读。这套工作流设计基于官方 Gemini 图像生成指引提炼，再封装成更适合 agent 使用的实践形式。',
         actions: {
           openGallery: '去画廊',
           templateSystem: '模板系统',
@@ -462,7 +484,7 @@ const translations = {
       manifesto: {
         kicker: 'BananaHub 是什么',
         title: '模板的分发层，不是 prompt 堆放站。',
-        lead: '把模板从 BananaHub Skill 核心里拆出来，让运行时保持轻量，模板可以独立搜索、安装和跨仓库使用。',
+        lead: '让 BananaHub Skill 只内置一套紧凑的起步模板，其余模板继续保持可搜索、可安装、可跨仓库复用。',
       },
       principles: {
         first: {
@@ -482,7 +504,7 @@ const translations = {
         kicker: '机器文件',
         title: '自动化直接用这些。',
         lead: '跟画廊数据同步，Agent 和脚本优先用这几个文件。',
-        installPattern: '安装格式',
+        installPattern: '命令格式',
       },
       contribute: {
         kicker: '参与贡献',

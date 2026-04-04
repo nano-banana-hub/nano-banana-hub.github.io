@@ -34,7 +34,8 @@ export function sortTemplates(templates, sortMode, statsMap) {
 
   const getStats = (template) => statsMap.get(`${template.repo || 'unknown'}::${template.id}`);
   const getTrending = (template) => {
-    const value = getStats(template)?.trending;
+    const stats = getStats(template) || {};
+    const value = template.distribution === 'bundled' ? stats.usage24h : stats.trending;
     return typeof value === 'number' ? value : 0;
   };
   const getInstalls = (template) => {
@@ -45,6 +46,8 @@ export function sortTemplates(templates, sortMode, statsMap) {
     Number.isFinite(template.pinned_rank) ? template.pinned_rank : Number.POSITIVE_INFINITY
   );
   const getFeatured = (template) => Number(Boolean(template.featured));
+  const getDistributionRank = (template) => (template.distribution === 'bundled' ? 0 : 1);
+  const getSourceRank = (template) => (template.catalog_source === 'curated' ? 0 : 1);
   const getOfficial = (template) => Number(Boolean(template.official));
   const getTitle = (template) => template.title_en || template.title || template.id;
 
@@ -65,15 +68,27 @@ export function sortTemplates(templates, sortMode, statsMap) {
         return trendingDiff;
       }
     } else {
-      const installsDiff = getInstalls(b) - getInstalls(a);
-      if (installsDiff !== 0) {
-        return installsDiff;
+      const distributionDiff = getDistributionRank(a) - getDistributionRank(b);
+      if (distributionDiff !== 0) {
+        return distributionDiff;
       }
+    }
+
+    const sourceDiff = getSourceRank(a) - getSourceRank(b);
+    if (sourceDiff !== 0) {
+      return sourceDiff;
     }
 
     const officialDiff = getOfficial(b) - getOfficial(a);
     if (officialDiff !== 0) {
       return officialDiff;
+    }
+
+    if (a.distribution !== 'bundled' && b.distribution !== 'bundled') {
+      const installsDiff = getInstalls(b) - getInstalls(a);
+      if (installsDiff !== 0) {
+        return installsDiff;
+      }
     }
 
     return getTitle(a).localeCompare(getTitle(b), 'en');
@@ -97,6 +112,8 @@ export function searchTemplates(templates, query) {
       template.author,
       template.profile,
       template.catalog_source,
+      template.distribution,
+      template.primary_action,
       template.difficulty,
       ...(template.tags || [])
     ].join(' ').toLowerCase();
