@@ -110,6 +110,7 @@ export function searchTemplates(templates, query) {
       template.title_en,
       template.description,
       template.author,
+      template.license,
       template.profile,
       template.catalog_source,
       template.distribution,

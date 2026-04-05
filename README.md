@@ -43,6 +43,13 @@ There are two ways for a template to appear:
 
 `catalog-source.json` is the recommendation layer. Discovered templates are the open discovery layer.
 
+For both paths, published templates should:
+
+- declare a frontmatter `license` such as `CC-BY-4.0`
+- include a repo `LICENSE` file
+- avoid third-party sample assets or copy unless the submitter can redistribute them
+- keep `author` and source repository data accurate for attribution
+
 ## Local development
 
 Serve the site with any static file server:
@@ -62,3 +69,19 @@ GITHUB_TOKEN=ghp_xxx node scripts/build-catalog.js
 - Prefer `catalog.json`, `catalog-curated.json`, `catalog-discovered.json`, `llms.txt`, and `agent-catalog.md` for agent access instead of scraping the visual homepage
 - Generated install commands are intended to stay truthful to the `bananahub` CLI behavior
 - Curated templates win over discovered duplicates in the merged catalog
+
+## Contributing
+
+Site code and docs contributions are accepted under MIT and should be signed off with:
+
+```bash
+git commit -s -m "feat: your change"
+```
+
+For curated template additions or policy questions, see [CONTRIBUTING.md](./CONTRIBUTING.md) and [COMMUNITY-TEMPLATE-POLICY.md](./COMMUNITY-TEMPLATE-POLICY.md).
+
+## Licensing
+
+- Site code and original site copy: MIT
+- Template records surfaced in the catalog: retain each template's declared upstream license
+- Official BananaHub-authored template content is expected to declare `CC-BY-4.0`

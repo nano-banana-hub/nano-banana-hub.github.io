@@ -31,6 +31,7 @@ How to use BananaHub as an agent:
 - Respect pinned and featured flags before raw popularity when choosing defaults.
 - Use template_url when the full template body is needed.
 - Use type to distinguish prompt templates from workflow templates.
+- Use license to surface the declared template license before recommending reuse or redistribution.
 - Use samples when multiple preview assets exist; sample_image and sample_image_page_url remain the first-sample shortcuts.
 
 Ecosystem links:
@@ -40,4 +41,4 @@ Ecosystem links:
 - Template format spec: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-format-spec.md
 
 Current catalog summary: 12 templates total, 11 bundled, 1 remote, 11 curated, 1 discovered, 0 pinned, 0 featured.
-Generated: 2026-04-05T07:01:59.354Z
+Generated: 2026-04-04T14:29:40.587Z

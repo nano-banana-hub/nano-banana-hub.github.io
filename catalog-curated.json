@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "catalog_type": "curated",
-  "generated": "2026-04-05T07:01:59.354Z",
+  "generated": "2026-04-04T14:29:40.587Z",
   "site": {
     "url": "https://bananahub.ai/",
     "hub_api_base": "https://worker.bananahub.ai/api",
@@ -59,6 +59,7 @@
       "title": "App/Web Logo 生成工作流",
       "title_en": "App and Web Logo Workflow",
       "author": "bananahub",
+      "license": "CC-BY-4.0",
       "version": "1.0.0",
       "profile": "text-heavy",
       "tags": [
@@ -116,6 +117,7 @@
       "title": "文章配图工作流",
       "title_en": "Article Illustration Workflow",
       "author": "bananahub",
+      "license": "CC-BY-4.0",
       "version": "1.0.0",
       "profile": "diagram",
       "tags": [
@@ -191,6 +193,7 @@
       "title": "本地素材风格统一工作流",
       "title_en": "Local Asset Style Consistency Workflow",
       "author": "bananahub",
+      "license": "CC-BY-4.0",
       "version": "1.0.0",
       "profile": "general",
       "tags": [
@@ -255,6 +258,7 @@
       "title": "角色一致性分镜工作流",
       "title_en": "Consistent Character Storyboard Workflow",
       "author": "bananahub",
+      "license": "CC-BY-4.0",
       "version": "1.0.0",
       "profile": "general",
       "tags": [
@@ -310,6 +314,7 @@
       "title": "Q版贴纸表情包",
       "title_en": "Cute Chibi Sticker Pack",
       "author": "bananahub",
+      "license": "CC-BY-4.0",
       "version": "1.0.0",
       "profile": "sticker",
       "tags": [
@@ -364,6 +369,7 @@
       "title": "赛博朋克城市夜景",
       "title_en": "Cyberpunk City Nightscape",
       "author": "bananahub",
+      "license": "CC-BY-4.0",
       "version": "1.0.0",
       "profile": "photo",
       "tags": [
@@ -418,6 +424,7 @@
       "title": "信息图/流程图",
       "title_en": "Infographic & Flowchart",
       "author": "bananahub",
+      "license": "CC-BY-4.0",
       "version": "1.0.0",
       "profile": "diagram",
       "tags": [
@@ -472,6 +479,7 @@
       "title": "极简手机壁纸",
       "title_en": "Minimal Phone Wallpaper",
       "author": "bananahub",
+      "license": "CC-BY-4.0",
       "version": "1.0.0",
       "profile": "minimal",
       "tags": [
@@ -526,6 +534,7 @@
       "title": "电商白底产品图",
       "title_en": "E-commerce Product on White",
       "author": "bananahub",
+      "license": "CC-BY-4.0",
       "version": "1.0.0",
       "profile": "product",
       "tags": [
@@ -580,6 +589,7 @@
       "title": "README 启动视觉工作流",
       "title_en": "README Launch Visual Workflow",
       "author": "bananahub",
+      "license": "CC-BY-4.0",
       "version": "1.0.0",
       "profile": "text-heavy",
       "tags": [
@@ -645,6 +655,7 @@
       "title": "代码库讲解图工作流",
       "title_en": "Repository Explainer Diagram Workflow",
       "author": "bananahub",
+      "license": "CC-BY-4.0",
       "version": "1.0.0",
       "profile": "diagram",
       "tags": [

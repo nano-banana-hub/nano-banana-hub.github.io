@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "catalog_type": "discovered",
-  "generated": "2026-04-05T07:01:59.354Z",
+  "generated": "2026-04-04T14:29:40.587Z",
   "site": {
     "url": "https://bananahub.ai/",
     "hub_api_base": "https://worker.bananahub.ai/api",
@@ -53,6 +53,7 @@
       "title": "匠人环境人像",
       "title_en": "Environmental Artisan Portrait",
       "author": "zkywalker",
+      "license": "NOASSERTION",
       "version": "1.0.0",
       "profile": "photo",
       "tags": [

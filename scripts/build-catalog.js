@@ -519,6 +519,13 @@ function buildUseCommand(templateId) {
   return `/bananahub use ${templateId}`;
 }
 
+function normalizeTemplateLicense(value, { official = false } = {}) {
+  const normalized = String(value || '').trim();
+  if (normalized) return normalized;
+  if (official) return 'CC-BY-4.0';
+  return 'NOASSERTION';
+}
+
 function buildTemplateRecord({ repoConfig, repoInfo, templateDirPath, templateSlug, frontmatter, content, generatedAt }) {
   const normalizedTemplateDir = normalizePath(templateDirPath);
   const resolvedSlug = templateSlug || basenameSafe(normalizedTemplateDir) || frontmatter.id || '';
@@ -545,6 +552,7 @@ function buildTemplateRecord({ repoConfig, repoInfo, templateDirPath, templateSl
     title: frontmatter.title || '',
     title_en: frontmatter.title_en || frontmatter.title || resolvedId,
     author: frontmatter.author || 'unknown',
+    license: normalizeTemplateLicense(frontmatter.license, { official: Boolean(repoConfig.official) }),
     version: frontmatter.version || '1.0.0',
     profile: frontmatter.profile || 'general',
     tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
@@ -868,6 +876,7 @@ function buildLlmsTxt(catalog) {
     '- Respect pinned and featured flags before raw popularity when choosing defaults.',
     '- Use template_url when the full template body is needed.',
     '- Use type to distinguish prompt templates from workflow templates.',
+    '- Use license to surface the declared template license before recommending reuse or redistribution.',
     '- Use samples when multiple preview assets exist; sample_image and sample_image_page_url remain the first-sample shortcuts.',
     '',
     'Ecosystem links:',
@@ -929,6 +938,7 @@ function appendTemplateDigest(lines, template) {
   lines.push(`- Difficulty: ${template.difficulty}`);
   lines.push(`- Source Layer: ${template.catalog_source}`);
   lines.push(`- Distribution: ${template.distribution}`);
+  lines.push(`- License: ${template.license || 'NOASSERTION'}`);
   lines.push(`- Official: ${template.official ? 'yes' : 'no'}`);
   lines.push(`- Featured: ${template.featured ? (template.featured_label || 'yes') : 'no'}`);
   lines.push(`- Pinned: ${template.pinned ? `yes${Number.isFinite(template.pinned_rank) ? ` (#${template.pinned_rank})` : ''}` : 'no'}`);

@@ -1,6 +1,6 @@
 # BananaHub Agent Catalog
 
-Generated: 2026-04-05T07:01:59.354Z
+Generated: 2026-04-04T14:29:40.587Z
 
 BananaHub is the installable template network for BananaHub Skill.
 Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.
@@ -22,6 +22,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Difficulty: intermediate
 - Source Layer: curated
 - Distribution: bundled
+- License: CC-BY-4.0
 - Official: yes
 - Featured: no
 - Pinned: no
@@ -40,6 +41,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Difficulty: intermediate
 - Source Layer: curated
 - Distribution: bundled
+- License: CC-BY-4.0
 - Official: yes
 - Featured: no
 - Pinned: no
@@ -58,6 +60,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Difficulty: advanced
 - Source Layer: curated
 - Distribution: bundled
+- License: CC-BY-4.0
 - Official: yes
 - Featured: no
 - Pinned: no
@@ -76,6 +79,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Difficulty: intermediate
 - Source Layer: curated
 - Distribution: bundled
+- License: CC-BY-4.0
 - Official: yes
 - Featured: no
 - Pinned: no
@@ -94,6 +98,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Difficulty: beginner
 - Source Layer: curated
 - Distribution: bundled
+- License: CC-BY-4.0
 - Official: yes
 - Featured: no
 - Pinned: no
@@ -112,6 +117,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Difficulty: beginner
 - Source Layer: curated
 - Distribution: bundled
+- License: CC-BY-4.0
 - Official: yes
 - Featured: no
 - Pinned: no
@@ -130,6 +136,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Difficulty: intermediate
 - Source Layer: curated
 - Distribution: bundled
+- License: CC-BY-4.0
 - Official: yes
 - Featured: no
 - Pinned: no
@@ -148,6 +155,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Difficulty: beginner
 - Source Layer: curated
 - Distribution: bundled
+- License: CC-BY-4.0
 - Official: yes
 - Featured: no
 - Pinned: no
@@ -166,6 +174,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Difficulty: beginner
 - Source Layer: curated
 - Distribution: bundled
+- License: CC-BY-4.0
 - Official: yes
 - Featured: no
 - Pinned: no
@@ -184,6 +193,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Difficulty: intermediate
 - Source Layer: curated
 - Distribution: bundled
+- License: CC-BY-4.0
 - Official: yes
 - Featured: no
 - Pinned: no
@@ -202,6 +212,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Difficulty: intermediate
 - Source Layer: curated
 - Distribution: bundled
+- License: CC-BY-4.0
 - Official: yes
 - Featured: no
 - Pinned: no
@@ -222,6 +233,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Difficulty: beginner
 - Source Layer: discovered
 - Distribution: remote
+- License: NOASSERTION
 - Official: no
 - Featured: no
 - Pinned: no
