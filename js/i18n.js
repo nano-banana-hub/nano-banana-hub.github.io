@@ -81,6 +81,7 @@ const translations = {
         unknown: 'Unknown',
         unavailable: 'Unavailable',
         na: 'n/a',
+        notDeclared: 'Not declared',
         loading: 'Loading',
       },
       aria: {
@@ -154,6 +155,16 @@ const translations = {
           discovered: 'discovered',
         },
       },
+      quickstart: {
+        kicker: 'Quick Start',
+        title: 'Install BananaHub Skill before browsing deeper.',
+        lead: 'Use one install path for your environment, then run setup once and come back to the catalog when you need templates.',
+        paths: {
+          openAgentSkills: 'Open Agent Skills',
+          claudeCode: 'Claude Code',
+          firstRun: 'Run setup once',
+        },
+      },
       filters: {
         search: 'Search',
         searchPlaceholder: 'Search by template name, type, tag, profile, author, or intent in English or Chinese',
@@ -182,6 +193,7 @@ const translations = {
       modal: {
         kicker: 'Template Brief',
         author: 'Author',
+        license: 'License',
         version: 'Version',
         aspect: 'Aspect',
         updated: 'Updated',
@@ -343,6 +355,7 @@ const translations = {
         unknown: '未知',
         unavailable: '暂无',
         na: '—',
+        notDeclared: '未声明',
         loading: '加载中',
       },
       aria: {
@@ -416,6 +429,16 @@ const translations = {
           discovered: '社区',
         },
       },
+      quickstart: {
+        kicker: '快速开始',
+        title: '先装 BananaHub Skill，再继续挑模板。',
+        lead: '按你的环境选一种安装方式，装好后先跑一次初始化，再回来挑模板。',
+        paths: {
+          openAgentSkills: 'Open Agent Skills',
+          claudeCode: 'Claude Code',
+          firstRun: '首次初始化',
+        },
+      },
       filters: {
         search: '搜索',
         searchPlaceholder: '搜模板名、标签、分类、作者……中英文都行',
@@ -444,6 +467,7 @@ const translations = {
       modal: {
         kicker: '模板详情',
         author: '作者',
+        license: '许可证',
         version: '版本',
         aspect: '比例',
         updated: '更新时间',

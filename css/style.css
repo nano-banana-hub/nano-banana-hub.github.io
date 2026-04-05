@@ -118,6 +118,7 @@ code {
 
 .site-header,
 .hero-banner,
+.quickstart-strip,
 .hero,
 .catalog-shell,
 .agent-strip,
@@ -271,6 +272,7 @@ main {
 }
 
 .hero-banner,
+.quickstart-strip,
 .hero,
 .catalog-shell,
 .agent-drawer,
@@ -286,6 +288,7 @@ main {
 
 .hero-banner,
 .hero,
+.quickstart-strip,
 .catalog-shell,
 .site-footer {
   background:
@@ -354,6 +357,87 @@ main {
   color: var(--ink-faint);
   font-size: 0.75rem;
   white-space: nowrap;
+}
+
+.quickstart-strip {
+  display: grid;
+  gap: 16px;
+  padding: 20px 22px 22px;
+  overflow: clip;
+}
+
+.quickstart-copy {
+  display: grid;
+  gap: 8px;
+  max-width: 64ch;
+}
+
+.quickstart-copy h2 {
+  margin: 0;
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.45rem, 2.2vw, 2.1rem);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+
+.quickstart-lead {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.quickstart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.quickstart-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(28, 33, 28, 0.12);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 251, 243, 0.84), rgba(246, 238, 220, 0.92)),
+    radial-gradient(circle at top right, rgba(217, 134, 42, 0.12), transparent 46%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.quickstart-label {
+  margin: 0;
+  color: var(--accent-deep);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.quickstart-command {
+  display: grid;
+  gap: 10px;
+}
+
+.quickstart-command code {
+  display: block;
+  min-height: 96px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(28, 33, 28, 0.92);
+  color: #f7efdc;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  white-space: normal;
+  word-break: break-word;
+  user-select: all;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 18px rgba(28, 33, 28, 0.1);
+}
+
+.quickstart-command .copy-btn {
+  justify-self: flex-start;
 }
 
 /* — old hero (about page) — */
@@ -1888,6 +1972,7 @@ main {
 
   .header-inner,
   .hero-banner,
+  .quickstart-strip,
   .hero,
   .catalog-shell,
   .agent-summary,
@@ -1902,6 +1987,10 @@ main {
   .hero-banner {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .quickstart-command code {
+    min-height: 0;
   }
 
   .hero h1 {
@@ -2034,6 +2123,10 @@ main {
 
   .copy-btn-compact {
     width: auto;
+  }
+
+  .quickstart-command .copy-btn {
+    width: 100%;
   }
 }
 

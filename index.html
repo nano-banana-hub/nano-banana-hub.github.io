@@ -86,6 +86,63 @@
         </div>
       </section>
 
+      <section class="quickstart-strip" id="quickstart" aria-labelledby="quickstart-title">
+        <div class="quickstart-copy">
+          <p class="section-kicker" data-i18n="index.quickstart.kicker">Quick Start</p>
+          <h2 id="quickstart-title" data-i18n="index.quickstart.title">Install BananaHub Skill before browsing deeper.</h2>
+          <p class="quickstart-lead" data-i18n="index.quickstart.lead">
+            Use one install path for your environment, then run setup once and come back to the catalog when you need templates.
+          </p>
+        </div>
+
+        <div class="quickstart-grid">
+          <article class="quickstart-card">
+            <p class="quickstart-label" data-i18n="index.quickstart.paths.openAgentSkills">Open Agent Skills</p>
+            <div class="quickstart-command">
+              <code>npx skills add https://github.com/bananahub-ai/bananahub-skill --skill bananahub</code>
+              <button
+                class="copy-btn copy-btn-compact"
+                type="button"
+                data-i18n="common.action.copy"
+                data-i18n-aria-label="common.action.copy"
+                data-copy-label-key="common.action.copy"
+                data-cmd="npx skills add https://github.com/bananahub-ai/bananahub-skill --skill bananahub"
+              >Copy</button>
+            </div>
+          </article>
+
+          <article class="quickstart-card">
+            <p class="quickstart-label" data-i18n="index.quickstart.paths.claudeCode">Claude Code</p>
+            <div class="quickstart-command">
+              <code>claude skill install https://github.com/bananahub-ai/bananahub-skill</code>
+              <button
+                class="copy-btn copy-btn-compact"
+                type="button"
+                data-i18n="common.action.copy"
+                data-i18n-aria-label="common.action.copy"
+                data-copy-label-key="common.action.copy"
+                data-cmd="claude skill install https://github.com/bananahub-ai/bananahub-skill"
+              >Copy</button>
+            </div>
+          </article>
+
+          <article class="quickstart-card">
+            <p class="quickstart-label" data-i18n="index.quickstart.paths.firstRun">Run setup once</p>
+            <div class="quickstart-command">
+              <code>/bananahub init</code>
+              <button
+                class="copy-btn copy-btn-compact"
+                type="button"
+                data-i18n="common.action.copy"
+                data-i18n-aria-label="common.action.copy"
+                data-copy-label-key="common.action.copy"
+                data-cmd="/bananahub init"
+              >Copy</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section class="catalog-shell" id="catalog-section" aria-labelledby="catalog-title">
         <div class="catalog-intro">
           <div class="catalog-copy">
@@ -270,6 +327,7 @@
 
           <div class="modal-meta">
             <div class="modal-meta-item"><span class="label" data-i18n="index.modal.author">Author</span><span id="modal-author"></span></div>
+            <div class="modal-meta-item"><span class="label" data-i18n="index.modal.license">License</span><span id="modal-license"></span></div>
             <div class="modal-meta-item"><span class="label" data-i18n="index.modal.version">Version</span><span id="modal-version"></span></div>
             <div class="modal-meta-item"><span class="label" data-i18n="index.modal.aspect">Aspect</span><span id="modal-aspect"></span></div>
             <div class="modal-meta-item"><span class="label" data-i18n="index.modal.updated">Updated</span><span id="modal-updated"></span></div>

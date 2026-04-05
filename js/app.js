@@ -45,6 +45,7 @@ const previewRecoveryCache = new Map();
 
 const dom = {
   siteHeader: document.querySelector('.site-header'),
+  quickstartStrip: document.getElementById('quickstart'),
   grid: document.getElementById('card-grid'),
   searchInput: document.getElementById('search-input'),
   templateCount: document.getElementById('template-count'),
@@ -75,6 +76,7 @@ const dom = {
   modalBadges: document.getElementById('modal-badges'),
   modalTags: document.getElementById('modal-tags'),
   modalAuthor: document.getElementById('modal-author'),
+  modalLicense: document.getElementById('modal-license'),
   modalVersion: document.getElementById('modal-version'),
   modalAspect: document.getElementById('modal-aspect'),
   modalUpdated: document.getElementById('modal-updated'),
@@ -201,6 +203,17 @@ function bindEvents() {
     syncUIFromState();
     render();
   });
+
+  if (dom.quickstartStrip) {
+    dom.quickstartStrip.addEventListener('click', (event) => {
+      const copyButton = event.target.closest('.copy-btn');
+      if (!copyButton) {
+        return;
+      }
+
+      copyToClipboard(copyButton.dataset.cmd || '', copyButton);
+    });
+  }
 
   dom.grid.addEventListener('click', (event) => {
     const copyButton = event.target.closest('.copy-btn');
@@ -875,11 +888,15 @@ function populateModal(template) {
   const sourceValue = template.catalog_source || 'curated';
   const distributionValue = template.distribution || 'remote';
   const isBundled = isBundledTemplate(template);
+  const licenseValue = String(template.license || '').trim();
 
   dom.modalTitle.textContent = title;
   dom.modalSubtitle.textContent = subtitle;
   dom.modalDesc.textContent = getLocalizedTemplateDescription(template);
   dom.modalAuthor.textContent = template.author || t('common.value.unknown');
+  dom.modalLicense.textContent = !licenseValue || licenseValue === 'NOASSERTION'
+    ? t('common.value.notDeclared')
+    : licenseValue;
   dom.modalVersion.textContent = template.version || t('common.value.unknown');
   dom.modalAspect.textContent = template.aspect || t('common.value.na');
   dom.modalUpdated.textContent = formatDate(template.updated || template.created);
@@ -1527,6 +1544,10 @@ function joinLocalizedList(items) {
 function getCopyButtonLabel(button, fallback) {
   if (!button?.isConnected) {
     return fallback;
+  }
+
+  if (button.dataset.copyLabelKey) {
+    return t(button.dataset.copyLabelKey);
   }
 
   if (button.id === 'modal-copy-btn') {
