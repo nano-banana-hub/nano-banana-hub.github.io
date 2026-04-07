@@ -617,7 +617,7 @@ function renderCard(template) {
   const primarySample = samples[0] || null;
   const tagsHtml = (template.tags || [])
     .slice(0, 3)
-    .map((tag) => `<span class="tag">${escHtml(tag)}</span>`)
+    .map((tag) => `<span class="tag" title="${escAttr(tag)}">${escHtml(tag)}</span>`)
     .join('');
   const hasSampleImage = Boolean(primarySample?.image);
   const previewLabel = hasSampleImage ? t('common.preview.loading') : t('common.preview.unavailable');
@@ -694,7 +694,7 @@ function renderCard(template) {
       <div class="card-body">
         <div class="card-head">
           <div class="card-title-stack">
-            <p class="card-eyebrow">${escHtml(template.id)}</p>
+            <p class="card-eyebrow" title="${escAttr(template.id)}">${escHtml(template.id)}</p>
             <div class="card-title">${escHtml(title)}</div>
             <div class="card-subtitle">${escHtml(subtitle || template.repo)}</div>
           </div>
@@ -921,7 +921,7 @@ function populateModal(template) {
   ].join('');
 
   dom.modalTags.innerHTML = (template.tags || []).length > 0
-    ? template.tags.map((tag) => `<span class="tag">${escHtml(tag)}</span>`).join('')
+    ? template.tags.map((tag) => `<span class="tag" title="${escAttr(tag)}">${escHtml(tag)}</span>`).join('')
     : `<span class="tag">${escHtml(t('common.template.noTags'))}</span>`;
 
   if (hasSampleImage) {

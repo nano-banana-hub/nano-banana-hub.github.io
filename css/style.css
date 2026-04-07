@@ -841,7 +841,8 @@ main {
 }
 
 .template-card {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   min-width: 0;
   width: 100%;
@@ -1021,7 +1022,9 @@ main {
 }
 
 .card-body {
-  display: grid;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   gap: 12px;
   min-width: 0;
   padding: 2px 2px 0;
@@ -1032,27 +1035,32 @@ main {
   gap: 10px;
   justify-content: space-between;
   align-items: flex-start;
+  min-width: 0;
 }
 
 .card-title-stack {
+  display: grid;
+  width: 100%;
   min-width: 0;
+  gap: 4px;
   overflow-wrap: anywhere;
 }
 
 .card-eyebrow {
   color: var(--ink-faint);
   font-size: 0.68rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .card-title {
-  margin-top: 3px;
   font-size: 1.08rem;
   line-height: 1.05;
   overflow-wrap: anywhere;
 }
 
 .card-subtitle {
-  margin-top: 4px;
   color: var(--ink-soft);
   font-size: 0.82rem;
   line-height: 1.35;
@@ -1089,6 +1097,7 @@ main {
   flex-wrap: wrap;
   gap: 6px;
   min-width: 0;
+  width: 100%;
 }
 
 .tag,
@@ -1106,7 +1115,14 @@ main {
   border: 1px dashed rgba(28, 33, 28, 0.16);
   color: var(--ink-soft);
   background: rgba(255, 255, 255, 0.58);
-  overflow-wrap: anywhere;
+}
+
+.card-tags .tag {
+  min-width: 0;
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .badge {
@@ -1168,6 +1184,7 @@ main {
   align-items: center;
   gap: 6px;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .card-meta-inline span::before {
@@ -1179,10 +1196,12 @@ main {
 }
 
 .card-actions {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: stretch;
   gap: 8px;
+  min-width: 0;
+  margin-top: auto;
   padding-top: 10px;
   border-top: 1px solid rgba(28, 33, 28, 0.08);
 }
@@ -1204,10 +1223,13 @@ main {
 }
 
 .card-action-stat {
-  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
   min-width: 0;
   gap: 7px;
-  justify-content: space-between;
+  width: auto;
+  justify-content: stretch;
   padding-inline: 12px;
   border: 1px solid rgba(28, 33, 28, 0.12);
   background: rgba(28, 33, 28, 0.05);
@@ -1219,6 +1241,11 @@ main {
   font-size: 0.68rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  min-width: 0;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  text-align: left;
+  white-space: normal;
 }
 
 .card-action-stat-value {
@@ -1226,6 +1253,7 @@ main {
   font-family: 'Fraunces', serif;
   font-size: 0.96rem;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .copy-btn {
@@ -1255,12 +1283,12 @@ main {
 }
 
 .card-action-icon {
-  flex: 0 0 36px;
   width: 36px;
   min-width: 36px;
   min-height: 36px;
   padding: 0;
   border-radius: 12px;
+  justify-self: end;
 }
 
 .card-action-icon svg {
@@ -2073,23 +2101,6 @@ main {
   .lightbox-link,
   .lightbox-close {
     width: 100%;
-  }
-
-  .card-actions {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
-    align-items: stretch;
-  }
-
-  .card-actions .card-action-stat {
-    width: auto;
-    white-space: normal;
-    align-items: flex-start;
-  }
-
-  .card-actions .card-action-stat small {
-    text-align: left;
-    line-height: 1.2;
   }
 
   .card-grid {
