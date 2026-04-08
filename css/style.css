@@ -1991,10 +1991,10 @@ main {
   }
 
   .modal {
-    height: min(90vh, 920px);
-    height: min(90dvh, 920px);
+    height: auto;
     max-height: 90vh;
     max-height: 90dvh;
+    overflow-y: auto;
   }
 
   .modal-media {
@@ -2003,6 +2003,22 @@ main {
 
   .modal-image-button {
     min-height: 0;
+  }
+
+  .modal-body {
+    display: block;
+    overflow: visible;
+  }
+
+  .modal-body-copy {
+    overflow: visible;
+    padding-bottom: 20px;
+  }
+
+  .modal-body-footer {
+    padding-top: 0;
+    border-top: 0;
+    background: transparent;
   }
 }
 
