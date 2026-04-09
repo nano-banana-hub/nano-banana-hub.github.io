@@ -12,6 +12,7 @@ import {
 
 const GITHUB_RAW = 'https://raw.githubusercontent.com';
 const GITHUB_WEB = 'https://github.com';
+const GITHUB_SKILL_REPO_API = 'https://api.github.com/repos/bananahub-ai/bananahub-skill';
 const DEFAULT_FILTERS = {
   source: 'all',
   profile: 'all',
@@ -41,6 +42,7 @@ let activeSampleIndex = 0;
 let lastFocusTarget = null;
 let didCatalogLoadFail = false;
 let isHandlingLocationSync = false;
+let githubStarsCount = null;
 const previewRecoveryCache = new Map();
 
 const dom = {
@@ -50,6 +52,7 @@ const dom = {
   searchInput: document.getElementById('search-input'),
   templateCount: document.getElementById('template-count'),
   profileCount: document.getElementById('profile-count'),
+  githubStarsCount: document.getElementById('github-stars-count'),
   catalogGenerated: document.getElementById('catalog-generated'),
   resultCount: document.getElementById('result-count'),
   curatedCount: document.getElementById('curated-count'),
@@ -108,6 +111,7 @@ async function init() {
   syncStickyOffsets();
   bindEvents();
   subscribeLanguageChange(handleLanguageChange);
+  loadGithubStars();
   readUrlState();
   syncUIFromState();
 
@@ -130,6 +134,7 @@ async function init() {
 
 function handleLanguageChange() {
   syncStickyOffsets();
+  updateGithubStars();
 
   if (isHandlingLocationSync) {
     return;
@@ -346,6 +351,7 @@ function renderLoadError() {
   const zero = formatCount(0);
   const unavailable = t('common.value.unavailable');
 
+  updateGithubStars();
   dom.templateCount.textContent = zero;
   dom.profileCount.textContent = zero;
   dom.catalogGenerated.textContent = unavailable;
@@ -486,10 +492,45 @@ function hydrateCatalogMeta() {
   const totalProfiles = summary.profile_count || new Set(allTemplates.map((template) => template.profile)).size;
   const generatedAt = catalog?.generated || '';
 
+  updateGithubStars();
   dom.templateCount.textContent = formatCount(totalTemplates);
   dom.profileCount.textContent = formatCount(totalProfiles);
   dom.catalogGenerated.textContent = formatDate(generatedAt);
   dom.catalogGenerated.title = generatedAt || t('common.value.unknown');
+}
+
+async function loadGithubStars() {
+  try {
+    const response = await fetch(GITHUB_SKILL_REPO_API, {
+      headers: {
+        Accept: 'application/vnd.github+json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`GitHub repo request failed with ${response.status}`);
+    }
+
+    const payload = await response.json();
+    githubStarsCount = typeof payload?.stargazers_count === 'number'
+      ? payload.stargazers_count
+      : null;
+  } catch (error) {
+    console.warn('Failed to load GitHub stars:', error);
+    githubStarsCount = null;
+  }
+
+  updateGithubStars();
+}
+
+function updateGithubStars() {
+  if (!dom.githubStarsCount) {
+    return;
+  }
+
+  dom.githubStarsCount.textContent = typeof githubStarsCount === 'number'
+    ? formatCount(githubStarsCount)
+    : '--';
 }
 
 function render() {
