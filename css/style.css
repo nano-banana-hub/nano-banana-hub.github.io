@@ -1772,19 +1772,23 @@ main {
 }
 
 .modal-body {
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
+  display: flex;
+  flex-direction: column;
   padding: 0;
   overflow: hidden;
 }
 
 .modal-body-copy {
+  flex: 1 1 auto;
   min-height: 0;
+  width: 100%;
   padding: 28px 26px 18px;
   overflow: auto;
 }
 
 .modal-body-footer {
+  flex: 0 0 auto;
+  width: 100%;
   padding: 18px 26px 24px;
   border-top: 1px solid rgba(28, 33, 28, 0.08);
   background: linear-gradient(180deg, rgba(250, 245, 235, 0.74), rgba(240, 231, 210, 0.96));
@@ -1864,6 +1868,7 @@ main {
 .modal-install-box {
   display: flex;
   align-items: center;
+  width: 100%;
   gap: 10px;
   padding: 14px;
   border: 1px solid rgba(28, 33, 28, 0.12);
