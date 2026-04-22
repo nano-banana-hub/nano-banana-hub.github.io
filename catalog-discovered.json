@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "catalog_type": "discovered",
-  "generated": "2026-04-22T15:35:10.443Z",
+  "generated": "2026-04-22T15:39:57.757Z",
   "site": {
     "url": "https://bananahub.ai/",
     "hub_api_base": "https://worker.bananahub.ai/api",
@@ -113,7 +113,7 @@
       "prompt_variants": {},
       "recommended_provider": "google-ai-studio",
       "recommended_model": "gemini-3-pro-image-preview",
-      "model_priority": 1,
+      "model_priority": 0,
       "schema_version": 2,
       "aspect": "3:4",
       "difficulty": "beginner",
@@ -210,7 +210,7 @@
       "prompt_variants": {},
       "recommended_provider": "google-ai-studio",
       "recommended_model": "gemini-3-pro-image-preview",
-      "model_priority": 1,
+      "model_priority": 0,
       "schema_version": 2,
       "aspect": "1:1",
       "difficulty": "intermediate",

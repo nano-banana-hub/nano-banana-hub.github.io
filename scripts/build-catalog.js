@@ -553,10 +553,12 @@ function deriveRecommendedModel(providers) {
     for (const model of provider.models || []) {
       const modelId = canonicalModelId(model.id);
       if (!modelId) continue;
+      const quality = String(model.quality || '').trim().toLowerCase();
       const candidate = {
         provider: provider.id || '',
         model: modelId,
-        priority: getModelPriority(modelId)
+        quality,
+        priority: getRecommendationPriority({ provider: provider.id || '', model: modelId, quality })
       };
       if (!best || candidate.priority < best.priority) {
         best = candidate;
@@ -564,6 +566,34 @@ function deriveRecommendedModel(providers) {
     }
   }
   return best;
+}
+
+function getRecommendationPriority({ provider, model, quality }) {
+  const canonical = canonicalModelId(model);
+  const normalizedQuality = String(quality || '').toLowerCase();
+
+  if (provider === 'google-ai-studio' && normalizedQuality === 'best') {
+    return 0;
+  }
+  if (provider === 'google-ai-studio' && normalizedQuality === 'good') {
+    return 1;
+  }
+  if (provider === 'openai' && ['best', 'good', 'ok', 'tested'].includes(normalizedQuality)) {
+    return 2;
+  }
+  if (canonical === 'gemini-3-pro-image-preview') {
+    return 3;
+  }
+  if (canonical === 'gemini-3.1-flash-image-preview') {
+    return 4;
+  }
+  if (canonical === 'gpt-image-2') {
+    return 5;
+  }
+  if (canonical === 'gpt-image-1') {
+    return 6;
+  }
+  return 9;
 }
 
 function buildSampleRecords(sampleEntries, repo, branch, templateDir) {

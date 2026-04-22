@@ -779,8 +779,8 @@ function renderCard(template) {
 }
 
 function getProviderSummary(template) {
-  const providers = (template.providers || []).slice(0, 3);
-  const models = (template.models || []).slice(0, 2);
+  const providers = extractProviderIds(template).slice(0, 3);
+  const models = extractModelIds(template).slice(0, 3);
   if (!providers.length && !models.length) {
     return '';
   }
@@ -795,6 +795,24 @@ function getProviderSummary(template) {
     chunks.push(`<strong>${escHtml(t('common.card.providers'))}:</strong> ${escHtml(providers.join(', '))}`);
   }
   return chunks.join(' <span>|</span> ');
+}
+
+function extractProviderIds(template) {
+  return (template.providers || [])
+    .map((provider) => (typeof provider === 'string' ? provider : provider?.id || ''))
+    .filter(Boolean);
+}
+
+function extractModelIds(template) {
+  const direct = (template.models || [])
+    .map((model) => (typeof model === 'string' ? model : model?.id || model?.name || ''))
+    .filter(Boolean);
+  if (direct.length > 0) {
+    return direct;
+  }
+  return (template.providers || [])
+    .flatMap((provider) => (provider?.models || []).map((model) => model?.id || model?.name || ''))
+    .filter(Boolean);
 }
 
 function renderBadge(className, label) {
