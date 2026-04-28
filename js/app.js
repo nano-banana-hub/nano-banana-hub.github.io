@@ -789,19 +789,10 @@ function renderSupportSummary(template, options = {}) {
   }
 
   if (variant === 'card') {
-    return renderCardSupportSummary(models, providers, recommendedModel, recommendedProvider);
+    return renderCardSupportSummary(template, models, providers, recommendedModel, recommendedProvider);
   }
 
-  const visibleModels = getVisibleSupportItems(models, recommendedModel);
-  const visibleProviders = getVisibleSupportItems(providers, recommendedProvider);
-  const secondaryInfo = visibleModels.length > 0 || visibleProviders.length > 0
-    ? `
-        <div class="support-detail-grid support-detail-grid-static">
-          ${visibleModels.length ? renderSupportGroup('models', visibleModels) : ''}
-          ${visibleProviders.length ? renderSupportGroup('providers', visibleProviders) : ''}
-        </div>
-      `
-    : '';
+  const secondaryInfo = renderProviderSupportDetails(template, models, recommendedProvider, recommendedModel);
 
   return `
     <div class="support-summary support-summary-${escAttr(variant)}">
@@ -811,9 +802,9 @@ function renderSupportSummary(template, options = {}) {
   `;
 }
 
-function renderCardSupportSummary(models, providers, recommendedModel, recommendedProvider) {
+function renderCardSupportSummary(template, models, providers, recommendedModel, recommendedProvider) {
   const providerIds = getOrderedSupportProviders(providers, recommendedProvider);
-  const title = getSupportSummaryTitle(models, providerIds, recommendedModel, recommendedProvider);
+  const title = getSupportSummaryTitle(template, models, providerIds, recommendedModel, recommendedProvider);
   const visibleProviderIds = recommendedProvider
     ? providerIds.filter((providerId) => providerId === recommendedProvider).slice(0, 1)
     : providerIds.slice(0, 2);
@@ -871,6 +862,69 @@ function renderProviderChip(providerId, options = {}) {
   return `<span class="${className}" title="${escAttr(title)}">${escHtml(shortLabel)}</span>`;
 }
 
+function renderProviderSupportDetails(template, fallbackModels, recommendedProvider, recommendedModel) {
+  const groups = getProviderSupportGroups(template);
+  if (!groups.length && !fallbackModels.length) {
+    return '';
+  }
+
+  return `
+    <div class="support-detail-grid support-detail-grid-static">
+      ${groups.length
+        ? groups.map((group) => renderProviderSupportGroup(group, recommendedProvider, recommendedModel)).join('')
+        : renderSupportGroup('models', fallbackModels)}
+    </div>
+  `;
+}
+
+function renderProviderSupportGroup(group, recommendedProvider, recommendedModel) {
+  const providerLabel = group.id ? formatProviderLabel(group.id) : t('common.card.providers');
+  const models = group.models.length ? group.models : [t('common.value.notDeclared')];
+
+  return `
+    <div class="support-provider-group">
+      <div class="support-provider-heading">
+        ${group.id ? renderProviderChip(group.id, { recommended: group.id === recommendedProvider }) : ''}
+        <span class="support-group-label">${escHtml(providerLabel)}</span>
+      </div>
+      <div class="support-chip-row support-provider-model-row">
+        ${models.map((model) => renderProviderModelChip(model, group.id, recommendedProvider, recommendedModel)).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderProviderModelChip(model, providerId, recommendedProvider, recommendedModel) {
+  const isRecommended = Boolean(
+    providerId
+    && providerId === recommendedProvider
+    && model === recommendedModel
+  );
+  const label = isRecommended
+    ? `${model} · ${t('common.card.recommended')}`
+    : model;
+  const className = `support-chip support-model-chip${isRecommended ? ' is-recommended' : ''}`;
+
+  return `<span class="${className}" title="${escAttr(label)}">${escHtml(model)}</span>`;
+}
+
+function getProviderSupportGroups(template) {
+  return (template.providers || [])
+    .map((provider) => {
+      if (typeof provider === 'string') {
+        return { id: provider, models: [] };
+      }
+
+      const id = String(provider?.id || '').trim();
+      const models = getUniqueItems(
+        (provider?.models || []).map((model) => (model?.id || model?.name || ''))
+      );
+
+      return id || models.length ? { id, models } : null;
+    })
+    .filter(Boolean);
+}
+
 function renderSupportGroup(key, items) {
   return `
     <div class="support-group">
@@ -911,7 +965,7 @@ function getOrderedSupportProviders(providers, recommendedProvider) {
   return [recommendedProvider, ...uniqueProviders.filter((providerId) => providerId !== recommendedProvider)];
 }
 
-function getSupportSummaryTitle(models, providers, recommendedModel, recommendedProvider) {
+function getSupportSummaryTitle(template, models, providers, recommendedModel, recommendedProvider) {
   const parts = [];
   if (recommendedModel || recommendedProvider) {
     const recommendedBits = [
@@ -920,22 +974,36 @@ function getSupportSummaryTitle(models, providers, recommendedModel, recommended
     ].filter(Boolean);
     parts.push(`${t('common.card.recommended')}: ${recommendedBits.join(' · ')}`);
   }
-  if (providers.length) {
-    parts.push(`${t('common.card.providers')}: ${providers.map(formatProviderLabel).join(', ')}`);
-  }
-  if (models.length) {
-    parts.push(`${t('common.card.models')}: ${models.join(', ')}`);
+
+  const providerSummaries = getProviderSupportGroups(template).map((group) => {
+    const label = group.id ? formatProviderLabel(group.id) : t('common.card.providers');
+    return group.models.length ? `${label}: ${group.models.join(', ')}` : label;
+  });
+
+  if (providerSummaries.length) {
+    parts.push(...providerSummaries);
+  } else {
+    if (providers.length) {
+      parts.push(`${t('common.card.providers')}: ${providers.map(formatProviderLabel).join(', ')}`);
+    }
+    if (models.length) {
+      parts.push(`${t('common.card.models')}: ${models.join(', ')}`);
+    }
   }
 
   return parts.join(' | ');
 }
 
 function getVisibleSupportItems(items, recommendedItem) {
-  const unique = [...new Set(items.map((item) => String(item || '').trim()).filter(Boolean))];
+  const unique = getUniqueItems(items);
   if (!recommendedItem) {
     return unique;
   }
   return unique.filter((item) => item !== recommendedItem);
+}
+
+function getUniqueItems(items) {
+  return [...new Set(items.map((item) => String(item || '').trim()).filter(Boolean))];
 }
 
 function extractProviderIds(template) {

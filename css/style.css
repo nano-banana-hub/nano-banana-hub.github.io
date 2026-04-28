@@ -1332,6 +1332,34 @@ main {
   gap: 8px;
 }
 
+.support-provider-group {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(28, 33, 28, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.48);
+}
+
+.support-provider-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.support-provider-heading .support-group-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.support-provider-model-row {
+  min-width: 0;
+}
+
 .support-group-label {
   color: var(--ink-faint);
   font-family: 'IBM Plex Mono', monospace;
@@ -1360,6 +1388,12 @@ main {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.support-model-chip.is-recommended {
+  border-color: rgba(143, 76, 22, 0.28);
+  background: rgba(217, 134, 42, 0.14);
+  color: var(--accent-deep);
 }
 
 .badge {
@@ -2097,7 +2131,7 @@ main {
 }
 
 .support-summary-modal .support-detail-grid {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
   padding: 16px 18px;
   border: 1px solid rgba(28, 33, 28, 0.08);
   border-radius: 16px;
