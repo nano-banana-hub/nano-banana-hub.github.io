@@ -1,6 +1,6 @@
 # BananaHub Agent Catalog
 
-Generated: 2026-04-27T08:19:08.613Z
+Generated: 2026-04-28T08:21:45.731Z
 
 BananaHub is the installable template network for BananaHub Skill.
 Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.
@@ -11,7 +11,6 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Merged Catalog JSON: https://bananahub.ai/catalog.json
 - Curated Catalog JSON: https://bananahub.ai/catalog-curated.json
 - Discovered Catalog JSON: https://bananahub.ai/catalog-discovered.json
-- Support Metadata JSON: https://bananahub.ai/support-metadata.json
 - llms.txt: https://bananahub.ai/llms.txt
 
 ## Curated Templates (11)

@@ -13,7 +13,6 @@ Preferred machine-readable entry points:
 - https://bananahub.ai/catalog.json — merged catalog with curated + discovered templates
 - https://bananahub.ai/catalog-curated.json — curated-only catalog
 - https://bananahub.ai/catalog-discovered.json — discovered-only catalog
-- https://bananahub.ai/support-metadata.json — provider/model display metadata and logo placeholders
 - https://bananahub.ai/agent-catalog.md — markdown digest of the current catalog
 - https://bananahub.ai/llms.txt — this overview
 
@@ -42,4 +41,4 @@ Ecosystem links:
 - Template format spec: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-format-spec.md
 
 Current catalog summary: 13 templates total, 11 bundled, 2 remote, 11 curated, 2 discovered, 0 pinned, 0 featured.
-Generated: 2026-04-27T08:19:08.613Z
+Generated: 2026-04-28T08:21:45.731Z
