@@ -586,7 +586,7 @@ function updateResultsPanel() {
   if (currentFilters.provider !== DEFAULT_FILTERS.provider) {
     activeDetails.push(
       t('common.results.provider', {
-        value: currentFilters.provider
+        value: formatProviderLabel(currentFilters.provider)
       })
     );
   }
@@ -788,59 +788,87 @@ function renderSupportSummary(template, options = {}) {
     return '';
   }
 
+  if (variant === 'card') {
+    return renderCardSupportSummary(models, providers, recommendedModel, recommendedProvider);
+  }
+
   const visibleModels = getVisibleSupportItems(models, recommendedModel);
   const visibleProviders = getVisibleSupportItems(providers, recommendedProvider);
-  const hasSecondaryInfo = visibleModels.length > 0 || visibleProviders.length > 0;
-
-  return `
-    <div class="support-summary support-summary-${escAttr(variant)}">
-      ${renderRecommendedHero(recommendedModel, recommendedProvider)}
-      ${hasSecondaryInfo ? (
-        variant === 'modal'
-          ? `
+  const secondaryInfo = visibleModels.length > 0 || visibleProviders.length > 0
+    ? `
         <div class="support-detail-grid support-detail-grid-static">
           ${visibleModels.length ? renderSupportGroup('models', visibleModels) : ''}
           ${visibleProviders.length ? renderSupportGroup('providers', visibleProviders) : ''}
         </div>
       `
-          : `
-        <details class="support-details" data-card-support-details>
-          <summary class="support-toggle">
-            <span class="support-toggle-label support-toggle-open">${escHtml(t('common.card.showSupport'))}</span>
-            <span class="support-toggle-label support-toggle-close">${escHtml(t('common.card.hideSupport'))}</span>
-            <span class="support-toggle-count">${escHtml(getSupportToggleMeta(visibleModels, visibleProviders))}</span>
-          </summary>
-          <div class="support-detail-grid">
-            ${visibleModels.length ? renderSupportGroup('models', visibleModels) : ''}
-            ${visibleProviders.length ? renderSupportGroup('providers', visibleProviders) : ''}
-          </div>
-        </details>
-      `)
-        : ''}
+    : '';
+
+  return `
+    <div class="support-summary support-summary-${escAttr(variant)}">
+      ${renderRecommendedHero(recommendedModel, recommendedProvider)}
+      ${secondaryInfo}
+    </div>
+  `;
+}
+
+function renderCardSupportSummary(models, providers, recommendedModel, recommendedProvider) {
+  const providerIds = getOrderedSupportProviders(providers, recommendedProvider);
+  const title = getSupportSummaryTitle(models, providerIds, recommendedModel, recommendedProvider);
+  const visibleProviderIds = recommendedProvider
+    ? providerIds.filter((providerId) => providerId === recommendedProvider).slice(0, 1)
+    : providerIds.slice(0, 2);
+  const hiddenProviderIds = providerIds.filter((providerId) => !visibleProviderIds.includes(providerId));
+  const fallbackText = recommendedModel || models[0] || t('common.value.notDeclared');
+  const label = recommendedModel || recommendedProvider
+    ? t('common.card.recommended')
+    : t('common.card.providers');
+
+  return `
+    <div class="support-summary support-summary-card" aria-label="${escAttr(title)}">
+      <div class="support-compact" title="${escAttr(title)}">
+        <span class="support-compact-label">${escHtml(label)}</span>
+        <div class="support-provider-row">
+          ${visibleProviderIds.length
+            ? visibleProviderIds.map((providerId) => renderProviderChip(providerId, {
+              recommended: providerId === recommendedProvider,
+              model: providerId === recommendedProvider ? recommendedModel : ''
+            })).join('')
+            : `<span class="support-provider-chip is-model-only" title="${escAttr(title)}">${escHtml(fallbackText)}</span>`}
+          ${hiddenProviderIds.length ? `<span class="support-provider-more" title="${escAttr(hiddenProviderIds.map(formatProviderLabel).join(' · '))}">+${hiddenProviderIds.length}</span>` : ''}
+        </div>
+      </div>
     </div>
   `;
 }
 
 function renderRecommendedHero(model, provider) {
   const title = model || t('common.value.unknown');
+  const providerLabel = provider ? formatProviderLabel(provider) : t('common.value.notDeclared');
   const providerMarkup = provider
-    ? `<span class="support-recommended-provider">${escHtml(provider)}</span>`
-    : '';
+    ? renderProviderChip(provider, { recommended: true, model })
+    : `<span class="support-provider-chip is-model-only">${escHtml(providerLabel)}</span>`;
 
   return `
     <div class="support-recommended">
-      <span class="support-recommended-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m12 3 2.7 5.48 6.05.88-4.38 4.26 1.03 6.03L12 16.9l-5.4 2.84 1.03-6.03L3.25 9.36l6.05-.88L12 3Z"></path>
-        </svg>
-      </span>
+      ${providerMarkup}
       <div class="support-recommended-copy">
         <span class="support-recommended-label">${escHtml(t('common.card.recommended'))}</span>
         <strong class="support-recommended-model">${escHtml(title)}</strong>
-        ${providerMarkup}
       </div>
     </div>
   `;
+}
+
+function renderProviderChip(providerId, options = {}) {
+  const label = formatProviderLabel(providerId);
+  const shortLabel = formatProviderLabel(providerId, { short: true });
+  const model = String(options.model || '').trim();
+  const title = model
+    ? `${t('common.card.recommended')}: ${label} · ${model}`
+    : label;
+  const className = `support-provider-chip${options.recommended ? ' is-recommended' : ''}`;
+
+  return `<span class="${className}" title="${escAttr(title)}">${escHtml(shortLabel)}</span>`;
 }
 
 function renderSupportGroup(key, items) {
@@ -848,10 +876,58 @@ function renderSupportGroup(key, items) {
     <div class="support-group">
       <span class="support-group-label">${escHtml(t(`common.card.${key}`))}</span>
       <div class="support-chip-row">
-        ${items.map((item) => `<span class="support-chip">${escHtml(item)}</span>`).join('')}
+        ${items.map((item) => {
+          const label = formatSupportItem(key, item);
+          return `<span class="support-chip" title="${escAttr(label)}">${escHtml(label)}</span>`;
+        }).join('')}
       </div>
     </div>
   `;
+}
+
+function formatSupportItem(key, item) {
+  return key === 'providers' ? formatProviderLabel(item) : item;
+}
+
+function formatProviderLabel(providerId, options = {}) {
+  const providerKey = String(providerId || '').trim();
+  if (!providerKey) {
+    return t('common.value.notDeclared');
+  }
+
+  if (options.short) {
+    return t(`common.providerShort.${providerKey}`, {}, translateEnum('provider', providerKey, providerKey));
+  }
+
+  return translateEnum('provider', providerKey, providerKey);
+}
+
+function getOrderedSupportProviders(providers, recommendedProvider) {
+  const uniqueProviders = getVisibleSupportItems(providers, '');
+  if (!recommendedProvider) {
+    return uniqueProviders;
+  }
+
+  return [recommendedProvider, ...uniqueProviders.filter((providerId) => providerId !== recommendedProvider)];
+}
+
+function getSupportSummaryTitle(models, providers, recommendedModel, recommendedProvider) {
+  const parts = [];
+  if (recommendedModel || recommendedProvider) {
+    const recommendedBits = [
+      recommendedProvider ? formatProviderLabel(recommendedProvider) : '',
+      recommendedModel
+    ].filter(Boolean);
+    parts.push(`${t('common.card.recommended')}: ${recommendedBits.join(' · ')}`);
+  }
+  if (providers.length) {
+    parts.push(`${t('common.card.providers')}: ${providers.map(formatProviderLabel).join(', ')}`);
+  }
+  if (models.length) {
+    parts.push(`${t('common.card.models')}: ${models.join(', ')}`);
+  }
+
+  return parts.join(' | ');
 }
 
 function getVisibleSupportItems(items, recommendedItem) {
@@ -860,17 +936,6 @@ function getVisibleSupportItems(items, recommendedItem) {
     return unique;
   }
   return unique.filter((item) => item !== recommendedItem);
-}
-
-function getSupportToggleMeta(models, providers) {
-  const parts = [];
-  if (models.length) {
-    parts.push(t('common.card.modelsCount', { count: String(models.length) }));
-  }
-  if (providers.length) {
-    parts.push(t('common.card.providersCount', { count: String(providers.length) }));
-  }
-  return parts.join(' · ');
 }
 
 function extractProviderIds(template) {

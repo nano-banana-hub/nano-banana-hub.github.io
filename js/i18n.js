@@ -52,6 +52,16 @@ const translations = {
         prompt: 'Prompt',
         workflow: 'Workflow',
       },
+      provider: {
+        openai: 'OpenAI',
+        'google-ai-studio': 'Google AI Studio',
+        'chatgpt-compatible': 'ChatGPT-compatible',
+      },
+      providerShort: {
+        openai: 'OpenAI',
+        'google-ai-studio': 'Gemini',
+        'chatgpt-compatible': 'ChatGPT',
+      },
       badge: {
         pinned: 'Pinned',
         featured: 'Featured',
@@ -338,6 +348,16 @@ const translations = {
       type: {
         prompt: '提示词',
         workflow: '工作流',
+      },
+      provider: {
+        openai: 'OpenAI',
+        'google-ai-studio': 'Google AI Studio',
+        'chatgpt-compatible': 'ChatGPT 兼容',
+      },
+      providerShort: {
+        openai: 'OpenAI',
+        'google-ai-studio': 'Gemini',
+        'chatgpt-compatible': 'ChatGPT',
       },
       badge: {
         pinned: '置顶',
