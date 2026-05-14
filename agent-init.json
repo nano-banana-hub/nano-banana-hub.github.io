@@ -23,6 +23,25 @@
       }
     ]
   },
+  "scope": {
+    "does": [
+      "install BananaHub Skill when the host agent supports the listed install command",
+      "diagnose local BananaHub provider configuration",
+      "create or update BananaHub provider profiles in the local BananaHub config",
+      "guide local API-key entry without exposing secrets in chat",
+      "install missing Python runtime packages reported by config doctor after user consent",
+      "validate provider-backed, host-native, or prompt-only runtime mode"
+    ],
+    "does_not": [
+      "run SQL or database migrations",
+      "modify application database schemas",
+      "upgrade Cloudflare Worker, KV, API, CLI, template repositories, or other BananaHub components",
+      "update an existing BananaHub installation beyond what the selected host install command normally does",
+      "run paid image generation without explicit user consent"
+    ],
+    "existing_install_policy": "If BananaHub Skill is already installed, diagnose first and preserve any valid provider/profile/model configuration. Do not reinstall or upgrade unrelated components unless the user explicitly asks for that operation.",
+    "component_update_policy": "Treat SQL/database changes, service upgrades, CLI upgrades, template repository updates, and platform deployment changes as separate maintenance tasks outside this initialization contract."
+  },
   "agent_contract": {
     "secret_policy": "never_ask_user_to_paste_real_api_key_into_chat",
     "preferred_secret_entry": [
@@ -188,5 +207,10 @@
       "https://bananahub.ai/catalog.json",
       "https://bananahub.ai/agent-catalog.md"
     ]
+  },
+  "handoff_usage": {
+    "minimal_instruction": "Read https://bananahub.ai/agent-init.json and initialize BananaHub. Do not ask me to paste API keys into chat; use a local wizard or placeholder command.",
+    "recommended_instruction": "Read https://bananahub.ai/agent-init.json. If BananaHub Skill is missing, install it using the supported host command. Then run config doctor --json, preserve any valid existing config, guide local API-key entry safely, repair only missing Python runtime dependencies with consent, and validate without paid generation unless I explicitly approve a smoke test.",
+    "human_readable_fallback": "https://bananahub.ai/agent-init.md"
   }
 }

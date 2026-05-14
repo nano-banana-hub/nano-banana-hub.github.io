@@ -5,6 +5,41 @@ Machine-readable companion: https://bananahub.ai/agent-init.json
 
 Use this file when a user asks an agent to make BananaHub usable from a fresh environment. It covers installation, local API-key setup, diagnosis, and validation. After initialization, use https://bananahub.ai/llms.txt and https://bananahub.ai/catalog.json for template discovery.
 
+## How to Hand This to Another Agent
+
+Minimal handoff:
+
+```text
+Read https://bananahub.ai/agent-init.json and initialize BananaHub. Do not ask me to paste API keys into chat; use a local wizard or placeholder command.
+```
+
+Recommended handoff:
+
+```text
+Read https://bananahub.ai/agent-init.json. If BananaHub Skill is missing, install it using the supported host command. Then run config doctor --json, preserve any valid existing config, guide local API-key entry safely, repair only missing Python runtime dependencies with consent, and validate without paid generation unless I explicitly approve a smoke test.
+```
+
+## Scope Boundary
+
+This initialization contract does:
+
+- install BananaHub Skill when the host agent supports the listed install command
+- diagnose local BananaHub provider configuration
+- create or update BananaHub provider profiles in the local BananaHub config
+- guide local API-key entry without exposing secrets in chat
+- install missing Python runtime packages reported by `config doctor --json` after user consent
+- validate provider-backed, host-native, or prompt-only runtime mode
+
+This initialization contract does not:
+
+- run SQL or database migrations
+- modify application database schemas
+- upgrade Cloudflare Worker, KV, API, CLI, template repositories, or other BananaHub components
+- update an existing BananaHub installation beyond what the selected host install command normally does
+- run paid image generation without explicit user consent
+
+If BananaHub Skill is already installed, diagnose first and preserve any valid provider/profile/model configuration. Treat SQL/database changes, service upgrades, CLI upgrades, template repository updates, and platform deployment changes as separate maintenance tasks outside this initialization contract.
+
 ## Agent Contract
 
 - Never ask the user to paste a real API key into chat.
