@@ -28,7 +28,7 @@
       "install BananaHub Skill when the host agent supports the listed install command",
       "diagnose local BananaHub provider configuration",
       "create or update BananaHub provider profiles in the local BananaHub config",
-      "guide local API-key entry without exposing secrets in chat",
+      "collect or route API-key entry according to user choice, then persist it in the local BananaHub config",
       "install missing Python runtime packages reported by config doctor after user consent",
       "validate provider-backed, host-native, or prompt-only runtime mode"
     ],
@@ -43,11 +43,14 @@
     "component_update_policy": "Treat SQL/database changes, service upgrades, CLI upgrades, template repository updates, and platform deployment changes as separate maintenance tasks outside this initialization contract."
   },
   "agent_contract": {
-    "secret_policy": "never_ask_user_to_paste_real_api_key_into_chat",
+    "secret_policy": "ask_user_to_choose_direct_agent_entry_or_local_placeholder_command",
+    "direct_agent_entry_allowed": true,
     "preferred_secret_entry": [
-      "local_init_wizard",
-      "terminal_command_with_placeholder"
+      "agent_session_field_collection_with_api_key_stdin_when_user_explicitly_allows",
+      "terminal_quickset_command_with_placeholder",
+      "human_terminal_init_wizard_fallback"
     ],
+    "interactive_command_policy": "Agents must not assume they can run TTY prompts. init --wizard is a human-terminal fallback, not the default agent path.",
     "first_human_question": "Which image channel do you already have?",
     "default_provider": "openai-compatible",
     "default_profile": "gpt",
@@ -55,6 +58,34 @@
     "preserve_existing_valid_config": true,
     "paid_generation_requires_explicit_consent": true,
     "diagnose_before_provider_call": true
+  },
+  "config_profile_contract": {
+    "path": "~/.config/bananahub/config.json",
+    "selection": "Use default_profile unless BANANAHUB_PROFILE or --profile selects another profile.",
+    "shape": {
+      "default_profile": "gpt",
+      "profiles": {
+        "gpt": {
+          "provider": "openai-compatible",
+          "openai_base_url": "https://example.com/v1",
+          "openai_api_key": "<persisted secret>",
+          "model": "gpt-image-2"
+        },
+        "nano": {
+          "provider": "google-ai-studio",
+          "api_key": "<persisted secret>",
+          "model": "gemini-3-pro-image-preview"
+        }
+      }
+    },
+    "profile_defaults": {
+      "openai-compatible": "gpt",
+      "openai": "gpt",
+      "google-ai-studio": "nano",
+      "gemini-compatible": "nano",
+      "vertex-ai": "vertex",
+      "chatgpt-compatible": "chat"
+    }
   },
   "flow": [
     {
@@ -69,6 +100,9 @@
         "requires_user_secret",
         "safe_to_autofix",
         "suggested_commands",
+        "suggested_commands_stdin",
+        "config_path",
+        "secret_entry_modes",
         "ignored_config_sources",
         "agent_notes"
       ]
@@ -79,21 +113,28 @@
       "next_action": "proceed_to_bananahub_work"
     },
     {
-      "step": "local_secret_entry",
-      "condition": "diagnosis.requires_user_secret == true",
-      "command": "python3 {baseDir}/scripts/bananahub.py init --wizard",
-      "rule": "do_not_collect_secret_in_chat"
+      "step": "collect_connection_fields",
+      "condition": "diagnosis.status == \"needs_setup\"",
+      "rule": "Ask only for provider-required fields. If the user chooses direct agent entry or already pasted values, persist the API key with config quickset --api-key-stdin. If the user does not want secrets in chat, provide the matching quickset command with placeholders for the user's local terminal."
+    },
+    {
+      "step": "persist_provider_profile",
+      "condition": "required connection fields are available",
+      "command_source": "providers[*].quickset_command",
+      "stdin_command_source": "providers[*].quickset_stdin_command",
+      "writes": "~/.config/bananahub/config.json"
     },
     {
       "step": "dependency_repair",
       "condition": "diagnosis.missing_dependencies.length > 0 && user_allows_local_package_install",
-      "command": "python3 {baseDir}/scripts/bananahub.py init --wizard --install-deps",
+      "command_source": "diagnosis.dependency_install_command",
       "pep668_policy": "do_not_add_break_system_packages_automatically"
     },
     {
-      "step": "quickset",
-      "condition": "user_already_knows_provider_endpoint_and_model",
-      "command_source": "providers[*].quickset_command"
+      "step": "human_terminal_fallback",
+      "condition": "user_wants_manual_interactive_setup",
+      "command": "python3 {baseDir}/scripts/bananahub.py init --wizard",
+      "rule": "Only ask the human to run this in a real terminal; do not use it as the agent automation path."
     },
     {
       "step": "non_paid_validation",
@@ -119,7 +160,8 @@
         "api_key",
         "base_url"
       ],
-      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider openai-compatible --profile gpt --default-profile --base-url \"<openai-compatible base url>\" --api-key \"<api key>\" --model gpt-image-2"
+      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider openai-compatible --profile gpt --default-profile --base-url \"<openai-compatible base url>\" --api-key \"<api key>\" --model gpt-image-2",
+      "quickset_stdin_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider openai-compatible --profile gpt --default-profile --base-url \"<openai-compatible base url>\" --api-key-stdin --model gpt-image-2"
     },
     {
       "id": "openai",
@@ -129,7 +171,8 @@
       "requires": [
         "api_key"
       ],
-      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider openai --profile gpt --default-profile --api-key \"<openai api key>\" --model gpt-image-2"
+      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider openai --profile gpt --default-profile --api-key \"<openai api key>\" --model gpt-image-2",
+      "quickset_stdin_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider openai --profile gpt --default-profile --api-key-stdin --model gpt-image-2"
     },
     {
       "id": "google-ai-studio",
@@ -139,7 +182,8 @@
       "requires": [
         "api_key"
       ],
-      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider google-ai-studio --profile nano --default-profile --api-key \"<google api key>\" --model gemini-3-pro-image-preview"
+      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider google-ai-studio --profile nano --default-profile --api-key \"<google api key>\" --model gemini-3-pro-image-preview",
+      "quickset_stdin_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider google-ai-studio --profile nano --default-profile --api-key-stdin --model gemini-3-pro-image-preview"
     },
     {
       "id": "gemini-compatible",
@@ -150,7 +194,8 @@
         "api_key",
         "base_url"
       ],
-      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider gemini-compatible --profile nano --default-profile --base-url \"<gemini-compatible base url>\" --api-key \"<api key>\" --model gemini-3-pro-image-preview"
+      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider gemini-compatible --profile nano --default-profile --base-url \"<gemini-compatible base url>\" --api-key \"<api key>\" --model gemini-3-pro-image-preview",
+      "quickset_stdin_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider gemini-compatible --profile nano --default-profile --base-url \"<gemini-compatible base url>\" --api-key-stdin --model gemini-3-pro-image-preview"
     },
     {
       "id": "vertex-ai",
@@ -172,7 +217,8 @@
         "api_key",
         "base_url"
       ],
-      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider chatgpt-compatible --profile chat --default-profile --base-url \"<chat endpoint>\" --api-key \"<api key>\" --model gpt-5.4"
+      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider chatgpt-compatible --profile chat --default-profile --base-url \"<chat endpoint>\" --api-key \"<api key>\" --model gpt-5.4",
+      "quickset_stdin_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider chatgpt-compatible --profile chat --default-profile --base-url \"<chat endpoint>\" --api-key-stdin --model gpt-5.4"
     }
   ],
   "diagnosis_contract": {

@@ -22,7 +22,8 @@ Initialization before templates:
 - If BananaHub Skill is not installed, install it first from https://github.com/bananahub-ai/bananahub-skill.
 - Read agent-init.json for structured setup data, or agent-init.md for the readable guide, before asking the user for setup details.
 - Run config doctor --json before any provider call.
-- Never ask the user to paste a real API key into chat; use init --wizard or a local quickset command with placeholders.
+- For image API setup, collect provider fields in the agent session when the user chooses direct entry and persist API keys with config quickset --api-key-stdin, or provide a local config quickset command with placeholders.
+- Do not assume an agent can run init --wizard; it is a human-terminal fallback.
 - Do not run paid image-generation smoke tests unless the user explicitly agrees.
 
 Command rules:
@@ -50,4 +51,4 @@ Ecosystem links:
 - Template format spec: https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-format-spec.md
 
 Current catalog summary: 15 templates total, 5 bundled, 10 remote, 13 curated, 2 discovered, 0 pinned, 0 featured.
-Generated: 2026-05-14T16:18:53.788Z
+Generated: 2026-05-14T17:02:10.826Z
