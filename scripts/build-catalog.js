@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const childProcess = require('child_process');
 
 const GITHUB_API = 'https://api.github.com';
 const GITHUB_RAW = 'https://raw.githubusercontent.com';
@@ -20,6 +21,10 @@ const GENERATED_FILES = {
   agentCatalog: 'agent-catalog.md',
   robots: 'robots.txt',
   sitemap: 'sitemap.xml'
+};
+const STATIC_FILES = {
+  agentInit: 'agent-init.md',
+  agentInitJson: 'agent-init.json',
 };
 
 function parseFrontmatter(content) {
@@ -293,6 +298,18 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function runGit(args, cwd) {
+  const result = childProcess.spawnSync('git', args, {
+    cwd,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+  });
+  if (result.status !== 0) {
+    return null;
+  }
+  return result.stdout;
+}
+
 async function fetchRepoInfo(repo, headers) {
   const url = `${GITHUB_API}/repos/${repo}`;
   const response = await fetchWithRetry(url, headers);
@@ -380,6 +397,43 @@ function listLocalDirectoryItems(localRepoPath, relativePath) {
     .map((entry) => ({
       name: entry.name,
       type: entry.isDirectory() ? 'dir' : 'file',
+    }));
+}
+
+function listLocalTrackedDirectoryItems(localRepoPath, relativePath) {
+  const normalized = normalizePath(relativePath);
+  const gitRoot = runGit(['rev-parse', '--show-toplevel'], localRepoPath);
+  if (!gitRoot) {
+    return listLocalDirectoryItems(localRepoPath, normalized);
+  }
+
+  const root = gitRoot.trim();
+  const relativeRoot = path.relative(root, path.resolve(localRepoPath, normalized)).replace(/\\/g, '/');
+  const prefix = normalizePath(relativeRoot);
+  const output = runGit(['ls-files', '--cached', '-z', '--', prefix || '.'], root);
+  if (output === null) {
+    return listLocalDirectoryItems(localRepoPath, normalized);
+  }
+
+  const prefixWithSlash = prefix ? `${prefix}/` : '';
+  const names = new Set(output
+    .split('\0')
+    .map((line) => normalizePath(line))
+    .filter(Boolean)
+    .map((line) => {
+      if (prefixWithSlash && !line.startsWith(prefixWithSlash)) {
+        return '';
+      }
+      const tail = prefixWithSlash ? line.slice(prefixWithSlash.length) : line;
+      return tail.includes('/') ? tail.split('/')[0] : '';
+    })
+    .filter(Boolean));
+
+  return [...names]
+    .sort()
+    .map((line) => ({
+      name: line,
+      type: 'dir',
     }));
 }
 
@@ -991,6 +1045,8 @@ function buildCatalog({ version, generatedAt, catalogType, templates, curatedTem
       catalog_curated_json: `${SITE_URL}/${GENERATED_FILES.catalogCurated}`,
       catalog_discovered_json: `${SITE_URL}/${GENERATED_FILES.catalogDiscovered}`,
       llms_txt: `${SITE_URL}/${GENERATED_FILES.llms}`,
+      agent_init: `${SITE_URL}/${STATIC_FILES.agentInit}`,
+      agent_init_json: `${SITE_URL}/${STATIC_FILES.agentInitJson}`,
       agent_catalog: `${SITE_URL}/${GENERATED_FILES.agentCatalog}`,
     },
     summary: {
@@ -1028,11 +1084,20 @@ function buildLlmsTxt(catalog) {
     `Canonical site: ${catalog.site.url}`,
     '',
     'Preferred machine-readable entry points:',
+    `- ${catalog.site.agent_init_json} — structured zero-to-ready initialization contract for agents`,
+    `- ${catalog.site.agent_init} — zero-to-ready initialization guide for agents, including safe API-key setup`,
     `- ${catalog.site.catalog_json} — merged catalog with curated + discovered templates`,
     `- ${catalog.site.catalog_curated_json} — curated-only catalog`,
     `- ${catalog.site.catalog_discovered_json} — discovered-only catalog`,
     `- ${catalog.site.agent_catalog} — markdown digest of the current catalog`,
     `- ${catalog.site.llms_txt} — this overview`,
+    '',
+    'Initialization before templates:',
+    '- If BananaHub Skill is not installed, install it first from https://github.com/bananahub-ai/bananahub-skill.',
+    '- Read agent-init.json for structured setup data, or agent-init.md for the readable guide, before asking the user for setup details.',
+    '- Run config doctor --json before any provider call.',
+    '- Never ask the user to paste a real API key into chat; use init --wizard or a local quickset command with placeholders.',
+    '- Do not run paid image-generation smoke tests unless the user explicitly agrees.',
     '',
     'Command rules:',
     '- Prefer primary_cmd for the next action.',
@@ -1077,6 +1142,8 @@ function buildAgentCatalog(catalog) {
     '## Entry Points',
     '',
     `- Site: ${catalog.site.url}`,
+    `- Agent Initialization JSON: ${catalog.site.agent_init_json}`,
+    `- Agent Initialization: ${catalog.site.agent_init}`,
     `- Merged Catalog JSON: ${catalog.site.catalog_json}`,
     `- Curated Catalog JSON: ${catalog.site.catalog_curated_json}`,
     `- Discovered Catalog JSON: ${catalog.site.catalog_discovered_json}`,
@@ -1143,6 +1210,8 @@ function buildSitemapXml(generatedAt) {
     `${SITE_URL}/${GENERATED_FILES.catalog}`,
     `${SITE_URL}/${GENERATED_FILES.catalogCurated}`,
     `${SITE_URL}/${GENERATED_FILES.catalogDiscovered}`,
+    `${SITE_URL}/${STATIC_FILES.agentInitJson}`,
+    `${SITE_URL}/${STATIC_FILES.agentInit}`,
     `${SITE_URL}/${GENERATED_FILES.llms}`,
     `${SITE_URL}/${GENERATED_FILES.agentCatalog}`,
   ];
@@ -1233,7 +1302,7 @@ async function main() {
     }
 
     const templateItems = localRepoPath
-      ? listLocalDirectoryItems(localRepoPath, collectionPath)
+      ? listLocalTrackedDirectoryItems(localRepoPath, collectionPath)
       : await fetchDirectoryItems(repoConfig.repo, collectionPath, headers);
     const templateDirs = Array.isArray(templateItems)
       ? templateItems.filter((item) => item.type === 'dir').map((item) => item.name).sort()

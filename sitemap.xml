@@ -2,30 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://bananahub.ai/</loc>
-    <lastmod>2026-05-14T08:33:58.336Z</lastmod>
+    <lastmod>2026-05-14T16:17:50.447Z</lastmod>
   </url>
   <url>
     <loc>https://bananahub.ai/about.html</loc>
-    <lastmod>2026-05-14T08:33:58.336Z</lastmod>
+    <lastmod>2026-05-14T16:17:50.447Z</lastmod>
   </url>
   <url>
     <loc>https://bananahub.ai/catalog.json</loc>
-    <lastmod>2026-05-14T08:33:58.336Z</lastmod>
+    <lastmod>2026-05-14T16:17:50.447Z</lastmod>
   </url>
   <url>
     <loc>https://bananahub.ai/catalog-curated.json</loc>
-    <lastmod>2026-05-14T08:33:58.336Z</lastmod>
+    <lastmod>2026-05-14T16:17:50.447Z</lastmod>
   </url>
   <url>
     <loc>https://bananahub.ai/catalog-discovered.json</loc>
-    <lastmod>2026-05-14T08:33:58.336Z</lastmod>
+    <lastmod>2026-05-14T16:17:50.447Z</lastmod>
+  </url>
+  <url>
+    <loc>https://bananahub.ai/agent-init.json</loc>
+    <lastmod>2026-05-14T16:17:50.447Z</lastmod>
+  </url>
+  <url>
+    <loc>https://bananahub.ai/agent-init.md</loc>
+    <lastmod>2026-05-14T16:17:50.447Z</lastmod>
   </url>
   <url>
     <loc>https://bananahub.ai/llms.txt</loc>
-    <lastmod>2026-05-14T08:33:58.336Z</lastmod>
+    <lastmod>2026-05-14T16:17:50.447Z</lastmod>
   </url>
   <url>
     <loc>https://bananahub.ai/agent-catalog.md</loc>
-    <lastmod>2026-05-14T08:33:58.336Z</lastmod>
+    <lastmod>2026-05-14T16:17:50.447Z</lastmod>
   </url>
 </urlset>

@@ -239,10 +239,11 @@ const translations = {
         lead: 'BananaHub Skill is the agent-native runtime for guided Gemini image generation in chat. BananaHub bundles a small starter pack and adds a searchable, installable, machine-readable layer for everything else. Its workflow design is grounded in official Gemini image-generation guidance and refined into a practical agent workflow.',
         actions: {
           openGallery: 'Open gallery',
+          agentInit: 'Agent Init',
           templateSystem: 'Template System',
           templateFormat: 'Template Format',
         },
-        note: 'Humans should usually start in the gallery. Agents should prefer `llms.txt`, `catalog.json`, and `agent-catalog.md`.',
+        note: 'Humans should usually start in the gallery. Agents should start with `agent-init.md` when setup is incomplete, then use `llms.txt`, `catalog.json`, and `agent-catalog.md`.',
       },
       manifesto: {
         kicker: 'What BananaHub Is',
@@ -526,10 +527,11 @@ const translations = {
         lead: 'BananaHub Skill 负责在对话里引导 Gemini 生图；BananaHub 则提供一小套内置起步模板，并把其他模板整理成可搜索、可安装、可机读的一层。整套工作流基于官方 Gemini 图像生成指引，再打磨成更适合 agent 使用的方式。',
         actions: {
           openGallery: '查看模板库',
+          agentInit: 'Agent 初始化',
           templateSystem: '模板系统',
           templateFormat: '模板格式',
         },
-        note: '普通用户一般从模板库开始就够了。Agent 建议优先读取 `llms.txt`、`catalog.json` 和 `agent-catalog.md`。',
+        note: '普通用户一般从模板库开始就够了。如果还没完成安装和密钥配置，Agent 应先读 `agent-init.md`，之后再读 `llms.txt`、`catalog.json` 和 `agent-catalog.md`。',
       },
       manifesto: {
         kicker: 'BananaHub 是什么',

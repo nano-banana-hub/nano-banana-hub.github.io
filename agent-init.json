@@ -1,0 +1,192 @@
+{
+  "schema_version": "1.0.0",
+  "name": "BananaHub Agent Initialization",
+  "updated": "2026-05-14",
+  "stable_urls": {
+    "json": "https://bananahub.ai/agent-init.json",
+    "markdown": "https://bananahub.ai/agent-init.md",
+    "llms_txt": "https://bananahub.ai/llms.txt",
+    "catalog_json": "https://bananahub.ai/catalog.json"
+  },
+  "skill": {
+    "name": "bananahub",
+    "repo": "https://github.com/bananahub-ai/bananahub-skill",
+    "user_command": "/bananahub",
+    "install_commands": [
+      {
+        "host": "open-agent-skills",
+        "command": "npx skills add https://github.com/bananahub-ai/bananahub-skill --skill bananahub"
+      },
+      {
+        "host": "claude-code",
+        "command": "claude skill install https://github.com/bananahub-ai/bananahub-skill"
+      }
+    ]
+  },
+  "agent_contract": {
+    "secret_policy": "never_ask_user_to_paste_real_api_key_into_chat",
+    "preferred_secret_entry": [
+      "local_init_wizard",
+      "terminal_command_with_placeholder"
+    ],
+    "first_human_question": "Which image channel do you already have?",
+    "default_provider": "openai-compatible",
+    "default_profile": "gpt",
+    "default_model": "gpt-image-2",
+    "preserve_existing_valid_config": true,
+    "paid_generation_requires_explicit_consent": true,
+    "diagnose_before_provider_call": true
+  },
+  "flow": [
+    {
+      "step": "diagnose",
+      "command": "python3 {baseDir}/scripts/bananahub.py config doctor --json",
+      "parse_fields": [
+        "status",
+        "provider",
+        "profile",
+        "missing_fields",
+        "missing_dependencies",
+        "requires_user_secret",
+        "safe_to_autofix",
+        "suggested_commands",
+        "ignored_config_sources",
+        "agent_notes"
+      ]
+    },
+    {
+      "step": "stop_if_ready",
+      "condition": "diagnosis.status == \"ok\"",
+      "next_action": "proceed_to_bananahub_work"
+    },
+    {
+      "step": "local_secret_entry",
+      "condition": "diagnosis.requires_user_secret == true",
+      "command": "python3 {baseDir}/scripts/bananahub.py init --wizard",
+      "rule": "do_not_collect_secret_in_chat"
+    },
+    {
+      "step": "dependency_repair",
+      "condition": "diagnosis.missing_dependencies.length > 0 && user_allows_local_package_install",
+      "command": "python3 {baseDir}/scripts/bananahub.py init --wizard --install-deps",
+      "pep668_policy": "do_not_add_break_system_packages_automatically"
+    },
+    {
+      "step": "quickset",
+      "condition": "user_already_knows_provider_endpoint_and_model",
+      "command_source": "providers[*].quickset_command"
+    },
+    {
+      "step": "non_paid_validation",
+      "commands": [
+        "python3 {baseDir}/scripts/bananahub.py init --skip-test --json",
+        "python3 {baseDir}/scripts/bananahub.py config show",
+        "python3 {baseDir}/scripts/bananahub.py check-mode --pretty"
+      ]
+    },
+    {
+      "step": "paid_smoke_test",
+      "condition": "user_explicitly_consents_to_spend_generation_quota",
+      "command_source": "smoke_tests.gpt_image_2_generation.command"
+    }
+  ],
+  "providers": [
+    {
+      "id": "openai-compatible",
+      "label": "OpenAI-compatible gateway",
+      "profile": "gpt",
+      "default_model": "gpt-image-2",
+      "requires": [
+        "api_key",
+        "base_url"
+      ],
+      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider openai-compatible --profile gpt --default-profile --base-url \"<openai-compatible base url>\" --api-key \"<api key>\" --model gpt-image-2"
+    },
+    {
+      "id": "openai",
+      "label": "OpenAI official GPT Image API",
+      "profile": "gpt",
+      "default_model": "gpt-image-2",
+      "requires": [
+        "api_key"
+      ],
+      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider openai --profile gpt --default-profile --api-key \"<openai api key>\" --model gpt-image-2"
+    },
+    {
+      "id": "google-ai-studio",
+      "label": "Google AI Studio / Gemini",
+      "profile": "nano",
+      "default_model": "gemini-3-pro-image-preview",
+      "requires": [
+        "api_key"
+      ],
+      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider google-ai-studio --profile nano --default-profile --api-key \"<google api key>\" --model gemini-3-pro-image-preview"
+    },
+    {
+      "id": "gemini-compatible",
+      "label": "Gemini-compatible gateway",
+      "profile": "nano",
+      "default_model": "gemini-3-pro-image-preview",
+      "requires": [
+        "api_key",
+        "base_url"
+      ],
+      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider gemini-compatible --profile nano --default-profile --base-url \"<gemini-compatible base url>\" --api-key \"<api key>\" --model gemini-3-pro-image-preview"
+    },
+    {
+      "id": "vertex-ai",
+      "label": "Vertex AI",
+      "profile": "vertex",
+      "default_model": "gemini-3-pro-image-preview",
+      "requires": [
+        "project",
+        "location"
+      ],
+      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider vertex-ai --profile vertex --default-profile --auth-mode adc --project \"<gcp-project>\" --location global"
+    },
+    {
+      "id": "chatgpt-compatible",
+      "label": "ChatGPT-compatible image endpoint",
+      "profile": "chat",
+      "default_model": "gpt-5.4",
+      "requires": [
+        "api_key",
+        "base_url"
+      ],
+      "quickset_command": "python3 {baseDir}/scripts/bananahub.py config quickset --provider chatgpt-compatible --profile chat --default-profile --base-url \"<chat endpoint>\" --api-key \"<api key>\" --model gpt-5.4"
+    }
+  ],
+  "diagnosis_contract": {
+    "primary_command": "python3 {baseDir}/scripts/bananahub.py config doctor --json",
+    "ready_status": "ok",
+    "needs_setup_status": "needs_setup",
+    "ignored_config_sources_policy": "treat_as_informational_unless_it_explains_a_failure",
+    "dependency_policy": {
+      "install_command_field": "dependency_install_command",
+      "pep668_error": "externally-managed-environment",
+      "pep668_action": "ask_user_to_choose_agent_python_environment_venv_or_os_package_manager"
+    }
+  },
+  "smoke_tests": {
+    "non_paid": [
+      "python3 {baseDir}/scripts/bananahub.py init --skip-test --json",
+      "python3 {baseDir}/scripts/bananahub.py check-mode --pretty"
+    ],
+    "gpt_image_2_generation": {
+      "requires_explicit_user_consent": true,
+      "command": "BANANAHUB_PROFILE=gpt python3 {baseDir}/scripts/bananahub.py generate \"Create a cute sticker of a tiny cheerful robot holding a banana, rounded kawaii vector style, thick clean outlines, soft pastel colors, plain white background, no text.\" --model gpt-image-2 --aspect 1:1 --no-fallback --output /tmp/bananahub-gpt-image-2-smoke-test.png",
+      "expected": {
+        "status": "ok",
+        "actual_model": "gpt-image-2",
+        "output": "readable_image_file"
+      }
+    }
+  },
+  "after_setup": {
+    "template_discovery_order": [
+      "https://bananahub.ai/llms.txt",
+      "https://bananahub.ai/catalog.json",
+      "https://bananahub.ai/agent-catalog.md"
+    ]
+  }
+}

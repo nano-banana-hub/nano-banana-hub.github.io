@@ -20,6 +20,8 @@ The goal is not to create one giant prompt dump. The goal is to keep the base wo
 - `catalog.json` — merged structured catalog used by the homepage and agents
 - `catalog-curated.json` — curated-only catalog
 - `catalog-discovered.json` — discovered-only catalog
+- `agent-init.json` — structured zero-to-ready initialization contract for agents
+- `agent-init.md` — stable zero-to-ready initialization guide for agents
 - `llms.txt` — short agent-oriented overview with canonical entry points
 - `agent-catalog.md` — markdown digest of the current catalog
 
@@ -68,7 +70,8 @@ GITHUB_TOKEN=ghp_xxx node scripts/build-catalog.js
 
 ## Notes
 
-- Prefer `catalog.json`, `catalog-curated.json`, `catalog-discovered.json`, `support-metadata.json`, `llms.txt`, and `agent-catalog.md` for agent access instead of scraping the visual homepage
+- Prefer `agent-init.json`, `agent-init.md`, `catalog.json`, `catalog-curated.json`, `catalog-discovered.json`, `support-metadata.json`, `llms.txt`, and `agent-catalog.md` for agent access instead of scraping the visual homepage
+- Send fresh agents to `agent-init.json` or `agent-init.md` first when BananaHub Skill installation, API-key entry, or provider diagnosis is not complete
 - Generated install commands are intended to stay truthful to the `bananahub` CLI behavior
 - Curated templates win over discovered duplicates in the merged catalog
 

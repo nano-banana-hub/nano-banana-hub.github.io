@@ -24,7 +24,9 @@
   <link rel="canonical" href="https://bananahub.ai/">
   <link rel="alternate" type="application/json" title="Machine-readable catalog JSON" href="catalog.json">
   <link rel="alternate" type="application/json" title="Provider and model support metadata" href="support-metadata.json">
+  <link rel="alternate" type="application/json" title="Agent initialization contract" href="agent-init.json">
   <link rel="alternate" type="text/plain" title="LLM workflow instructions" href="llms.txt">
+  <link rel="alternate" type="text/markdown" title="Agent initialization guide" href="agent-init.md">
   <link rel="alternate" type="text/markdown" title="Agent catalog markdown" href="agent-catalog.md">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -274,6 +276,8 @@
         </div>
 
         <div class="agent-strip-links" aria-label="Agent-friendly files">
+          <a class="agent-pill agent-pill-primary" href="agent-init.json">agent-init.json</a>
+          <a class="agent-pill agent-pill-primary" href="agent-init.md">agent-init.md</a>
           <a class="agent-pill" href="llms.txt">llms.txt</a>
           <a class="agent-pill" href="agent-catalog.md">agent-catalog.md</a>
           <a class="agent-pill" href="catalog.json">catalog.json</a>
@@ -284,6 +288,8 @@
 
         <p class="agent-install-line">
           <span data-i18n="index.agent.installPattern">Command patterns</span>
+          <code>read agent-init.json</code>
+          <code>read agent-init.md</code>
           <code>/bananahub use info-diagram</code>
           <code>bananahub add user/repo/template</code>
         </p>
@@ -302,6 +308,8 @@
 
         <div class="footer-links">
           <a href="about.html" data-i18n="common.nav.about">About</a>
+          <a href="agent-init.json">agent-init.json</a>
+          <a href="agent-init.md">agent-init.md</a>
           <a href="llms.txt">llms.txt</a>
           <a href="agent-catalog.md">agent-catalog.md</a>
           <a href="catalog.json">catalog.json</a>
@@ -320,6 +328,8 @@
   <noscript>
     <div class="noscript-banner">
       JavaScript is disabled. For agent-friendly and no-JS access, use
+      <a href="agent-init.json">agent-init.json</a>,
+      <a href="agent-init.md">agent-init.md</a>,
       <a href="llms.txt">llms.txt</a>,
       <a href="agent-catalog.md">agent-catalog.md</a>, or
       <a href="catalog.json">catalog.json</a>.

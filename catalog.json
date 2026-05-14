@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "catalog_type": "merged",
-  "generated": "2026-05-14T08:33:58.336Z",
+  "generated": "2026-05-14T16:17:50.447Z",
   "site": {
     "url": "https://bananahub.ai/",
     "hub_api_base": "https://worker.bananahub.ai/api",
@@ -9,6 +9,8 @@
     "catalog_curated_json": "https://bananahub.ai/catalog-curated.json",
     "catalog_discovered_json": "https://bananahub.ai/catalog-discovered.json",
     "llms_txt": "https://bananahub.ai/llms.txt",
+    "agent_init": "https://bananahub.ai/agent-init.md",
+    "agent_init_json": "https://bananahub.ai/agent-init.json",
     "agent_catalog": "https://bananahub.ai/agent-catalog.md"
   },
   "summary": {

@@ -23,7 +23,9 @@
   >
   <link rel="canonical" href="https://bananahub.ai/about.html">
   <link rel="alternate" type="application/json" title="Machine-readable catalog JSON" href="catalog.json">
+  <link rel="alternate" type="application/json" title="Agent initialization contract" href="agent-init.json">
   <link rel="alternate" type="text/plain" title="LLM workflow instructions" href="llms.txt">
+  <link rel="alternate" type="text/markdown" title="Agent initialization guide" href="agent-init.md">
   <link rel="alternate" type="text/markdown" title="Agent catalog markdown" href="agent-catalog.md">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,6 +96,7 @@
         <aside class="hero-rail" aria-label="About quick links">
           <div class="hero-actions">
             <a class="button button-primary" href="/#catalog-section" data-i18n="about.hero.actions.openGallery">Open gallery</a>
+            <a class="button button-secondary" href="agent-init.md" data-i18n="about.hero.actions.agentInit">Agent Init</a>
             <a class="button button-secondary" href="https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-system.md" target="_blank" rel="noopener" data-i18n="about.hero.actions.templateSystem">Template System</a>
             <a class="button button-tertiary" href="https://github.com/bananahub-ai/bananahub-skill/blob/main/references/template-format-spec.md" target="_blank" rel="noopener" data-i18n="about.hero.actions.templateFormat">Template Format</a>
           </div>
@@ -154,6 +157,8 @@
         </div>
 
         <div class="agent-strip-links">
+          <a class="agent-pill agent-pill-primary" href="agent-init.json">agent-init.json</a>
+          <a class="agent-pill agent-pill-primary" href="agent-init.md">agent-init.md</a>
           <a class="agent-pill" href="llms.txt">llms.txt</a>
           <a class="agent-pill" href="agent-catalog.md">agent-catalog.md</a>
           <a class="agent-pill" href="catalog.json">catalog.json</a>
@@ -161,6 +166,8 @@
 
         <p class="agent-install-line">
           <span data-i18n="about.machineFiles.installPattern">Command patterns</span>
+          <code>read agent-init.json</code>
+          <code>read agent-init.md</code>
           <code>/bananahub use info-diagram</code>
           <code>bananahub add user/repo/template</code>
         </p>
@@ -206,6 +213,8 @@
 
         <div class="footer-links">
           <a href="/" data-i18n="common.nav.home">Home</a>
+          <a href="agent-init.json">agent-init.json</a>
+          <a href="agent-init.md">agent-init.md</a>
           <a href="llms.txt">llms.txt</a>
           <a href="agent-catalog.md">agent-catalog.md</a>
           <a href="catalog.json">catalog.json</a>
