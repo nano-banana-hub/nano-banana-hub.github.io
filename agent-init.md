@@ -7,17 +7,11 @@ Use this file when a user asks an agent to make BananaHub usable from a fresh en
 
 ## How to Hand This to Another Agent
 
-Minimal handoff:
-
 ```text
-Read https://bananahub.ai/agent-init.json and initialize BananaHub. Do not ask me to paste API keys into chat; use a local wizard or placeholder command.
+Read https://bananahub.ai/agent-init.json and initialize BananaHub according to it.
 ```
 
-Recommended handoff:
-
-```text
-Read https://bananahub.ai/agent-init.json. If BananaHub Skill is missing, install it using the supported host command. Then run config doctor --json, preserve any valid existing config, guide local API-key entry safely, repair only missing Python runtime dependencies with consent, and validate without paid generation unless I explicitly approve a smoke test.
-```
+The safety rules, provider choices, dependency behavior, and validation steps are part of the initialization contract itself.
 
 ## Scope Boundary
 

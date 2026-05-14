@@ -209,8 +209,7 @@
     ]
   },
   "handoff_usage": {
-    "minimal_instruction": "Read https://bananahub.ai/agent-init.json and initialize BananaHub. Do not ask me to paste API keys into chat; use a local wizard or placeholder command.",
-    "recommended_instruction": "Read https://bananahub.ai/agent-init.json. If BananaHub Skill is missing, install it using the supported host command. Then run config doctor --json, preserve any valid existing config, guide local API-key entry safely, repair only missing Python runtime dependencies with consent, and validate without paid generation unless I explicitly approve a smoke test.",
+    "instruction": "Read https://bananahub.ai/agent-init.json and initialize BananaHub according to it.",
     "human_readable_fallback": "https://bananahub.ai/agent-init.md"
   }
 }
