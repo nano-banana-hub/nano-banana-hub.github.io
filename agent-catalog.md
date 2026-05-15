@@ -1,6 +1,6 @@
 # BananaHub Agent Catalog
 
-Generated: 2026-05-14T17:05:02.749Z
+Generated: 2026-05-15T08:45:18.908Z
 
 BananaHub is the installable template network for BananaHub Skill.
 Use `catalog.json` for structured access. This markdown file is a readable digest of the merged catalog.
@@ -15,7 +15,7 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Discovered Catalog JSON: https://bananahub.ai/catalog-discovered.json
 - llms.txt: https://bananahub.ai/llms.txt
 
-## Curated Templates (13)
+## Curated Templates (14)
 
 ### app-web-logo-system
 - Title: App and Web Logo Workflow / App/Web Logo 生成工作流
@@ -172,6 +172,25 @@ Use `catalog.json` for structured access. This markdown file is a readable diges
 - Usage Stats: https://worker.bananahub.ai/api/usage-stats?repo=bananahub-ai%2Ftemplates&template_id=cyberpunk-city
 - Template Source: https://github.com/bananahub-ai/templates/tree/main/cyberpunk-city
 - Preview Image: https://raw.githubusercontent.com/bananahub-ai/templates/main/cyberpunk-city/samples/sample-3.1-flash-01.png
+
+### github-repo-visual-kit
+- Title: GitHub Repository Visual Kit / GitHub 仓库运营视觉套件
+- Type: workflow
+- Profile: diagram
+- Difficulty: intermediate
+- Source Layer: curated
+- Distribution: remote
+- License: CC-BY-4.0
+- Official: yes
+- Featured: no
+- Pinned: no
+- Tags: GitHub, README, 仓库配图, 信息图, 部署指南, repo, infographic, deployment, hero
+- Description: Create GitHub-ready visual assets from verified repository context: a README hero image for user attraction, a target-user infographic for fast understanding, or a deployment guide image for first successful use. Marketing clarity matters, but factual accuracy wins.
+- Primary Action: install
+- Primary Command: `bananahub add bananahub-ai/templates/github-repo-visual-kit`
+- Install Command: `bananahub add bananahub-ai/templates/github-repo-visual-kit`
+- Usage Stats: https://worker.bananahub.ai/api/usage-stats?repo=bananahub-ai%2Ftemplates&template_id=github-repo-visual-kit
+- Template Source: https://github.com/bananahub-ai/templates/tree/main/github-repo-visual-kit
 
 ### info-diagram
 - Title: Practical Infographic One-Pager / 信息图一页卡

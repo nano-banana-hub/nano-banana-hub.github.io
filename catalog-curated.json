@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "catalog_type": "curated",
-  "generated": "2026-05-14T17:05:02.749Z",
+  "generated": "2026-05-15T08:45:18.908Z",
   "site": {
     "url": "https://bananahub.ai/",
     "hub_api_base": "https://worker.bananahub.ai/api",
@@ -14,14 +14,14 @@
     "agent_catalog": "https://bananahub.ai/agent-catalog.md"
   },
   "summary": {
-    "template_count": 13,
+    "template_count": 14,
     "profile_count": 7,
-    "official_count": 13,
+    "official_count": 14,
     "featured_count": 0,
     "pinned_count": 0,
     "bundled_count": 5,
-    "remote_count": 8,
-    "curated_count": 13,
+    "remote_count": 9,
+    "curated_count": 14,
     "discovered_count": 0,
     "repos": [
       "bananahub-ai/bananahub-skill",
@@ -30,10 +30,10 @@
   },
   "layers": {
     "curated": {
-      "template_count": 13,
-      "official_count": 13,
+      "template_count": 14,
+      "official_count": 14,
       "bundled_count": 5,
-      "remote_count": 8,
+      "remote_count": 9,
       "repos": [
         "bananahub-ai/bananahub-skill",
         "bananahub-ai/templates"
@@ -1097,6 +1097,126 @@
       "featured_note": ""
     },
     {
+      "id": "github-repo-visual-kit",
+      "type": "workflow",
+      "title": "GitHub 仓库运营视觉套件",
+      "title_en": "GitHub Repository Visual Kit",
+      "author": "bananahub",
+      "license": "CC-BY-4.0",
+      "version": "1.0.0",
+      "profile": "diagram",
+      "tags": [
+        "GitHub",
+        "README",
+        "仓库配图",
+        "信息图",
+        "部署指南",
+        "repo",
+        "infographic",
+        "deployment",
+        "hero"
+      ],
+      "models": [
+        {
+          "name": "gpt-image-2",
+          "tested": false,
+          "quality": "best"
+        },
+        {
+          "name": "gemini-3-pro-image-preview",
+          "tested": false,
+          "quality": "good"
+        },
+        {
+          "name": "gemini-3.1-flash-image-preview",
+          "tested": false,
+          "quality": "good"
+        }
+      ],
+      "providers": [
+        {
+          "id": "openai",
+          "family": "gpt-image",
+          "models": [
+            {
+              "id": "gpt-image-2",
+              "quality": "best",
+              "prompt_variant": "gpt-image"
+            },
+            {
+              "id": "gpt-image-1",
+              "quality": "ok",
+              "prompt_variant": "gpt-image"
+            }
+          ]
+        },
+        {
+          "id": "google-ai-studio",
+          "family": "gemini-image",
+          "models": [
+            {
+              "id": "gemini-3-pro-image-preview",
+              "aliases": [
+                "nano-banana-pro"
+              ],
+              "quality": "good",
+              "prompt_variant": "gemini"
+            },
+            {
+              "id": "gemini-3.1-flash-image-preview",
+              "aliases": [
+                "nano-banana-2"
+              ],
+              "quality": "good",
+              "prompt_variant": "gemini"
+            }
+          ]
+        }
+      ],
+      "capabilities": {
+        "generation": true,
+        "edit": false,
+        "mask_edit": false
+      },
+      "prompt_variants": {
+        "default": "base",
+        "gemini": "prompt-gemini"
+      },
+      "recommended_provider": "google-ai-studio",
+      "recommended_model": "gemini-3-pro-image-preview",
+      "model_priority": 1,
+      "schema_version": 2,
+      "aspect": "16:9",
+      "difficulty": "intermediate",
+      "description": "Create GitHub-ready visual assets from verified repository context: a README hero image for user attraction, a target-user infographic for fast understanding, or a deployment guide image for first successful use. Marketing clarity matters, but factual accuracy wins.",
+      "samples": [],
+      "sample_image": "",
+      "sample_image_page_url": "",
+      "repo": "bananahub-ai/templates",
+      "repo_url": "https://github.com/bananahub-ai/templates",
+      "branch": "main",
+      "distribution": "remote",
+      "template_root": "",
+      "template_path": "github-repo-visual-kit",
+      "template_url": "https://github.com/bananahub-ai/templates/tree/main/github-repo-visual-kit",
+      "official": true,
+      "catalog_source": "curated",
+      "use_cmd": "/bananahub use github-repo-visual-kit",
+      "install_target": "bananahub-ai/templates/github-repo-visual-kit",
+      "install_cmd": "bananahub add bananahub-ai/templates/github-repo-visual-kit",
+      "primary_action": "install",
+      "primary_cmd": "bananahub add bananahub-ai/templates/github-repo-visual-kit",
+      "install_required": true,
+      "usage_stats_url": "https://worker.bananahub.ai/api/usage-stats?repo=bananahub-ai%2Ftemplates&template_id=github-repo-visual-kit",
+      "created": "2026-05-07",
+      "updated": "2026-05-15",
+      "pinned": false,
+      "pinned_rank": null,
+      "featured": false,
+      "featured_label": "",
+      "featured_note": ""
+    },
+    {
       "id": "info-diagram",
       "type": "prompt",
       "title": "信息图一页卡",
@@ -1618,44 +1738,22 @@
       ],
       "models": [
         {
-          "name": "gemini-3-pro-image-preview",
+          "name": "gpt-image-2",
           "tested": false,
           "quality": "best"
+        },
+        {
+          "name": "gemini-3-pro-image-preview",
+          "tested": false,
+          "quality": "good"
         },
         {
           "name": "gemini-3.1-flash-image-preview",
           "tested": false,
           "quality": "good"
-        },
-        {
-          "name": "gpt-image-2",
-          "tested": false,
-          "quality": "best"
         }
       ],
       "providers": [
-        {
-          "id": "google-ai-studio",
-          "family": "gemini-image",
-          "models": [
-            {
-              "id": "gemini-3-pro-image-preview",
-              "aliases": [
-                "nano-banana-pro"
-              ],
-              "quality": "best",
-              "prompt_variant": "gemini"
-            },
-            {
-              "id": "gemini-3.1-flash-image-preview",
-              "aliases": [
-                "nano-banana-2"
-              ],
-              "quality": "good",
-              "prompt_variant": "gemini"
-            }
-          ]
-        },
         {
           "id": "openai",
           "family": "gpt-image",
@@ -1671,6 +1769,28 @@
               "prompt_variant": "gpt-image"
             }
           ]
+        },
+        {
+          "id": "google-ai-studio",
+          "family": "gemini-image",
+          "models": [
+            {
+              "id": "gemini-3-pro-image-preview",
+              "aliases": [
+                "nano-banana-pro"
+              ],
+              "quality": "good",
+              "prompt_variant": "gemini"
+            },
+            {
+              "id": "gemini-3.1-flash-image-preview",
+              "aliases": [
+                "nano-banana-2"
+              ],
+              "quality": "good",
+              "prompt_variant": "gemini"
+            }
+          ]
         }
       ],
       "capabilities": {
@@ -1684,7 +1804,7 @@
       },
       "recommended_provider": "google-ai-studio",
       "recommended_model": "gemini-3-pro-image-preview",
-      "model_priority": 0,
+      "model_priority": 1,
       "schema_version": 2,
       "aspect": "4:3",
       "difficulty": "intermediate",
@@ -1709,7 +1829,7 @@
       "install_required": false,
       "usage_stats_url": "https://worker.bananahub.ai/api/usage-stats?repo=bananahub-ai%2Fbananahub-skill&template_id=repo-explainer-diagram",
       "created": "2026-03-31",
-      "updated": "2026-04-29",
+      "updated": "2026-05-15",
       "pinned": false,
       "pinned_rank": null,
       "featured": false,
