@@ -46,6 +46,7 @@ If BananaHub Skill is already installed, diagnose first and preserve any valid p
 - Preserve any provider/profile/model that already validates.
 - Do not run paid image generation tests unless the user explicitly agrees.
 - Use machine-readable diagnosis before explaining setup state to the user.
+- Treat the persisted default profile as the user's durable choice. Environment variables fill missing fields by default; they override profile fields only when `BANANAHUB_ENV_OVERRIDE=1` is set.
 
 ## Install BananaHub Skill
 
@@ -121,6 +122,14 @@ If package installation fails with a PEP 668 `externally-managed-environment` er
 ## Profile Config Contract
 
 BananaHub persists image API connection details in `~/.config/bananahub/config.json`. Prefer named profiles so users can switch API keys, endpoints, and models later without rewriting the whole config.
+
+Default precedence is:
+
+1. `--config <file>` for an explicit one-off config
+2. selected profile from `~/.config/bananahub/config.json`
+3. environment variables as fallback values for fields not present in the selected profile
+
+Use `BANANAHUB_PROFILE=<name>` to select another persisted profile. Use `BANANAHUB_ENV_OVERRIDE=1` only for deliberate temporary environment overrides.
 
 ```json
 {
@@ -255,7 +264,9 @@ python3 {baseDir}/scripts/bananahub.py config quickset --provider chatgpt-compat
 - `suggested_commands_stdin`: variants that read API keys from stdin for direct agent entry
 - `config_path`: persistent config file path, usually `~/.config/bananahub/config.json`
 - `secret_entry_modes`: supported direct-entry, placeholder-command, and human-terminal fallback modes
+- `precedence`: active config precedence mode, including whether env vars are fill-missing or override mode
 - `ignored_config_sources`: inactive env/profile values; do not make the user debug them unless they explain a failure
+- `env_shadowed_config_sources`: env vars ignored because the selected persisted profile already defines that field
 - `agent_notes`: setup rules and quota warnings
 
 ## Smoke Tests

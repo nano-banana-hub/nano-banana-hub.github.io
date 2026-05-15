@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "name": "BananaHub Agent Initialization",
-  "updated": "2026-05-14",
+  "updated": "2026-05-15",
   "stable_urls": {
     "json": "https://bananahub.ai/agent-init.json",
     "markdown": "https://bananahub.ai/agent-init.md",
@@ -56,12 +56,21 @@
     "default_profile": "gpt",
     "default_model": "gpt-image-2",
     "preserve_existing_valid_config": true,
+    "persistent_profile_precedence": true,
+    "env_override_flag": "BANANAHUB_ENV_OVERRIDE",
+    "env_default_behavior": "Environment variables fill missing profile fields by default and override persisted profile fields only when BANANAHUB_ENV_OVERRIDE=1 is set.",
     "paid_generation_requires_explicit_consent": true,
     "diagnose_before_provider_call": true
   },
   "config_profile_contract": {
     "path": "~/.config/bananahub/config.json",
     "selection": "Use default_profile unless BANANAHUB_PROFILE or --profile selects another profile.",
+    "precedence": [
+      "--config <file>",
+      "selected profile from ~/.config/bananahub/config.json",
+      "environment variables as fallback values for fields missing from the selected profile"
+    ],
+    "environment_override": "Set BANANAHUB_ENV_OVERRIDE=1 only for deliberate temporary environment overrides.",
     "shape": {
       "default_profile": "gpt",
       "profiles": {
@@ -103,7 +112,9 @@
         "suggested_commands_stdin",
         "config_path",
         "secret_entry_modes",
+        "precedence",
         "ignored_config_sources",
+        "env_shadowed_config_sources",
         "agent_notes"
       ]
     },
@@ -225,7 +236,9 @@
     "primary_command": "python3 {baseDir}/scripts/bananahub.py config doctor --json",
     "ready_status": "ok",
     "needs_setup_status": "needs_setup",
+    "precedence_field": "precedence",
     "ignored_config_sources_policy": "treat_as_informational_unless_it_explains_a_failure",
+    "env_shadowed_config_sources_policy": "treat_as informational; these env vars were ignored because the selected persisted profile already defines that field",
     "dependency_policy": {
       "install_command_field": "dependency_install_command",
       "pep668_error": "externally-managed-environment",
